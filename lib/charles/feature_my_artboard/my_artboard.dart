@@ -159,7 +159,7 @@ class _MyArtboardState extends State<MyArtboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text("MyArtboard"),
         centerTitle: true,
       ),

@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Scrapy Art',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primaryColor: const Color.fromARGB(255, 146, 87, 65)),
+      theme: ThemeData(primaryColor: const Color(0xFF684500)),
       home: const MyHomePage(),
     );
   }
