@@ -131,150 +131,153 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             }).toList(),
           ),
-          const SizedBox(height: 5),
+          // const SizedBox(height: 5),
+          const Expanded(child: SizedBox()),
           Center(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        // open ngescrap
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const MyArtboard(),
-                          ),
-                        );
-                      },
+            child: SizedBox(
+              width: 145,
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 0,
+                runSpacing: 0,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      // open ngescrap
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const MyArtboard(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      color: Colors.blue,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
                         children: [
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(
-                                90, 130, 10, 10), // Adjust margin as needed
-                            child: Image.asset(
-                              'lib/assets/ngescrap.png',
-                              width: 40,
-                              height: 40,
-                            ),
+                          Image.asset(
+                            'lib/assets/ngescrap.png',
+                            width: 40,
+                            height: 40,
                           ),
                           const SizedBox(
-                              height: 0.1), // Space between icon and text
-                          const Padding(
-                            padding: EdgeInsets.only(
-                              left: 90,
-                              right: 10,
-                              top: 0.1,
-                            ), // Adjust text position
-                            child: Text(
-                              'Ngescrap',
-                              style: TextStyle(fontSize: 10),
-                            ),
-                          ),
+                              height: 3), // Space between icon and text
+                          const Text("Ngescrap"),
+                          // const Padding(
+                          //   padding: EdgeInsets.only(
+                          //     left: 90,
+                          //     right: 10,
+                          //     top: 0.1,
+                          //   ), // Adjust text position
+                          //   child: Text(
+                          //     'Ngescrap',
+                          //     style: TextStyle(fontSize: 10),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        // open ngetemplate
-                      },
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      // open ngetemplate
+                    },
+                    child: Container(
+                      color: Colors.amber,
                       child: Column(
                         children: [
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(
-                                90, 130, 50, 10), // Adjust margin as needed
-                            child: Image.asset(
-                              'lib/assets/ngetemplate.png',
-                              width: 40,
-                              height: 40,
-                            ),
+                          Image.asset(
+                            'lib/assets/ngetemplate.png',
+                            width: 40,
+                            height: 40,
                           ),
                           const SizedBox(
-                              height: 0.1), // Space between icon and text
-                          const Padding(
-                            padding: EdgeInsets.only(
-                              left: 50,
-                              right: 10,
-                              top: 0.4,
-                            ), // Adjust text position
-                            child: Text(
-                              'Ngetemplate',
-                              style: TextStyle(fontSize: 10),
-                            ),
-                          ),
+                              height: 3), // Space between icon and text
+                          const Text("Ngetemplate"),
+                          // const Padding(
+                          //   padding: EdgeInsets.only(
+                          //     left: 50,
+                          //     right: 10,
+                          //     top: 0.4,
+                          //   ), // Adjust text position
+                          //   child: Text(
+                          //     'Ngetemplate',
+                          //     style: TextStyle(fontSize: 10),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        // open ngeorder
-                      },
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      // open ngeorder
+                    },
+                    child: Container(
+                      color: Colors.cyan,
+                      padding: const EdgeInsets.symmetric(horizontal: 11),
                       child: Column(
                         children: [
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(
-                                90, 40, 10, 10), // Adjust margin as needed
-                            child: Image.asset(
-                              'lib/assets/ngorder.png',
-                              width: 40,
-                              height: 40,
-                            ),
+                          Image.asset(
+                            'lib/assets/ngorder.png',
+                            width: 40,
+                            height: 40,
                           ),
                           const SizedBox(
-                              height: 0.1), // Space between icon and text
-                          const Padding(
-                            padding: EdgeInsets.only(
-                              left: 90,
-                              right: 10,
-                              top: 0.1,
-                            ), // Adjust text position
-                            child: Text(
-                              'Ngeorder',
-                              style: TextStyle(fontSize: 10),
-                            ),
-                          ),
+                              height: 3), // Space between icon and text
+                          const Text("Ngeorder"),
+                          // const Padding(
+                          //   padding: EdgeInsets.only(
+                          //     left: 90,
+                          //     right: 10,
+                          //     top: 0.1,
+                          //   ), // Adjust text position
+                          //   child: Text(
+                          //     'Ngeorder',
+                          //     style: TextStyle(fontSize: 10),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        // open gudangku
-                      },
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      // open gudangku
+                    },
+                    child: Container(
+                      color: Colors.yellow,
+                      padding: const EdgeInsets.all(5),
                       child: Column(
                         children: [
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(
-                                90, 40, 10, 10), // Adjust margin as needed
-                            child: Image.asset(
-                              'lib/assets/gudangku.png',
-                              width: 40,
-                              height: 40,
-                            ),
+                          Image.asset(
+                            'lib/assets/gudangku.png',
+                            width: 40,
+                            height: 40,
                           ),
                           const SizedBox(
-                              height: 0.1), // Space between icon and text
-                          const Padding(
-                            padding: EdgeInsets.only(
-                              left: 90,
-                              right: 10,
-                              top: 0.1,
-                            ), // Adjust text position
-                            child: Text(
-                              'Gudangku',
-                              style: TextStyle(fontSize: 10),
-                            ),
-                          ),
+                              height: 3), // Space between icon and text
+                          const Text("Gudangku"),
+                          // const Padding(
+                          //   padding: EdgeInsets.only(
+                          //     left: 90,
+                          //     right: 10,
+                          //     top: 0.1,
+                          //   ), // Adjust text position
+                          //   child: Text(
+                          //     'Gudangku',
+                          //     style: TextStyle(fontSize: 10),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
+          const Expanded(child: SizedBox()),
           // Spasi antara carousel dan teks
         ]),
         bottomNavigationBar: Container(
