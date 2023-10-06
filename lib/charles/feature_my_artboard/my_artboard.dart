@@ -18,7 +18,7 @@ class MyArtboard extends StatefulWidget {
 class _MyArtboardState extends State<MyArtboard> {
   ScreenshotController screenshotController = ScreenshotController();
 
-  // TODO: Buat 5 gambar yang bisa diimport.
+  // Done: Buat 5 gambar yang bisa diimport.
   // TODO: Pindah layer dengan onLongPress.
   // TODO: scaling gambar dengan gesture detection.
   File? _selectedImage1;
@@ -158,9 +158,11 @@ class _MyArtboardState extends State<MyArtboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(218, 255, 255, 255),
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text("MyArtboard"),
+        title:
+            Text("MyArtboard", style: Theme.of(context).textTheme.titleLarge),
         centerTitle: true,
       ),
       body: isFilePicked == true
@@ -719,10 +721,10 @@ class _MyArtboardState extends State<MyArtboard> {
                 ),
               ),
             )
-          : const Center(
+          : Center(
               child: Text(
               "Tidak ada gambar, silakan impor sebuah gambar",
-              style: TextStyle(color: Colors.black54),
+              style: Theme.of(context).textTheme.bodyMedium,
             )),
       floatingActionButton: Stack(children: [
         Row(
@@ -733,12 +735,14 @@ class _MyArtboardState extends State<MyArtboard> {
                 onPressed: () {
                   _pickImageFromGallery1();
                 },
-                child: const Text("Impor gambar 1"),
+                child: Text("Impor gambar 1",
+                    style: TextStyle(color: Theme.of(context).primaryColor)),
               ),
             if (_selectedImage1 != null)
               ElevatedButton(
                 onPressed: () => saveToGallery(context),
-                child: const Text("Simpan"),
+                child: Text("Simpan",
+                    style: TextStyle(color: Theme.of(context).primaryColor)),
               ),
             if (_selectedImage1 != null)
               Container(
@@ -772,7 +776,8 @@ class _MyArtboardState extends State<MyArtboard> {
                       // isImage1OnTheTop = !isImage1OnTheTop;
                     });
                   },
-                  child: const Text("Hapus"),
+                  child: Text("Hapus",
+                      style: TextStyle(color: Theme.of(context).primaryColor)),
                 ),
               ),
             if (_selectedImage1 != null)
@@ -785,7 +790,8 @@ class _MyArtboardState extends State<MyArtboard> {
                       isImage2Existed = false;
                     });
                   },
-                  child: const Text("Impor gambar 2"),
+                  child: Text("Impor gambar 2",
+                      style: TextStyle(color: Theme.of(context).primaryColor)),
                 ),
               ),
             if (_selectedImage2 != null)
@@ -798,7 +804,8 @@ class _MyArtboardState extends State<MyArtboard> {
                       isImage3Existed = false;
                     });
                   },
-                  child: const Text("Impor gambar 3"),
+                  child: Text("Impor gambar 3",
+                      style: TextStyle(color: Theme.of(context).primaryColor)),
                 ),
               ),
             if (_selectedImage3 != null)
@@ -811,7 +818,8 @@ class _MyArtboardState extends State<MyArtboard> {
                       isImage4Existed = false;
                     });
                   },
-                  child: const Text("Impor gambar 4"),
+                  child: Text("Impor gambar 4",
+                      style: TextStyle(color: Theme.of(context).primaryColor)),
                 ),
               ),
             if (_selectedImage4 != null)
@@ -824,13 +832,13 @@ class _MyArtboardState extends State<MyArtboard> {
                       isImage5Existed = false;
                     });
                   },
-                  child: const Text("Impor gambar 5"),
+                  child: Text("Impor gambar 5",
+                      style: TextStyle(color: Theme.of(context).primaryColor)),
                 ),
               ),
           ],
         ),
       ]),
-      backgroundColor: const Color.fromARGB(218, 255, 255, 255),
     );
   }
 

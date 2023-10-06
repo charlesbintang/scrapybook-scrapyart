@@ -31,8 +31,12 @@ class _MyHomePageState extends State<MyHomePage> {
           // backgroundColor: const Color(0xFF684500),
           backgroundColor: Theme.of(context).primaryColor,
           elevation: 0,
-          title: const Text('HOME'),
+          title: Text(
+            'HOME',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           leading: IconButton(
+            style: Theme.of(context).iconButtonTheme.style,
             onPressed: () {
               // open menu
             },
@@ -135,11 +139,11 @@ class _MyHomePageState extends State<MyHomePage> {
           const Expanded(child: SizedBox()),
           Center(
             child: SizedBox(
-              width: 145,
+              width: 250,
               child: Wrap(
                 alignment: WrapAlignment.center,
-                spacing: 0,
-                runSpacing: 0,
+                spacing: 60,
+                runSpacing: 60,
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -151,7 +155,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     },
                     child: Container(
-                      color: Colors.blue,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
                         children: [
@@ -182,31 +185,28 @@ class _MyHomePageState extends State<MyHomePage> {
                     onTap: () {
                       // open ngetemplate
                     },
-                    child: Container(
-                      color: Colors.amber,
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            'lib/assets/ngetemplate.png',
-                            width: 40,
-                            height: 40,
-                          ),
-                          const SizedBox(
-                              height: 3), // Space between icon and text
-                          const Text("Ngetemplate"),
-                          // const Padding(
-                          //   padding: EdgeInsets.only(
-                          //     left: 50,
-                          //     right: 10,
-                          //     top: 0.4,
-                          //   ), // Adjust text position
-                          //   child: Text(
-                          //     'Ngetemplate',
-                          //     style: TextStyle(fontSize: 10),
-                          //   ),
-                          // ),
-                        ],
-                      ),
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          'lib/assets/ngetemplate.png',
+                          width: 40,
+                          height: 40,
+                        ),
+                        const SizedBox(
+                            height: 3), // Space between icon and text
+                        const Text("Ngetemplate"),
+                        // const Padding(
+                        //   padding: EdgeInsets.only(
+                        //     left: 50,
+                        //     right: 10,
+                        //     top: 0.4,
+                        //   ), // Adjust text position
+                        //   child: Text(
+                        //     'Ngetemplate',
+                        //     style: TextStyle(fontSize: 10),
+                        //   ),
+                        // ),
+                      ],
                     ),
                   ),
                   GestureDetector(
@@ -214,7 +214,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       // open ngeorder
                     },
                     child: Container(
-                      color: Colors.cyan,
                       padding: const EdgeInsets.symmetric(horizontal: 11),
                       child: Column(
                         children: [
@@ -246,8 +245,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       // open gudangku
                     },
                     child: Container(
-                      color: Colors.yellow,
-                      padding: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.symmetric(horizontal: 9),
                       child: Column(
                         children: [
                           Image.asset(
