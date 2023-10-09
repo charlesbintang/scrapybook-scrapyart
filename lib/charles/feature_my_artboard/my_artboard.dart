@@ -89,32 +89,32 @@ class _MyArtboardState extends State<MyArtboard> {
     });
   }
 
-  void _showContextMenu(context) async {
-    final RenderObject? overlay =
-        Overlay.of(context).context.findRenderObject();
-    // ignore: unused_local_variable
-    final result = await showMenu(
-        context: context,
-        position: RelativeRect.fromRect(
-          Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 10, 10),
-          Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
-              overlay.paintBounds.size.height),
-        ),
-        items: [
-          PopupMenuItem(
-            child: const Text("Bawa Maju"),
-            onTap: () {
-              setState(() {});
-            },
-          ),
-          PopupMenuItem(
-            child: const Text("Bawa Mundur"),
-            onTap: () {
-              setState(() {});
-            },
-          ),
-        ]);
-  }
+  // void _showContextMenu(context) async {
+  //   final RenderObject? overlay =
+  //       Overlay.of(context).context.findRenderObject();
+  //   // ignore: unused_local_variable
+  //   final result = await showMenu(
+  //       context: context,
+  //       position: RelativeRect.fromRect(
+  //         Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 10, 10),
+  //         Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+  //             overlay.paintBounds.size.height),
+  //       ),
+  //       items: [
+  //         PopupMenuItem(
+  //           child: const Text("Bawa Maju"),
+  //           onTap: () {
+  //             setState(() {});
+  //           },
+  //         ),
+  //         PopupMenuItem(
+  //           child: const Text("Bawa Mundur"),
+  //           onTap: () {
+  //             setState(() {});
+  //           },
+  //         ),
+  //       ]);
+  // }
 
   void _showContextMenu1A(context) async {
     final RenderObject? overlay =
@@ -129,14 +129,14 @@ class _MyArtboardState extends State<MyArtboard> {
         ),
         items: [
           PopupMenuItem(
-            child: const Text("Bawa Maju"),
+            child: const Text("Bawa Maju"), //bawa maju ke 1B
             onTap: () {
               setState(() {
                 isImage1AVisible = false;
                 isImage2AVisible = true;
-                isImage3AVisible = true;
-                isImage4AVisible = true;
-                isImage5AVisible = true;
+                isImage3AVisible = false;
+                isImage4AVisible = false;
+                isImage5AVisible = false;
 
                 isImage1BVisible = true;
                 isImage2BVisible = false;
@@ -162,20 +162,20 @@ class _MyArtboardState extends State<MyArtboard> {
         ),
         items: [
           PopupMenuItem(
-            child: const Text("Bawa Maju"),
+            child: const Text("Bawa Maju"), //bawa maju ke 1C
             onTap: () {
               setState(() {
                 isImage1AVisible = false;
                 isImage2AVisible = false;
                 isImage3AVisible = false;
-                isImage4AVisible = true;
-                isImage5AVisible = true;
+                isImage4AVisible = false;
+                isImage5AVisible = false;
 
                 isImage1BVisible = false;
                 isImage2BVisible = true;
                 isImage3BVisible = true;
-                isImage4BVisible = true;
-                isImage5BVisible = true;
+                isImage4BVisible = false;
+                isImage5BVisible = false;
 
                 isImage1CVisible = true;
                 isImage2CVisible = false;
@@ -186,27 +186,215 @@ class _MyArtboardState extends State<MyArtboard> {
             },
           ),
           PopupMenuItem(
-            child: const Text("Bawa Mundur"),
+            child: const Text("Bawa Mundur"), //bawa mundur ke 1A
             onTap: () {
               setState(() {
                 isImage1AVisible = true;
-                // isImage2AVisible = true;
-                // isImage3AVisible = true;
-                // isImage4AVisible = true;
-                // isImage5AVisible = true;
+                isImage2AVisible = true;
+                isImage3AVisible = true;
+                isImage4AVisible = true;
+                isImage5AVisible = true;
 
-                // // B = layer2
+                isImage1BVisible = false;
+                isImage2BVisible = false;
+                isImage3BVisible = false;
+                isImage4BVisible = false;
+                isImage5BVisible = false;
+              });
+            },
+          ),
+        ]);
+  }
+
+  void _showContextMenu1C(context) async {
+    final RenderObject? overlay =
+        Overlay.of(context).context.findRenderObject();
+    // ignore: unused_local_variable
+    final result = await showMenu(
+        context: context,
+        position: RelativeRect.fromRect(
+          Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 10, 10),
+          Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+              overlay.paintBounds.size.height),
+        ),
+        items: [
+          PopupMenuItem(
+            child: const Text("Bawa Maju"), //bawa maju ke 1D
+            onTap: () {
+              setState(() {
+                isImage1AVisible = false;
+                isImage2AVisible = false;
+                isImage3AVisible = false;
+                isImage4AVisible = false;
+                isImage5AVisible = false;
+
                 isImage1BVisible = false;
                 isImage2BVisible = false;
                 isImage3BVisible = false;
                 isImage4BVisible = false;
                 isImage5BVisible = false;
 
-                // isImage1CVisible = false;
-                // isImage2CVisible = true;
-                // isImage3CVisible = true;
-                // isImage4CVisible = true;
-                // isImage5CVisible = true;
+                isImage1CVisible = false;
+                isImage2CVisible = true;
+                isImage3CVisible = true;
+                isImage4CVisible = true;
+                isImage5CVisible = false;
+
+                isImage1DVisible = true;
+                isImage2DVisible = false;
+                isImage3DVisible = false;
+                isImage4DVisible = false;
+                isImage5DVisible = true;
+
+                isImage1EVisible = false;
+                isImage2EVisible = false;
+                isImage3EVisible = false;
+                isImage4EVisible = false;
+                isImage5EVisible = false;
+              });
+            },
+          ),
+          PopupMenuItem(
+            child: const Text("Bawa Mundur"), //bawa mundur ke 1B
+            onTap: () {
+              setState(() {
+                isImage1AVisible = false;
+                isImage2AVisible = true;
+                isImage3AVisible = false;
+                isImage4AVisible = false;
+                isImage5AVisible = false;
+
+                isImage1BVisible = true;
+                isImage2BVisible = false;
+                isImage3BVisible = true;
+                isImage4BVisible = true;
+                isImage5BVisible = true;
+
+                isImage1CVisible = false;
+                isImage2CVisible = false;
+                isImage3CVisible = false;
+                isImage4CVisible = false;
+                isImage5CVisible = false;
+              });
+            },
+          ),
+        ]);
+  }
+
+  void _showContextMenu1D(context) async {
+    final RenderObject? overlay =
+        Overlay.of(context).context.findRenderObject();
+    // ignore: unused_local_variable
+    final result = await showMenu(
+        context: context,
+        position: RelativeRect.fromRect(
+          Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 10, 10),
+          Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+              overlay.paintBounds.size.height),
+        ),
+        items: [
+          PopupMenuItem(
+            child: const Text("Bawa Maju"), //bawa maju ke 1E
+            onTap: () {
+              setState(() {
+                isImage1AVisible = false;
+                isImage2AVisible = false;
+                isImage3AVisible = false;
+                isImage4AVisible = false;
+                isImage5AVisible = false;
+
+                isImage1BVisible = false;
+                isImage2BVisible = false;
+                isImage3BVisible = false;
+                isImage4BVisible = false;
+                isImage5BVisible = false;
+
+                isImage1CVisible = false;
+                isImage2CVisible = false;
+                isImage3CVisible = false;
+                isImage4CVisible = false;
+                isImage5CVisible = false;
+
+                isImage1DVisible = false;
+                isImage2DVisible = true;
+                isImage3DVisible = true;
+                isImage4DVisible = true;
+                isImage5DVisible = true;
+
+                isImage1EVisible = true;
+                isImage2EVisible = false;
+                isImage3EVisible = false;
+                isImage4EVisible = false;
+                isImage5EVisible = false;
+              });
+            },
+          ),
+          PopupMenuItem(
+            child: const Text("Bawa Mundur"), //bawa mundur ke 1C
+            onTap: () {
+              setState(() {
+                isImage1AVisible = false;
+                isImage2AVisible = false;
+                isImage3AVisible = false;
+                isImage4AVisible = false;
+                isImage5AVisible = false;
+
+                isImage1BVisible = false;
+                isImage2BVisible = true;
+                isImage3BVisible = true;
+                isImage4BVisible = false;
+                isImage5BVisible = false;
+
+                isImage1CVisible = true;
+                isImage2CVisible = false;
+                isImage3CVisible = false;
+                isImage4CVisible = true;
+                isImage5CVisible = true;
+
+                isImage1DVisible = false;
+                isImage2DVisible = false;
+                isImage3DVisible = false;
+                isImage4DVisible = false;
+                isImage5DVisible = false;
+              });
+            },
+          ),
+        ]);
+  }
+
+  void _showContextMenu1E(context) async {
+    final RenderObject? overlay =
+        Overlay.of(context).context.findRenderObject();
+    // ignore: unused_local_variable
+    final result = await showMenu(
+        context: context,
+        position: RelativeRect.fromRect(
+          Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 10, 10),
+          Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+              overlay.paintBounds.size.height),
+        ),
+        items: [
+          PopupMenuItem(
+            child: const Text("Bawa Mundur"), //bawa mundur ke 1D
+            onTap: () {
+              setState(() {
+                isImage1CVisible = false;
+                isImage2CVisible = true;
+                isImage3CVisible = true;
+                isImage4CVisible = true;
+                isImage5CVisible = false;
+
+                isImage1DVisible = true;
+                isImage2DVisible = false;
+                isImage3DVisible = false;
+                isImage4DVisible = false;
+                isImage5DVisible = true;
+
+                isImage1EVisible = false;
+                isImage2EVisible = false;
+                isImage3EVisible = false;
+                isImage4EVisible = false;
+                isImage5EVisible = false;
               });
             },
           ),
@@ -409,8 +597,7 @@ class _MyArtboardState extends State<MyArtboard> {
                       print("ini imageDanLayer1");
                     },
                     onLongPress: () {
-                      _showContextMenu1A(
-                          context); //_showContextMenu1A(context);
+                      _showContextMenu1A(context);
                     },
                     onPanUpdate: (details) {
                       _top1 = max(0, _top1 + details.delta.dy);
@@ -430,7 +617,7 @@ class _MyArtboardState extends State<MyArtboard> {
                       _getTapPosition(position);
                     },
                     onLongPress: () {
-                      _showContextMenu(context);
+                      //_showContextMenu(context);
                     },
                     onPanUpdate: (details) {
                       _top2 = max(0, _top2 + details.delta.dy);
@@ -455,7 +642,7 @@ class _MyArtboardState extends State<MyArtboard> {
                         _getTapPosition(position);
                       },
                       onLongPress: () {
-                        _showContextMenu(context);
+                        //_showContextMenu(context);
                       },
                       onPanUpdate: (details) {
                         _top3 = max(0, _top3 + details.delta.dy);
@@ -481,7 +668,7 @@ class _MyArtboardState extends State<MyArtboard> {
                         _getTapPosition(position);
                       },
                       onLongPress: () {
-                        _showContextMenu(context);
+                        //_showContextMenu(context);
                       },
                       onPanUpdate: (details) {
                         _top4 = max(0, _top4 + details.delta.dy);
@@ -507,7 +694,7 @@ class _MyArtboardState extends State<MyArtboard> {
                         _getTapPosition(position);
                       },
                       onLongPress: () {
-                        _showContextMenu(context);
+                        //_showContextMenu(context);
                       },
                       onPanUpdate: (details) {
                         _top5 = max(0, _top5 + details.delta.dy);
@@ -638,6 +825,13 @@ class _MyArtboardState extends State<MyArtboard> {
                     top: _top1,
                     left: _left1,
                     child: GestureDetector(
+                      onTapDown: (position) {
+                        _getTapPosition(position);
+                        print("ini imageDanLayer3");
+                      },
+                      onLongPress: () {
+                        _showContextMenu1C(context);
+                      },
                       onPanUpdate: (details) {
                         _top1 = max(0, _top1 + details.delta.dy);
                         _left1 = max(0, _left1 + details.delta.dx);
@@ -739,6 +933,13 @@ class _MyArtboardState extends State<MyArtboard> {
                     top: _top1,
                     left: _left1,
                     child: GestureDetector(
+                      onTapDown: (position) {
+                        _getTapPosition(position);
+                        print("ini imageDanLayer4");
+                      },
+                      onLongPress: () {
+                        _showContextMenu1D(context);
+                      },
                       onPanUpdate: (details) {
                         _top1 = max(0, _top1 + details.delta.dy);
                         _left1 = max(0, _left1 + details.delta.dx);
@@ -840,6 +1041,13 @@ class _MyArtboardState extends State<MyArtboard> {
                     top: _top1,
                     left: _left1,
                     child: GestureDetector(
+                      onTapDown: (position) {
+                        _getTapPosition(position);
+                        print("ini imageDanLayer4");
+                      },
+                      onLongPress: () {
+                        _showContextMenu1E(context);
+                      },
                       onPanUpdate: (details) {
                         _top1 = max(0, _top1 + details.delta.dy);
                         _left1 = max(0, _left1 + details.delta.dx);
@@ -924,7 +1132,7 @@ class _MyArtboardState extends State<MyArtboard> {
                         _getTapPosition(position);
                       },
                       onLongPress: () {
-                        _showContextMenu(context);
+                        //_showContextMenu(context);
                       },
                       onPanUpdate: (details) {
                         _top5 = max(0, _top5 + details.delta.dy);
