@@ -22,14 +22,6 @@ extension on List {
   }
 }
 
-enum Layers {
-  layer1,
-  layer2,
-  layer3,
-  layer4,
-  layer5,
-}
-
 class MyArtboard extends StatefulWidget {
   const MyArtboard({Key? key}) : super(key: key);
 
@@ -40,65 +32,63 @@ class MyArtboard extends StatefulWidget {
 class _MyArtboardState extends State<MyArtboard> {
   ScreenshotController screenshotController = ScreenshotController();
 
-  // DONE: Buat 5 gambar yang bisa diimport.
-
-  File? _selectedImage1;
-
-  File? _selectedImage2;
-  File? _selectedImage3;
-  File? _selectedImage4;
-  File? _selectedImage5;
-
-  // for onPanUpdate function to 5 image
-  double _top1 = 0;
-  double _left1 = 0;
-  double _top2 = 0;
-  double _left2 = 0;
-  double _top3 = 0;
-  double _left3 = 0;
-  double _top4 = 0;
-  double _left4 = 0;
-  double _top5 = 0;
-  double _left5 = 0;
-
+  File? _selectedImage;
   // boolean
   bool isFilePicked = false;
-  // A = layer1
-  bool isImage1AVisible = true;
-  bool isImage2AVisible = true;
-  bool isImage3AVisible = true;
-  bool isImage4AVisible = true;
-  bool isImage5AVisible = true;
-  // B = layer2
-  bool isImage1BVisible = false;
-  bool isImage2BVisible = false;
-  bool isImage3BVisible = false;
-  bool isImage4BVisible = false;
-  bool isImage5BVisible = false;
-  // C = layer3
-  bool isImage1CVisible = false;
-  bool isImage2CVisible = false;
-  bool isImage3CVisible = false;
-  bool isImage4CVisible = false;
-  bool isImage5CVisible = false;
-  // D = layer4
-  bool isImage1DVisible = false;
-  bool isImage2DVisible = false;
-  bool isImage3DVisible = false;
-  bool isImage4DVisible = false;
-  bool isImage5DVisible = false;
-  // E = layer5
-  bool isImage1EVisible = false;
-  bool isImage2EVisible = false;
-  bool isImage3EVisible = false;
-  bool isImage4EVisible = false;
-  bool isImage5EVisible = false;
 
-  // bool for visible button
-  bool isImage2Existed = true;
-  bool isImage3Existed = true;
-  bool isImage4Existed = true;
-  bool isImage5Existed = true;
+  // File? _selectedImage2;
+  // File? _selectedImage3;
+  // File? _selectedImage4;
+  // File? _selectedImage5;
+
+  // for onPanUpdate function to 5 image
+  // double _top1 = 0;
+  // double _left1 = 0;
+  // double _top2 = 0;
+  // double _left2 = 0;
+  // double _top3 = 0;
+  // double _left3 = 0;
+  // double _top4 = 0;
+  // double _left4 = 0;
+  // double _top5 = 0;
+  // double _left5 = 0;
+
+  // // A = layer1
+  // bool isImage1AVisible = true;
+  // bool isImage2AVisible = true;
+  // bool isImage3AVisible = true;
+  // bool isImage4AVisible = true;
+  // bool isImage5AVisible = true;
+  // // B = layer2
+  // bool isImage1BVisible = false;
+  // bool isImage2BVisible = false;
+  // bool isImage3BVisible = false;
+  // bool isImage4BVisible = false;
+  // bool isImage5BVisible = false;
+  // // C = layer3
+  // bool isImage1CVisible = false;
+  // bool isImage2CVisible = false;
+  // bool isImage3CVisible = false;
+  // bool isImage4CVisible = false;
+  // bool isImage5CVisible = false;
+  // // D = layer4
+  // bool isImage1DVisible = false;
+  // bool isImage2DVisible = false;
+  // bool isImage3DVisible = false;
+  // bool isImage4DVisible = false;
+  // bool isImage5DVisible = false;
+  // // E = layer5
+  // bool isImage1EVisible = false;
+  // bool isImage2EVisible = false;
+  // bool isImage3EVisible = false;
+  // bool isImage4EVisible = false;
+  // bool isImage5EVisible = false;
+
+  // // bool for visible button
+  // bool isImage2Existed = true;
+  // bool isImage3Existed = true;
+  // bool isImage4Existed = true;
+  // bool isImage5Existed = true;
 
   // start of pop up menu
   Offset _tapPosition = Offset.zero;
@@ -111,38 +101,38 @@ class _MyArtboardState extends State<MyArtboard> {
     });
   }
 
-  void _showContextMenu1A(context) async {
-    final RenderObject? overlay =
-        Overlay.of(context).context.findRenderObject();
+  // void _showContextMenu1A(context) async {
+  //   final RenderObject? overlay =
+  //       Overlay.of(context).context.findRenderObject();
 
-    final result = await showMenu(
-        context: context,
-        position: RelativeRect.fromRect(
-          Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 10, 10),
-          Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
-              overlay.paintBounds.size.height),
-        ),
-        items: [
-          PopupMenuItem(
-            child: const Text("Bawa Maju"), //bawa maju ke 1B
-            onTap: () {
-              setState(() {
-                isImage1AVisible = false;
-                isImage2AVisible = true;
-                isImage3AVisible = false;
-                isImage4AVisible = false;
-                isImage5AVisible = false;
+  //   final result = await showMenu(
+  //       context: context,
+  //       position: RelativeRect.fromRect(
+  //         Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 10, 10),
+  //         Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+  //             overlay.paintBounds.size.height),
+  //       ),
+  //       items: [
+  //         PopupMenuItem(
+  //           child: const Text("Bawa Maju"), //bawa maju ke 1B
+  //           onTap: () {
+  //             setState(() {
+  //               isImage1AVisible = false;
+  //               isImage2AVisible = true;
+  //               isImage3AVisible = false;
+  //               isImage4AVisible = false;
+  //               isImage5AVisible = false;
 
-                isImage1BVisible = true;
-                isImage2BVisible = false;
-                isImage3BVisible = true;
-                isImage4BVisible = true;
-                isImage5BVisible = true;
-              });
-            },
-          ),
-        ]);
-  }
+  //               isImage1BVisible = true;
+  //               isImage2BVisible = false;
+  //               isImage3BVisible = true;
+  //               isImage4BVisible = true;
+  //               isImage5BVisible = true;
+  //             });
+  //           },
+  //         ),
+  //       ]);
+  // }
 
   // void _showContextMenu(context) async {
   //   final RenderObject? overlay =
@@ -1338,8 +1328,8 @@ class _MyArtboardState extends State<MyArtboard> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (returnedImage == null) return;
     setState(() {
-      _selectedImage1 = File(returnedImage.path);
-      globalListImage.add(StackImage(image: _selectedImage1));
+      _selectedImage = File(returnedImage.path);
+      globalListImage.add(StackImage(image: _selectedImage));
 
       isFilePicked = true;
     });
