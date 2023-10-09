@@ -18,7 +18,7 @@ class MyArtboard extends StatefulWidget {
 class _MyArtboardState extends State<MyArtboard> {
   ScreenshotController screenshotController = ScreenshotController();
 
-  // Done: Buat 5 gambar yang bisa diimport.
+  // DONE: Buat 5 gambar yang bisa diimport.
   // TODO: Pindah layer dengan onLongPress.
   // TODO: scaling gambar dengan gesture detection.
   File? _selectedImage1;
@@ -39,6 +39,7 @@ class _MyArtboardState extends State<MyArtboard> {
   double _top5 = 0;
   double _left5 = 0;
 
+  // boolean
   bool isFilePicked = false;
   // A = layer1
   bool isImage1AVisible = true;
@@ -70,6 +71,7 @@ class _MyArtboardState extends State<MyArtboard> {
   bool isImage3EVisible = false;
   bool isImage4EVisible = false;
   bool isImage5EVisible = false;
+
   // bool for visible button
   bool isImage2Existed = true;
   bool isImage3Existed = true;
@@ -136,7 +138,6 @@ class _MyArtboardState extends State<MyArtboard> {
                 isImage4AVisible = true;
                 isImage5AVisible = true;
 
-                // B = layer2
                 isImage1BVisible = true;
                 isImage2BVisible = false;
                 isImage3BVisible = true;
@@ -145,10 +146,68 @@ class _MyArtboardState extends State<MyArtboard> {
               });
             },
           ),
+        ]);
+  }
+
+  void _showContextMenu1B(context) async {
+    final RenderObject? overlay =
+        Overlay.of(context).context.findRenderObject();
+    // ignore: unused_local_variable
+    final result = await showMenu(
+        context: context,
+        position: RelativeRect.fromRect(
+          Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 10, 10),
+          Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+              overlay.paintBounds.size.height),
+        ),
+        items: [
+          PopupMenuItem(
+            child: const Text("Bawa Maju"),
+            onTap: () {
+              setState(() {
+                isImage1AVisible = false;
+                isImage2AVisible = false;
+                isImage3AVisible = false;
+                isImage4AVisible = true;
+                isImage5AVisible = true;
+
+                isImage1BVisible = false;
+                isImage2BVisible = true;
+                isImage3BVisible = true;
+                isImage4BVisible = true;
+                isImage5BVisible = true;
+
+                isImage1CVisible = true;
+                isImage2CVisible = false;
+                isImage3CVisible = false;
+                isImage4CVisible = true;
+                isImage5CVisible = true;
+              });
+            },
+          ),
           PopupMenuItem(
             child: const Text("Bawa Mundur"),
             onTap: () {
-              setState(() {});
+              setState(() {
+                isImage1AVisible = true;
+                // isImage2AVisible = true;
+                // isImage3AVisible = true;
+                // isImage4AVisible = true;
+                // isImage5AVisible = true;
+
+                // // B = layer2
+                isImage1BVisible = false;
+                isImage2BVisible = false;
+                isImage3BVisible = false;
+                isImage4BVisible = false;
+                isImage5BVisible = false;
+
+                // isImage1CVisible = false;
+                // isImage2CVisible = true;
+                // isImage3CVisible = true;
+                // isImage4CVisible = true;
+                // isImage5CVisible = true;
+              });
             },
           ),
         ]);
@@ -166,561 +225,7 @@ class _MyArtboardState extends State<MyArtboard> {
         centerTitle: true,
       ),
       body: isFilePicked == true
-          ? Center(
-              child: Screenshot(
-                controller: screenshotController,
-                child: Container(
-                  color: const Color.fromARGB(255, 255, 255, 255),
-                  height: 620,
-                  width: 375,
-                  margin: const EdgeInsets.only(bottom: 65),
-                  child: Stack(
-                    children: [
-                      // gambar 1,2,3,4, dan 5 A.
-                      Visibility(
-                        visible: true,
-                        replacement: const SizedBox(
-                          height: double.infinity,
-                          width: double.infinity,
-                        ),
-                        child: Positioned(
-                          top: _top1,
-                          left: _left1,
-                          child: GestureDetector(
-                            onTapDown: (position) {
-                              _getTapPosition(position);
-                            },
-                            onLongPress: () {
-                              _showContextMenu1A(context);
-                            },
-                            onPanUpdate: (details) {
-                              _top1 = max(0, _top1 + details.delta.dy);
-                              _left1 = max(0, _left1 + details.delta.dx);
-                              setState(() {});
-                            },
-                            child: Image.file(_selectedImage1!),
-                          ),
-                        ),
-                      ),
-                      if (_selectedImage2 != null)
-                        Visibility(
-                          visible: isImage2AVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top2,
-                            left: _left2,
-                            child: GestureDetector(
-                              onTapDown: (position) {
-                                _getTapPosition(position);
-                              },
-                              onLongPress: () {
-                                _showContextMenu(context);
-                              },
-                              onPanUpdate: (details) {
-                                _top2 = max(0, _top2 + details.delta.dy);
-                                _left2 = max(0, _left2 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage2!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage3 != null)
-                        Visibility(
-                          visible: isImage3AVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top3,
-                            left: _left3,
-                            child: GestureDetector(
-                              onTapDown: (position) {
-                                _getTapPosition(position);
-                              },
-                              onLongPress: () {
-                                _showContextMenu(context);
-                              },
-                              onPanUpdate: (details) {
-                                _top3 = max(0, _top3 + details.delta.dy);
-                                _left3 = max(0, _left3 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage3!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage4 != null)
-                        Visibility(
-                          visible: isImage4AVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top4,
-                            left: _left4,
-                            child: GestureDetector(
-                              onTapDown: (position) {
-                                _getTapPosition(position);
-                              },
-                              onLongPress: () {
-                                _showContextMenu(context);
-                              },
-                              onPanUpdate: (details) {
-                                _top4 = max(0, _top4 + details.delta.dy);
-                                _left4 = max(0, _left4 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage4!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage5 != null)
-                        Visibility(
-                          visible: isImage5AVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top5,
-                            left: _left5,
-                            child: GestureDetector(
-                              onTapDown: (position) {
-                                _getTapPosition(position);
-                              },
-                              onLongPress: () {
-                                _showContextMenu(context);
-                              },
-                              onPanUpdate: (details) {
-                                _top5 = max(0, _top5 + details.delta.dy);
-                                _left5 = max(0, _left5 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage5!),
-                            ),
-                          ),
-                        ),
-                      // gambar 1,2,3,4, dan 5 B.
-                      if (_selectedImage2 != null)
-                        Visibility(
-                          visible: isImage1BVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top1,
-                            left: _left1,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top1 = max(0, _top1 + details.delta.dy);
-                                _left1 = max(0, _left1 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage1!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage2 != null)
-                        Visibility(
-                          visible: isImage2BVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top2,
-                            left: _left2,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top2 = max(0, _top2 + details.delta.dy);
-                                _left2 = max(0, _left2 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage2!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage3 != null)
-                        Visibility(
-                          visible: isImage3BVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top3,
-                            left: _left3,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top3 = max(0, _top3 + details.delta.dy);
-                                _left3 = max(0, _left3 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage3!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage4 != null)
-                        Visibility(
-                          visible: isImage4BVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top4,
-                            left: _left4,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top4 = max(0, _top4 + details.delta.dy);
-                                _left4 = max(0, _left4 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage4!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage5 != null)
-                        Visibility(
-                          visible: isImage5BVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top5,
-                            left: _left5,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top5 = max(0, _top5 + details.delta.dy);
-                                _left5 = max(0, _left5 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage5!),
-                            ),
-                          ),
-                        ),
-                      // gambar 1,2,3,4, dan 5 C.
-                      if (_selectedImage3 != null)
-                        Visibility(
-                          visible: isImage1CVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top1,
-                            left: _left1,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top1 = max(0, _top1 + details.delta.dy);
-                                _left1 = max(0, _left1 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage1!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage3 != null)
-                        Visibility(
-                          visible: isImage2CVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top2,
-                            left: _left2,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top2 = max(0, _top2 + details.delta.dy);
-                                _left2 = max(0, _left2 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage2!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage3 != null)
-                        Visibility(
-                          visible: isImage3CVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top3,
-                            left: _left3,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top3 = max(0, _top3 + details.delta.dy);
-                                _left3 = max(0, _left3 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage3!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage4 != null)
-                        Visibility(
-                          visible: isImage4CVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top4,
-                            left: _left4,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top4 = max(0, _top4 + details.delta.dy);
-                                _left4 = max(0, _left4 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage4!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage5 != null)
-                        Visibility(
-                          visible: isImage5CVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top5,
-                            left: _left5,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top5 = max(0, _top5 + details.delta.dy);
-                                _left5 = max(0, _left5 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage5!),
-                            ),
-                          ),
-                        ),
-                      // gambar 1,2,3,4, dan 5 D.
-                      if (_selectedImage4 != null)
-                        Visibility(
-                          visible: isImage1DVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top1,
-                            left: _left1,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top1 = max(0, _top1 + details.delta.dy);
-                                _left1 = max(0, _left1 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage1!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage4 != null)
-                        Visibility(
-                          visible: isImage2DVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top2,
-                            left: _left2,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top2 = max(0, _top2 + details.delta.dy);
-                                _left2 = max(0, _left2 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage2!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage4 != null)
-                        Visibility(
-                          visible: isImage3DVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top3,
-                            left: _left3,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top3 = max(0, _top3 + details.delta.dy);
-                                _left3 = max(0, _left3 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage3!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage4 != null)
-                        Visibility(
-                          visible: isImage4DVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top4,
-                            left: _left4,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top4 = max(0, _top4 + details.delta.dy);
-                                _left4 = max(0, _left4 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage4!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage5 != null)
-                        Visibility(
-                          visible: isImage5DVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top5,
-                            left: _left5,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top5 = max(0, _top5 + details.delta.dy);
-                                _left5 = max(0, _left5 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage5!),
-                            ),
-                          ),
-                        ),
-                      // gambar 1,2,3,4, dan 5 E.
-                      if (_selectedImage5 != null)
-                        Visibility(
-                          visible: isImage1EVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top1,
-                            left: _left1,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top1 = max(0, _top1 + details.delta.dy);
-                                _left1 = max(0, _left1 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage1!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage5 != null)
-                        Visibility(
-                          visible: isImage2EVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top2,
-                            left: _left2,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top2 = max(0, _top2 + details.delta.dy);
-                                _left2 = max(0, _left2 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage2!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage5 != null)
-                        Visibility(
-                          visible: isImage3EVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top3,
-                            left: _left3,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top3 = max(0, _top3 + details.delta.dy);
-                                _left3 = max(0, _left3 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage3!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage5 != null)
-                        Visibility(
-                          visible: isImage4EVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top4,
-                            left: _left4,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                _top4 = max(0, _top4 + details.delta.dy);
-                                _left4 = max(0, _left4 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage4!),
-                            ),
-                          ),
-                        ),
-                      if (_selectedImage5 != null)
-                        Visibility(
-                          visible: isImage5EVisible,
-                          replacement: const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                          ),
-                          child: Positioned(
-                            top: _top5,
-                            left: _left5,
-                            child: GestureDetector(
-                              onTapDown: (position) {
-                                _getTapPosition(position);
-                              },
-                              onLongPress: () {
-                                _showContextMenu(context);
-                              },
-                              onPanUpdate: (details) {
-                                _top5 = max(0, _top5 + details.delta.dy);
-                                _left5 = max(0, _left5 + details.delta.dx);
-                                setState(() {});
-                              },
-                              child: Image.file(_selectedImage5!),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            )
+          ? artboardCanvas(context)
           : Center(
               child: Text(
               "Tidak ada gambar, silakan impor sebuah gambar",
@@ -769,11 +274,46 @@ class _MyArtboardState extends State<MyArtboard> {
                       _top5 = 0;
                       _left5 = 0;
 
-                      isImage2Existed = !isImage2Existed;
-                      isImage3Existed = !isImage3Existed;
-                      isImage4Existed = !isImage4Existed;
-                      isImage5Existed = !isImage5Existed;
-                      // isImage1OnTheTop = !isImage1OnTheTop;
+                      // isImage2Existed = !isImage2Existed;
+                      // isImage3Existed = !isImage3Existed;
+                      // isImage4Existed = !isImage4Existed;
+                      // isImage5Existed = !isImage5Existed;
+
+                      isImage2Existed = true;
+                      isImage3Existed = true;
+                      isImage4Existed = true;
+                      isImage5Existed = true;
+
+                      // A = layer1
+                      isImage1AVisible = true;
+                      isImage2AVisible = true;
+                      isImage3AVisible = true;
+                      isImage4AVisible = true;
+                      isImage5AVisible = true;
+                      // B = layer2
+                      isImage1BVisible = false;
+                      isImage2BVisible = false;
+                      isImage3BVisible = false;
+                      isImage4BVisible = false;
+                      isImage5BVisible = false;
+                      // C = layer3
+                      isImage1CVisible = false;
+                      isImage2CVisible = false;
+                      isImage3CVisible = false;
+                      isImage4CVisible = false;
+                      isImage5CVisible = false;
+                      // D = layer4
+                      isImage1DVisible = false;
+                      isImage2DVisible = false;
+                      isImage3DVisible = false;
+                      isImage4DVisible = false;
+                      isImage5DVisible = false;
+                      // E = layer5
+                      isImage1EVisible = false;
+                      isImage2EVisible = false;
+                      isImage3EVisible = false;
+                      isImage4EVisible = false;
+                      isImage5EVisible = false;
                     });
                   },
                   child: Text("Hapus",
@@ -839,6 +379,566 @@ class _MyArtboardState extends State<MyArtboard> {
           ],
         ),
       ]),
+    );
+  }
+
+  Center artboardCanvas(BuildContext context) {
+    return Center(
+      child: Screenshot(
+        controller: screenshotController,
+        child: Container(
+          color: const Color.fromARGB(255, 255, 255, 255),
+          height: 620,
+          width: 375,
+          margin: const EdgeInsets.only(bottom: 65),
+          child: Stack(
+            children: [
+              // gambar 1,2,3,4, dan 5 A.
+              Visibility(
+                visible: isImage1AVisible, //isImage1AVisible,
+                replacement: const SizedBox(
+                  height: double.infinity,
+                  width: double.infinity,
+                ),
+                child: Positioned(
+                  top: _top1, //_top1,
+                  left: _left1, //_left1,
+                  child: GestureDetector(
+                    onTapDown: (position) {
+                      _getTapPosition(position);
+                      print("ini imageDanLayer1");
+                    },
+                    onLongPress: () {
+                      _showContextMenu1A(
+                          context); //_showContextMenu1A(context);
+                    },
+                    onPanUpdate: (details) {
+                      _top1 = max(0, _top1 + details.delta.dy);
+                      _left1 = max(0, _left1 + details.delta.dx);
+                      setState(() {});
+                    },
+                    child: Image.file(_selectedImage1!),
+                  ),
+                ),
+              ),
+              if (_selectedImage2 != null)
+                Positioned(
+                  top: _top2,
+                  left: _left2,
+                  child: GestureDetector(
+                    onTapDown: (position) {
+                      _getTapPosition(position);
+                    },
+                    onLongPress: () {
+                      _showContextMenu(context);
+                    },
+                    onPanUpdate: (details) {
+                      _top2 = max(0, _top2 + details.delta.dy);
+                      _left2 = max(0, _left2 + details.delta.dx);
+                      setState(() {});
+                    },
+                    child: Image.file(_selectedImage2!),
+                  ),
+                ),
+              if (_selectedImage3 != null)
+                Visibility(
+                  visible: isImage3AVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top3,
+                    left: _left3,
+                    child: GestureDetector(
+                      onTapDown: (position) {
+                        _getTapPosition(position);
+                      },
+                      onLongPress: () {
+                        _showContextMenu(context);
+                      },
+                      onPanUpdate: (details) {
+                        _top3 = max(0, _top3 + details.delta.dy);
+                        _left3 = max(0, _left3 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage3!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage4 != null)
+                Visibility(
+                  visible: isImage4AVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top4,
+                    left: _left4,
+                    child: GestureDetector(
+                      onTapDown: (position) {
+                        _getTapPosition(position);
+                      },
+                      onLongPress: () {
+                        _showContextMenu(context);
+                      },
+                      onPanUpdate: (details) {
+                        _top4 = max(0, _top4 + details.delta.dy);
+                        _left4 = max(0, _left4 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage4!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage5 != null)
+                Visibility(
+                  visible: isImage5AVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top5,
+                    left: _left5,
+                    child: GestureDetector(
+                      onTapDown: (position) {
+                        _getTapPosition(position);
+                      },
+                      onLongPress: () {
+                        _showContextMenu(context);
+                      },
+                      onPanUpdate: (details) {
+                        _top5 = max(0, _top5 + details.delta.dy);
+                        _left5 = max(0, _left5 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage5!),
+                    ),
+                  ),
+                ),
+              // gambar 1,2,3,4, dan 5 B.
+              if (_selectedImage2 != null)
+                Visibility(
+                  visible: isImage1BVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top1,
+                    left: _left1,
+                    child: GestureDetector(
+                      onTapDown: (position) {
+                        _getTapPosition(position);
+                        print("ini imageDanLayer2");
+                      },
+                      onLongPress: () {
+                        _showContextMenu1B(context);
+                      },
+                      onPanUpdate: (details) {
+                        _top1 = max(0, _top1 + details.delta.dy);
+                        _left1 = max(0, _left1 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage1!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage2 != null)
+                Visibility(
+                  visible: isImage2BVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top2,
+                    left: _left2,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top2 = max(0, _top2 + details.delta.dy);
+                        _left2 = max(0, _left2 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage2!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage3 != null)
+                Visibility(
+                  visible: isImage3BVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top3,
+                    left: _left3,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top3 = max(0, _top3 + details.delta.dy);
+                        _left3 = max(0, _left3 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage3!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage4 != null)
+                Visibility(
+                  visible: isImage4BVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top4,
+                    left: _left4,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top4 = max(0, _top4 + details.delta.dy);
+                        _left4 = max(0, _left4 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage4!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage5 != null)
+                Visibility(
+                  visible: isImage5BVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top5,
+                    left: _left5,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top5 = max(0, _top5 + details.delta.dy);
+                        _left5 = max(0, _left5 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage5!),
+                    ),
+                  ),
+                ),
+              // gambar 1,2,3,4, dan 5 C.
+              if (_selectedImage3 != null)
+                Visibility(
+                  visible: isImage1CVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top1,
+                    left: _left1,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top1 = max(0, _top1 + details.delta.dy);
+                        _left1 = max(0, _left1 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage1!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage3 != null)
+                Visibility(
+                  visible: isImage2CVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top2,
+                    left: _left2,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top2 = max(0, _top2 + details.delta.dy);
+                        _left2 = max(0, _left2 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage2!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage3 != null)
+                Visibility(
+                  visible: isImage3CVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top3,
+                    left: _left3,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top3 = max(0, _top3 + details.delta.dy);
+                        _left3 = max(0, _left3 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage3!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage4 != null)
+                Visibility(
+                  visible: isImage4CVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top4,
+                    left: _left4,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top4 = max(0, _top4 + details.delta.dy);
+                        _left4 = max(0, _left4 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage4!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage5 != null)
+                Visibility(
+                  visible: isImage5CVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top5,
+                    left: _left5,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top5 = max(0, _top5 + details.delta.dy);
+                        _left5 = max(0, _left5 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage5!),
+                    ),
+                  ),
+                ),
+              // gambar 1,2,3,4, dan 5 D.
+              if (_selectedImage4 != null)
+                Visibility(
+                  visible: isImage1DVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top1,
+                    left: _left1,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top1 = max(0, _top1 + details.delta.dy);
+                        _left1 = max(0, _left1 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage1!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage4 != null)
+                Visibility(
+                  visible: isImage2DVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top2,
+                    left: _left2,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top2 = max(0, _top2 + details.delta.dy);
+                        _left2 = max(0, _left2 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage2!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage4 != null)
+                Visibility(
+                  visible: isImage3DVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top3,
+                    left: _left3,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top3 = max(0, _top3 + details.delta.dy);
+                        _left3 = max(0, _left3 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage3!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage4 != null)
+                Visibility(
+                  visible: isImage4DVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top4,
+                    left: _left4,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top4 = max(0, _top4 + details.delta.dy);
+                        _left4 = max(0, _left4 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage4!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage5 != null)
+                Visibility(
+                  visible: isImage5DVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top5,
+                    left: _left5,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top5 = max(0, _top5 + details.delta.dy);
+                        _left5 = max(0, _left5 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage5!),
+                    ),
+                  ),
+                ),
+              // gambar 1,2,3,4, dan 5 E.
+              if (_selectedImage5 != null)
+                Visibility(
+                  visible: isImage1EVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top1,
+                    left: _left1,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top1 = max(0, _top1 + details.delta.dy);
+                        _left1 = max(0, _left1 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage1!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage5 != null)
+                Visibility(
+                  visible: isImage2EVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top2,
+                    left: _left2,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top2 = max(0, _top2 + details.delta.dy);
+                        _left2 = max(0, _left2 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage2!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage5 != null)
+                Visibility(
+                  visible: isImage3EVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top3,
+                    left: _left3,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top3 = max(0, _top3 + details.delta.dy);
+                        _left3 = max(0, _left3 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage3!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage5 != null)
+                Visibility(
+                  visible: isImage4EVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top4,
+                    left: _left4,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top4 = max(0, _top4 + details.delta.dy);
+                        _left4 = max(0, _left4 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage4!),
+                    ),
+                  ),
+                ),
+              if (_selectedImage5 != null)
+                Visibility(
+                  visible: isImage5EVisible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                  child: Positioned(
+                    top: _top5,
+                    left: _left5,
+                    child: GestureDetector(
+                      onTapDown: (position) {
+                        _getTapPosition(position);
+                      },
+                      onLongPress: () {
+                        _showContextMenu(context);
+                      },
+                      onPanUpdate: (details) {
+                        _top5 = max(0, _top5 + details.delta.dy);
+                        _left5 = max(0, _left5 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage5!),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
