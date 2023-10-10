@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
@@ -33,7 +35,7 @@ class _MyArtboardState extends State<MyArtboard> {
   ScreenshotController screenshotController = ScreenshotController();
 
   File? _selectedImage;
-  // boolean
+
   bool isFilePicked = false;
 
   Offset _tapPosition = Offset.zero;
@@ -54,12 +56,12 @@ class _MyArtboardState extends State<MyArtboard> {
     for (var i = 0; i < globalListImage.length; i++) {
       var imageOnCurentIndex = globalListImage[i];
       data.add(Positioned(
-        top: imageOnCurentIndex.top, //_top1,
-        left: imageOnCurentIndex.left, //_left1,
+        top: imageOnCurentIndex.top,
+        left: imageOnCurentIndex.left,
         child: GestureDetector(
           onTapDown: (position) {
             _getTapPosition(position);
-            print("ini imageDanLayer1");
+            print("index $i");
           },
           onLongPress: () {
             moveImage(i).then((value) {
@@ -77,26 +79,24 @@ class _MyArtboardState extends State<MyArtboard> {
         ),
       ));
     }
-
     return data;
   }
 
   Future<void> moveImage(
     int indexImage,
-    // BuildContext context
   ) async {
     final RenderObject? overlay =
         Overlay.of(context).context.findRenderObject();
 
     var up = PopupMenuItem(
-      child: const Text("Bawa Maju"), //bawa maju ke 1B
+      child: const Text("Bawa Maju"),
       onTap: () {
         globalListImage.moveImage(globalListImage[indexImage], 1);
       },
     );
 
     var down = PopupMenuItem(
-      child: const Text("Bawa Mundur"), //bawa maju ke 1B
+      child: const Text("Bawa Mundur"),
       onTap: () {
         globalListImage.moveImage(globalListImage[indexImage], -1);
       },
@@ -185,7 +185,7 @@ class _MyArtboardState extends State<MyArtboard> {
           content: Text("Berhasil disimpan!"),
         ),
       );
-      // ignore: invalid_return_type_for_catch_error, avoid_print
+      // ignore: invalid_return_type_for_catch_error,
     }).catchError((err) => print(err));
   }
 
