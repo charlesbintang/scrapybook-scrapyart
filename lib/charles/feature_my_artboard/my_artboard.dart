@@ -33,11 +33,8 @@ class MyArtboard extends StatefulWidget {
 
 class _MyArtboardState extends State<MyArtboard> {
   ScreenshotController screenshotController = ScreenshotController();
-
   File? _selectedImage;
-
   Offset _tapPosition = Offset.zero;
-
   List<StackImage> globalListImage = [];
 
   void _getTapPosition(TapDownDetails tapPostion) {
@@ -115,23 +112,21 @@ class _MyArtboardState extends State<MyArtboard> {
   Future<void> moveImage(
     int indexImage,
   ) async {
+    List<PopupMenuItem<dynamic>> actions = [];
     final RenderObject? overlay =
         Overlay.of(context).context.findRenderObject();
-
     var up = PopupMenuItem(
       child: const Text("Bawa Maju"),
       onTap: () {
         globalListImage.moveImage(globalListImage[indexImage], 1);
       },
     );
-
     var down = PopupMenuItem(
       child: const Text("Bawa Mundur"),
       onTap: () {
         globalListImage.moveImage(globalListImage[indexImage], -1);
       },
     );
-
     var delete = PopupMenuItem(
       child: const Text("Hapus"),
       onTap: () {
@@ -139,8 +134,6 @@ class _MyArtboardState extends State<MyArtboard> {
         globalListImage.removeAt(indexImage);
       },
     );
-
-    List<PopupMenuItem<dynamic>> actions = [];
 
     // gambar pertama
     if (indexImage == 0) {
@@ -199,25 +192,32 @@ class _MyArtboardState extends State<MyArtboard> {
       ),
       body: globalListImage.isNotEmpty
           ? artboardCanvas(context)
-          : Center(
-              child: Text(
-              "Tidak ada gambar, silakan impor sebuah gambar",
-              style: Theme.of(context).textTheme.bodyMedium,
-            )),
-      floatingActionButton: SizedBox(
-          height: 35,
-          child: ListView.separated(
-              padding: const EdgeInsets.only(left: 25),
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) => buttonSimpanHapusImpor()[index],
-              separatorBuilder: (context, index) => const SizedBox(
-                    width: 10,
-                  ),
-              itemCount: buttonSimpanHapusImpor().length)),
+          : centerNoImage(context),
+      floatingActionButton: floatingActionButton(),
     );
   }
 
-  // Method yang telah diekstrak
+  // METHOD EXTRACTED
+  Center centerNoImage(BuildContext context) {
+    return Center(
+        child: Text(
+      "Tidak ada gambar, silakan impor sebuah gambar",
+      style: Theme.of(context).textTheme.bodyMedium,
+    ));
+  }
+
+  SizedBox floatingActionButton() {
+    return SizedBox(
+        height: 35,
+        child: ListView.separated(
+            padding: const EdgeInsets.only(left: 25),
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) => buttonSimpanHapusImpor()[index],
+            separatorBuilder: (context, index) => const SizedBox(
+                  width: 10,
+                ),
+            itemCount: buttonSimpanHapusImpor().length));
+  }
 
   ElevatedButton simpanHapus(BuildContext context) {
     return ElevatedButton(
@@ -263,4 +263,5 @@ class _MyArtboardState extends State<MyArtboard> {
     await requestPermission(Permission.storage);
     await ImageGallerySaver.saveImage(bytes, name: name);
   }
+  // END OF METHOD EXTRACTED
 }
