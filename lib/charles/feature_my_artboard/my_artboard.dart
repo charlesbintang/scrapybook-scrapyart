@@ -83,29 +83,39 @@ class _MyArtboardState extends State<MyArtboard> {
 
   List<Widget> buttonSimpanHapusImpor() {
     List<Widget> data = [];
-    data.add(ElevatedButton(
-      onPressed: () {
-        _pickImageFromGallery();
-      },
-      child: Text("Impor gambar ${globalListImage.length + 1}",
-          style: TextStyle(color: Theme.of(context).primaryColor)),
-    ));
+    data.addAll([
+      const SizedBox(
+        width: 25,
+      ),
+      ElevatedButton(
+        onPressed: () {
+          _pickImageFromGallery();
+        },
+        child: Text("Impor gambar ${globalListImage.length + 1}",
+            style: TextStyle(color: Theme.of(context).primaryColor)),
+      )
+    ]);
     if (globalListImage.isNotEmpty) {
-      data.insertAll(0, [
+      data.addAll([
+        const SizedBox(
+          width: 5,
+        ),
         ElevatedButton(
           onPressed: () => saveToGallery(context),
           child: Text("Simpan",
               style: TextStyle(color: Theme.of(context).primaryColor)),
         ),
-        const SizedBox(width: 5),
+        const SizedBox(
+          width: 5,
+        ),
         ElevatedButton(
           onPressed: () {
             globalListImage.clear();
+            setState(() {});
           },
           child: Text("Hapus Semua Gambar",
               style: TextStyle(color: Theme.of(context).primaryColor)),
         ),
-        const SizedBox(width: 5),
       ]);
     }
     return data;
@@ -203,9 +213,13 @@ class _MyArtboardState extends State<MyArtboard> {
               "Tidak ada gambar, silakan impor sebuah gambar",
               style: Theme.of(context).textTheme.bodyMedium,
             )),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: buttonSimpanHapusImpor(),
+      floatingActionButton: SizedBox(
+        height: 50,
+        child: ListView(
+          clipBehavior: Clip.none,
+          scrollDirection: Axis.horizontal,
+          children: buttonSimpanHapusImpor(),
+        ),
       ),
     );
   }
