@@ -36,9 +36,9 @@ class _MyArtboardState extends State<MyArtboard> {
 
   File? _selectedImage;
 
-  bool isFilePicked = false;
-
   Offset _tapPosition = Offset.zero;
+
+  List<StackImage> globalListImage = [];
 
   void _getTapPosition(TapDownDetails tapPostion) {
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
@@ -47,8 +47,6 @@ class _MyArtboardState extends State<MyArtboard> {
       print(_tapPosition);
     });
   }
-
-  List<StackImage> globalListImage = [];
 
   // buat kembalikan list widget yang akan di tumpuk
   List<Widget> dataStack() {
@@ -62,6 +60,7 @@ class _MyArtboardState extends State<MyArtboard> {
           onTapDown: (position) {
             _getTapPosition(position);
             print("index $i");
+            print("index ${globalListImage.length}");
           },
           onLongPress: () {
             moveImage(i).then((value) {
@@ -78,6 +77,36 @@ class _MyArtboardState extends State<MyArtboard> {
           child: Image.file(imageOnCurentIndex.image!),
         ),
       ));
+    }
+    return data;
+  }
+
+  List<Widget> buttonSimpanHapusImpor() {
+    List<Widget> data = [];
+    data.add(ElevatedButton(
+      onPressed: () {
+        _pickImageFromGallery();
+      },
+      child: Text("Impor gambar ${globalListImage.length + 1}",
+          style: TextStyle(color: Theme.of(context).primaryColor)),
+    ));
+    if (globalListImage.isNotEmpty) {
+      data.insertAll(0, [
+        ElevatedButton(
+          onPressed: () => saveToGallery(context),
+          child: Text("Simpan",
+              style: TextStyle(color: Theme.of(context).primaryColor)),
+        ),
+        const SizedBox(width: 5),
+        ElevatedButton(
+          onPressed: () {
+            globalListImage.clear();
+          },
+          child: Text("Hapus Semua Gambar",
+              style: TextStyle(color: Theme.of(context).primaryColor)),
+        ),
+        const SizedBox(width: 5),
+      ]);
     }
     return data;
   }
@@ -102,16 +131,27 @@ class _MyArtboardState extends State<MyArtboard> {
       },
     );
 
+    var delete = PopupMenuItem(
+      child: const Text("Hapus"),
+      onTap: () {
+        // globalListImage.moveImage(globalListImage[indexImage], -1);
+        globalListImage.removeAt(indexImage);
+      },
+    );
+
     List<PopupMenuItem<dynamic>> actions = [];
 
     // gambar pertama
     if (indexImage == 0) {
       actions.add(up);
+      actions.add(delete);
     } else if (indexImage == globalListImage.length - 1) {
       actions.add(down);
+      actions.add(delete);
     } else {
       actions.add(up);
       actions.add(down);
+      actions.add(delete);
     }
 
     await showMenu(
@@ -124,6 +164,28 @@ class _MyArtboardState extends State<MyArtboard> {
         items: actions);
   }
 
+  Future<bool> requestPermission(Permission permission) async {
+    if (await permission.isGranted) {
+      return true;
+    } else {
+      var result = await permission.request();
+      if (result == PermissionStatus.granted) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future _pickImageFromGallery() async {
+    final returnedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (returnedImage == null) return;
+    setState(() {
+      _selectedImage = File(returnedImage.path);
+      globalListImage.add(StackImage(image: _selectedImage));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,31 +196,27 @@ class _MyArtboardState extends State<MyArtboard> {
             Text("MyArtboard", style: Theme.of(context).textTheme.titleLarge),
         centerTitle: true,
       ),
-      body: isFilePicked == true
+      body: globalListImage.isNotEmpty
           ? artboardCanvas(context)
           : Center(
               child: Text(
               "Tidak ada gambar, silakan impor sebuah gambar",
               style: Theme.of(context).textTheme.bodyMedium,
             )),
-      floatingActionButton: Stack(children: [
-        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          if (globalListImage.isNotEmpty)
-            ElevatedButton(
-              onPressed: () => saveToGallery(context),
-              child: Text("Simpan",
-                  style: TextStyle(color: Theme.of(context).primaryColor)),
-            ),
-          const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () {
-              _pickImageFromGallery1();
-            },
-            child: Text("Impor gambar ${globalListImage.length + 1}",
-                style: TextStyle(color: Theme.of(context).primaryColor)),
-          ),
-        ]),
-      ]),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: buttonSimpanHapusImpor(),
+      ),
+    );
+  }
+
+  // Method yang telah diekstrak
+
+  ElevatedButton simpanHapus(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () => saveToGallery(context),
+      child: Text("Simpan",
+          style: TextStyle(color: Theme.of(context).primaryColor)),
     );
   }
 
@@ -168,8 +226,8 @@ class _MyArtboardState extends State<MyArtboard> {
         controller: screenshotController,
         child: Container(
           color: const Color.fromARGB(255, 255, 255, 255),
-          height: 620,
-          width: 375,
+          height: MediaQuery.of(context).size.height - 180, //620,
+          width: MediaQuery.of(context).size.width - 20, //375,
           margin: const EdgeInsets.only(bottom: 65),
           child: Stack(children: dataStack()),
         ),
@@ -197,29 +255,5 @@ class _MyArtboardState extends State<MyArtboard> {
     final name = "screenshot_$time";
     await requestPermission(Permission.storage);
     await ImageGallerySaver.saveImage(bytes, name: name);
-  }
-
-  Future<bool> requestPermission(Permission permission) async {
-    if (await permission.isGranted) {
-      return true;
-    } else {
-      var result = await permission.request();
-      if (result == PermissionStatus.granted) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  Future _pickImageFromGallery1() async {
-    final returnedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (returnedImage == null) return;
-    setState(() {
-      _selectedImage = File(returnedImage.path);
-      globalListImage.add(StackImage(image: _selectedImage));
-
-      isFilePicked = true;
-    });
   }
 }
