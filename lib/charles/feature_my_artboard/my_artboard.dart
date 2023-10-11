@@ -84,9 +84,6 @@ class _MyArtboardState extends State<MyArtboard> {
   List<Widget> buttonSimpanHapusImpor() {
     List<Widget> data = [];
     data.addAll([
-      const SizedBox(
-        width: 25,
-      ),
       ElevatedButton(
         onPressed: () {
           _pickImageFromGallery();
@@ -97,16 +94,10 @@ class _MyArtboardState extends State<MyArtboard> {
     ]);
     if (globalListImage.isNotEmpty) {
       data.addAll([
-        const SizedBox(
-          width: 5,
-        ),
         ElevatedButton(
           onPressed: () => saveToGallery(context),
           child: Text("Simpan",
               style: TextStyle(color: Theme.of(context).primaryColor)),
-        ),
-        const SizedBox(
-          width: 5,
         ),
         ElevatedButton(
           onPressed: () {
@@ -214,13 +205,15 @@ class _MyArtboardState extends State<MyArtboard> {
               style: Theme.of(context).textTheme.bodyMedium,
             )),
       floatingActionButton: SizedBox(
-        height: 50,
-        child: ListView(
-          clipBehavior: Clip.none,
-          scrollDirection: Axis.horizontal,
-          children: buttonSimpanHapusImpor(),
-        ),
-      ),
+          height: 35,
+          child: ListView.separated(
+              padding: const EdgeInsets.only(left: 25),
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) => buttonSimpanHapusImpor()[index],
+              separatorBuilder: (context, index) => const SizedBox(
+                    width: 10,
+                  ),
+              itemCount: buttonSimpanHapusImpor().length)),
     );
   }
 
@@ -240,9 +233,9 @@ class _MyArtboardState extends State<MyArtboard> {
         controller: screenshotController,
         child: Container(
           color: const Color.fromARGB(255, 255, 255, 255),
-          height: MediaQuery.of(context).size.height - 180, //620,
+          height: MediaQuery.of(context).size.height - 160, //620,
           width: MediaQuery.of(context).size.width - 20, //375,
-          margin: const EdgeInsets.only(bottom: 65),
+          margin: const EdgeInsets.only(bottom: 55),
           child: Stack(children: dataStack()),
         ),
       ),
