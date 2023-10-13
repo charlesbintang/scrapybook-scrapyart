@@ -91,7 +91,17 @@ class _MyArtboardState extends State<MyArtboard> {
             },
             onTap: () {
               // imageOnCurentIndex.click = OnTapWinner.clicked;
+              // setState(() {
+              //   for (var i = 0; i < globalListImage.length; i++) {
+              //     var imageOnCurentIndex = globalListImage[i];
+              //     imageOnCurentIndex.click = OnTapWinner.none;
+              //   }
+              // });
               setState(() {
+                for (var i = 0; i < globalListImage.length; i++) {
+                  var imageOnCurentIndex = globalListImage[i];
+                  imageOnCurentIndex.click = OnTapWinner.none;
+                }
                 imageOnCurentIndex.click = OnTapWinner.clicked;
               });
             },
@@ -125,10 +135,8 @@ class _MyArtboardState extends State<MyArtboard> {
                   ? BoxDecoration(
                       border: Border.all(color: Colors.amber, width: 5))
                   : null,
-              child: GestureDetector(
-                child: Image.file(
-                  imageOnCurentIndex.image!,
-                ),
+              child: Image.file(
+                imageOnCurentIndex.image!,
               ),
             ),
           ),
