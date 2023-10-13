@@ -49,7 +49,6 @@ class _MyArtboardState extends State<MyArtboard> {
           }
         });
       },
-      onTapCancel: () {},
       child: Scaffold(
         backgroundColor: const Color.fromARGB(218, 255, 255, 255),
         appBar: AppBar(
