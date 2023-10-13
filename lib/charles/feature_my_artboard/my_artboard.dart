@@ -37,6 +37,35 @@ class _MyArtboardState extends State<MyArtboard> {
   Offset _tapPosition = Offset.zero;
   List<StackImage> globalListImage = [];
 
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      // TODO: jika diklik, tidak ada foto yang diborder
+      onTapDown: (onTapDown) {
+        setState(() {
+          for (var i = 0; i < globalListImage.length; i++) {
+            var imageOnCurentIndex = globalListImage[i];
+            imageOnCurentIndex.click = OnTapWinner.none;
+          }
+        });
+      },
+      onTapCancel: () {},
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(218, 255, 255, 255),
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          title:
+              Text("MyArtboard", style: Theme.of(context).textTheme.titleLarge),
+          centerTitle: true,
+        ),
+        body: globalListImage.isNotEmpty
+            ? artboardCanvas(context)
+            : centerNoImage(context),
+        floatingActionButton: floatingActionButton(),
+      ),
+    );
+  }
+
   void _getTapPosition(TapDownDetails tapPostion) {
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
     setState(() {
@@ -50,30 +79,61 @@ class _MyArtboardState extends State<MyArtboard> {
     List<Widget> data = [];
     for (var i = 0; i < globalListImage.length; i++) {
       var imageOnCurentIndex = globalListImage[i];
-      data.add(Positioned(
-        top: imageOnCurentIndex.top,
-        left: imageOnCurentIndex.left,
-        child: GestureDetector(
-          onTapDown: (position) {
-            _getTapPosition(position);
-            print("index $i");
-            print("index ${globalListImage.length}");
-          },
-          onLongPress: () {
-            moveImage(i).then((value) {
+      data.add(
+        Positioned(
+          top: imageOnCurentIndex.top,
+          left: imageOnCurentIndex.left,
+          child: GestureDetector(
+            onTapDown: (position) {
+              _getTapPosition(position);
+              print("index $i");
+              print("index ${globalListImage.length}");
+            },
+            onTap: () {
+              // imageOnCurentIndex.click = OnTapWinner.clicked;
+              setState(() {
+                imageOnCurentIndex.click = OnTapWinner.clicked;
+              });
+            },
+            onLongPress: () {
+              moveImage(i).then((value) {
+                setState(() {});
+              });
+            },
+            // onScaleUpdate: (details) {
+            //   setState(() {
+            //     imageOnCurentIndex.scale =
+            //         imageOnCurentIndex.previousScale * details.scale;
+            //   });
+            // },
+            // onScaleEnd: (details) {
+            //   imageOnCurentIndex.previousScale = imageOnCurentIndex.scale;
+            // },
+            onPanUpdate: (details) {
+              imageOnCurentIndex.top =
+                  max(0, imageOnCurentIndex.top + details.delta.dy);
+              imageOnCurentIndex.left =
+                  max(0, imageOnCurentIndex.left + details.delta.dx);
+              // imageOnCurentIndex.scale =
+              // imageOnCurentIndex.previousScale * details.scale;
               setState(() {});
-            });
-          },
-          onPanUpdate: (details) {
-            imageOnCurentIndex.top =
-                max(0, imageOnCurentIndex.top + details.delta.dy);
-            imageOnCurentIndex.left =
-                max(0, imageOnCurentIndex.left + details.delta.dx);
-            setState(() {});
-          },
-          child: Image.file(imageOnCurentIndex.image!),
+            },
+            // child: Transform.scale(
+            //   scale: imageOnCurentIndex.scale,
+            child: Container(
+              decoration: imageOnCurentIndex.click == OnTapWinner.clicked
+                  ? BoxDecoration(
+                      border: Border.all(color: Colors.amber, width: 5))
+                  : null,
+              child: GestureDetector(
+                child: Image.file(
+                  imageOnCurentIndex.image!,
+                ),
+              ),
+            ),
+          ),
         ),
-      ));
+      );
     }
     return data;
   }
@@ -130,7 +190,6 @@ class _MyArtboardState extends State<MyArtboard> {
     var delete = PopupMenuItem(
       child: const Text("Hapus"),
       onTap: () {
-        // globalListImage.moveImage(globalListImage[indexImage], -1);
         globalListImage.removeAt(indexImage);
       },
     );
@@ -180,24 +239,21 @@ class _MyArtboardState extends State<MyArtboard> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(218, 255, 255, 255),
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        title:
-            Text("MyArtboard", style: Theme.of(context).textTheme.titleLarge),
-        centerTitle: true,
+  Center artboardCanvas(BuildContext context) {
+    return Center(
+      child: Screenshot(
+        controller: screenshotController,
+        child: Container(
+          color: const Color.fromARGB(255, 255, 255, 255),
+          height: MediaQuery.of(context).size.height - 160, //620,
+          width: MediaQuery.of(context).size.width - 20, //375,
+          margin: const EdgeInsets.only(bottom: 55),
+          child: Stack(children: dataStack()),
+        ),
       ),
-      body: globalListImage.isNotEmpty
-          ? artboardCanvas(context)
-          : centerNoImage(context),
-      floatingActionButton: floatingActionButton(),
     );
   }
 
-  // METHOD EXTRACTED
   Center centerNoImage(BuildContext context) {
     return Center(
         child: Text(
@@ -224,21 +280,6 @@ class _MyArtboardState extends State<MyArtboard> {
       onPressed: () => saveToGallery(context),
       child: Text("Simpan",
           style: TextStyle(color: Theme.of(context).primaryColor)),
-    );
-  }
-
-  Center artboardCanvas(BuildContext context) {
-    return Center(
-      child: Screenshot(
-        controller: screenshotController,
-        child: Container(
-          color: const Color.fromARGB(255, 255, 255, 255),
-          height: MediaQuery.of(context).size.height - 160, //620,
-          width: MediaQuery.of(context).size.width - 20, //375,
-          margin: const EdgeInsets.only(bottom: 55),
-          child: Stack(children: dataStack()),
-        ),
-      ),
     );
   }
 
