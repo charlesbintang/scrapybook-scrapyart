@@ -40,12 +40,11 @@ class _MyArtboardState extends State<MyArtboard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // TODO: jika diklik, tidak ada foto yang diborder
       onTapDown: (onTapDown) {
         setState(() {
           for (var i = 0; i < globalListImage.length; i++) {
             var imageOnCurentIndex = globalListImage[i];
-            imageOnCurentIndex.click = OnTapWinner.none;
+            imageOnCurentIndex.isClicked = false;
           }
         });
       },
@@ -85,57 +84,69 @@ class _MyArtboardState extends State<MyArtboard> {
           child: GestureDetector(
             onTapDown: (position) {
               _getTapPosition(position);
-              print("index $i");
-              print("index ${globalListImage.length}");
+              // print("index $i");
+              // print("index ${globalListImage.length}");
             },
             onTap: () {
-              // imageOnCurentIndex.click = OnTapWinner.clicked;
-              // setState(() {
-              //   for (var i = 0; i < globalListImage.length; i++) {
-              //     var imageOnCurentIndex = globalListImage[i];
-              //     imageOnCurentIndex.click = OnTapWinner.none;
-              //   }
-              // });
-              setState(() {
-                for (var i = 0; i < globalListImage.length; i++) {
-                  var imageOnCurentIndex = globalListImage[i];
-                  imageOnCurentIndex.click = OnTapWinner.none;
-                }
-                imageOnCurentIndex.click = OnTapWinner.clicked;
-              });
+              if (imageOnCurentIndex.isClicked == false) {
+                setState(() {
+                  for (var i = 0; i < globalListImage.length; i++) {
+                    var imageOnCurentIndex = globalListImage[i];
+                    imageOnCurentIndex.isClicked = false;
+                  }
+                  imageOnCurentIndex.isClicked = true;
+                });
+              } else if (imageOnCurentIndex.isClicked == true) {
+                setState(() {
+                  imageOnCurentIndex.isClicked = false;
+                });
+              }
             },
             onLongPress: () {
               moveImage(i).then((value) {
                 setState(() {});
               });
             },
-            // onScaleUpdate: (details) {
-            //   setState(() {
-            //     imageOnCurentIndex.scale =
-            //         imageOnCurentIndex.previousScale * details.scale;
-            //   });
-            // },
-            // onScaleEnd: (details) {
-            //   imageOnCurentIndex.previousScale = imageOnCurentIndex.scale;
-            // },
-            onPanUpdate: (details) {
-              imageOnCurentIndex.top =
-                  max(0, imageOnCurentIndex.top + details.delta.dy);
-              imageOnCurentIndex.left =
-                  max(0, imageOnCurentIndex.left + details.delta.dx);
-              // imageOnCurentIndex.scale =
-              // imageOnCurentIndex.previousScale * details.scale;
-              setState(() {});
-            },
-            // child: Transform.scale(
-            //   scale: imageOnCurentIndex.scale,
+            onScaleUpdate: imageOnCurentIndex.isClicked == true
+                ? (details) {
+                    setState(() {
+                      imageOnCurentIndex.imageWidth =
+                          imageOnCurentIndex.previousImageWidth * details.scale;
+                    });
+                  }
+                : null,
+            onScaleEnd: imageOnCurentIndex.isClicked == true
+                ? (details) {
+                    imageOnCurentIndex.previousImageWidth =
+                        imageOnCurentIndex.imageWidth;
+
+                    setState(() {
+                      imageOnCurentIndex.isClicked = false;
+                    });
+                  }
+                : null,
+            onPanUpdate: imageOnCurentIndex.isClicked == false
+                ? (details) {
+                    imageOnCurentIndex.top =
+                        max(0, imageOnCurentIndex.top + details.delta.dy);
+                    imageOnCurentIndex.left =
+                        max(0, imageOnCurentIndex.left + details.delta.dx);
+                    setState(() {});
+                  }
+                : null,
             child: Container(
-              decoration: imageOnCurentIndex.click == OnTapWinner.clicked
+              decoration: imageOnCurentIndex.isClicked == true
                   ? BoxDecoration(
-                      border: Border.all(color: Colors.amber, width: 5))
+                      border: Border.all(
+                        color: Colors.blue.shade300,
+                        width: 3,
+                      ),
+                    )
                   : null,
               child: Image.file(
                 imageOnCurentIndex.image!,
+                width: imageOnCurentIndex.imageWidth,
+                fit: BoxFit.fill,
               ),
             ),
           ),
@@ -144,6 +155,84 @@ class _MyArtboardState extends State<MyArtboard> {
     }
     return data;
   }
+
+  //TODO: sekarang buat variabel yang akan mengembalikan sebuah tipe data double. Jika imageOnCurentIndex.scale bernilai 10.0 maka variabel d harus -10.0
+
+  double scaleImage(d) {
+    for (double i = 0; i < d; i++) {}
+    return d;
+  }
+
+// Container(
+//                 decoration: imageOnCurentIndex.isClicked == true
+//                     ? BoxDecoration(
+//                         border: Border.all(
+//                           color: Colors.blue.shade300,
+//                           width: 3,
+//                         ),
+//                       )
+//                     : null,
+//                 child: Image.file(
+//                   imageOnCurentIndex.image!,
+//                   scale: 10,
+//                 ),
+//               ),
+
+// child: imageOnCurentIndex.isClicked == true
+//                 ? Container(
+//                     decoration: BoxDecoration(
+//                       border: Border.all(color: Colors.amber, width: 5),
+//                     ),
+//                     child: Transform.scale(
+//                       scale: imageOnCurentIndex.scale,
+//                       child: Image.file(imageOnCurentIndex.image!),
+//                     ),
+//                   )
+//                 : Image.file(
+//                     imageOnCurentIndex.image!,
+//                   ),
+
+// Container(
+//                       decoration: BoxDecoration(
+//                         border: Border.all(color: Colors.amber, width: 5),
+//                       ),
+//                       child: Image.file(
+//                         imageOnCurentIndex.image!,
+//                         scale: imageOnCurentIndex.scale,
+//                       ),
+//                     ),
+
+// Container(
+//               decoration: imageOnCurentIndex.isClicked == true
+//                   ? BoxDecoration(
+//                       border: Border.all(color: Colors.amber, width: 5))
+//                   : null,
+//               child: Image.file(
+//                 imageOnCurentIndex.image!,
+//               ),
+//             ),
+
+  //GestureDetector(
+  //   onScaleUpdate: (details) {
+  //     if (imageOnCurentIndex.isClicked == true) {
+  //       setState(() {
+  //         imageOnCurentIndex.scale =
+  //             imageOnCurentIndex.previousScale * details.scale;
+  //       });
+  //     }
+  //   },
+  //   onScaleEnd: (details) {
+  //     if (imageOnCurentIndex.isClicked == true) {
+  //       setState(() {
+  //         imageOnCurentIndex.previousScale =
+  //             imageOnCurentIndex.scale;
+  //       });
+  //     }
+  //   },
+  //   child: Image.file(
+  //     imageOnCurentIndex.image!,
+  //   ),
+  // ),
 
   List<Widget> buttonSimpanHapusImpor() {
     List<Widget> data = [];
