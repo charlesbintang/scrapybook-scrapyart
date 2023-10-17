@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -56,9 +55,7 @@ class _MyArtboardState extends State<MyArtboard> {
               Text("MyArtboard", style: Theme.of(context).textTheme.titleLarge),
           centerTitle: true,
         ),
-        body: globalListImage.isNotEmpty
-            ? artboardCanvas(context)
-            : centerNoImage(context),
+        body: artboardCanvas(context),
         floatingActionButton: floatingActionButton(),
       ),
     );
@@ -84,8 +81,6 @@ class _MyArtboardState extends State<MyArtboard> {
           child: GestureDetector(
             onTapDown: (position) {
               _getTapPosition(position);
-              // print("index $i");
-              // print("index ${globalListImage.length}");
             },
             onTap: () {
               if (imageOnCurentIndex.isClicked == false) {
@@ -128,9 +123,9 @@ class _MyArtboardState extends State<MyArtboard> {
             onPanUpdate: imageOnCurentIndex.isClicked == false
                 ? (details) {
                     imageOnCurentIndex.top =
-                        max(0, imageOnCurentIndex.top + details.delta.dy);
+                        imageOnCurentIndex.top + details.delta.dy;
                     imageOnCurentIndex.left =
-                        max(0, imageOnCurentIndex.left + details.delta.dx);
+                        imageOnCurentIndex.left + details.delta.dx;
                     setState(() {});
                   }
                 : null,
@@ -155,84 +150,6 @@ class _MyArtboardState extends State<MyArtboard> {
     }
     return data;
   }
-
-  //TODO: sekarang buat variabel yang akan mengembalikan sebuah tipe data double. Jika imageOnCurentIndex.scale bernilai 10.0 maka variabel d harus -10.0
-
-  double scaleImage(d) {
-    for (double i = 0; i < d; i++) {}
-    return d;
-  }
-
-// Container(
-//                 decoration: imageOnCurentIndex.isClicked == true
-//                     ? BoxDecoration(
-//                         border: Border.all(
-//                           color: Colors.blue.shade300,
-//                           width: 3,
-//                         ),
-//                       )
-//                     : null,
-//                 child: Image.file(
-//                   imageOnCurentIndex.image!,
-//                   scale: 10,
-//                 ),
-//               ),
-
-// child: imageOnCurentIndex.isClicked == true
-//                 ? Container(
-//                     decoration: BoxDecoration(
-//                       border: Border.all(color: Colors.amber, width: 5),
-//                     ),
-//                     child: Transform.scale(
-//                       scale: imageOnCurentIndex.scale,
-//                       child: Image.file(imageOnCurentIndex.image!),
-//                     ),
-//                   )
-//                 : Image.file(
-//                     imageOnCurentIndex.image!,
-//                   ),
-
-// Container(
-//                       decoration: BoxDecoration(
-//                         border: Border.all(color: Colors.amber, width: 5),
-//                       ),
-//                       child: Image.file(
-//                         imageOnCurentIndex.image!,
-//                         scale: imageOnCurentIndex.scale,
-//                       ),
-//                     ),
-
-// Container(
-//               decoration: imageOnCurentIndex.isClicked == true
-//                   ? BoxDecoration(
-//                       border: Border.all(color: Colors.amber, width: 5))
-//                   : null,
-//               child: Image.file(
-//                 imageOnCurentIndex.image!,
-//               ),
-//             ),
-
-  //GestureDetector(
-  //   onScaleUpdate: (details) {
-  //     if (imageOnCurentIndex.isClicked == true) {
-  //       setState(() {
-  //         imageOnCurentIndex.scale =
-  //             imageOnCurentIndex.previousScale * details.scale;
-  //       });
-  //     }
-  //   },
-  //   onScaleEnd: (details) {
-  //     if (imageOnCurentIndex.isClicked == true) {
-  //       setState(() {
-  //         imageOnCurentIndex.previousScale =
-  //             imageOnCurentIndex.scale;
-  //       });
-  //     }
-  //   },
-  //   child: Image.file(
-  //     imageOnCurentIndex.image!,
-  //   ),
-  // ),
 
   List<Widget> buttonSimpanHapusImpor() {
     List<Widget> data = [];
@@ -335,12 +252,19 @@ class _MyArtboardState extends State<MyArtboard> {
     });
   }
 
+  // TODO: Kerjakan shapeDecoration
+
   Center artboardCanvas(BuildContext context) {
     return Center(
       child: Screenshot(
         controller: screenshotController,
         child: Container(
-          color: const Color.fromARGB(255, 255, 255, 255),
+          decoration: ShapeDecoration(
+            shape: Border.all(color: Colors.red, width: 8) +
+                Border.all(color: Colors.green, width: 8) +
+                Border.all(color: Colors.blue, width: 8),
+          ),
+          // color: const Color.fromARGB(255, 255, 255, 255),
           height: MediaQuery.of(context).size.height - 160, //620,
           width: MediaQuery.of(context).size.width - 20, //375,
           margin: const EdgeInsets.only(bottom: 55),
@@ -348,14 +272,6 @@ class _MyArtboardState extends State<MyArtboard> {
         ),
       ),
     );
-  }
-
-  Center centerNoImage(BuildContext context) {
-    return Center(
-        child: Text(
-      "Tidak ada gambar, silakan impor sebuah gambar",
-      style: Theme.of(context).textTheme.bodyMedium,
-    ));
   }
 
   SizedBox floatingActionButton() {
@@ -400,5 +316,4 @@ class _MyArtboardState extends State<MyArtboard> {
     await requestPermission(Permission.storage);
     await ImageGallerySaver.saveImage(bytes, name: name);
   }
-  // END OF METHOD EXTRACTED
 }
