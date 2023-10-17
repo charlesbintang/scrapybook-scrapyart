@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, avoid_print
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scrapyart_home/rahmat/screens/signin_screen.dart';
 import 'package:flutter/material.dart';

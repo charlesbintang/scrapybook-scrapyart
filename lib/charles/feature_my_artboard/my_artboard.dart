@@ -264,7 +264,6 @@ class _MyArtboardState extends State<MyArtboard> {
                 Border.all(color: Colors.green, width: 8) +
                 Border.all(color: Colors.blue, width: 8),
           ),
-          // color: const Color.fromARGB(255, 255, 255, 255),
           height: MediaQuery.of(context).size.height - 160, //620,
           width: MediaQuery.of(context).size.width - 20, //375,
           margin: const EdgeInsets.only(bottom: 55),

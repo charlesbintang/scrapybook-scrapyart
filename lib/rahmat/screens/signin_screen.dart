@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, avoid_print, use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scrapyart_home/rahmat/reusable_widget/reusable_widget.dart';
 import 'package:scrapyart_home/rahmat/screens/home_screen.dart';

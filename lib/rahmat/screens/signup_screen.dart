@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scrapyart_home/rahmat/screens/signin_screen.dart';
@@ -176,12 +178,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Text("Kesalahan"),
-                          content: Text(
+                          title: const Text("Kesalahan"),
+                          content: const Text(
                               "Kata sandi dan konfirmasi kata sandi tidak cocok."),
                           actions: [
                             TextButton(
-                              child: Text("Tutup"),
+                              child: const Text("Tutup"),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
