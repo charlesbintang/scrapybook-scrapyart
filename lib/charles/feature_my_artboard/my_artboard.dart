@@ -78,78 +78,113 @@ class _MyArtboardState extends State<MyArtboard> {
         Positioned(
           top: imageOnCurentIndex.top,
           left: imageOnCurentIndex.left,
-          child: GestureDetector(
-            onTapDown: (position) {
-              _getTapPosition(position);
-            },
-            onTap: () {
-              if (imageOnCurentIndex.isClicked == false) {
-                setState(() {
-                  for (var i = 0; i < globalListImage.length; i++) {
-                    var imageOnCurentIndex = globalListImage[i];
-                    imageOnCurentIndex.isClicked = false;
-                  }
-                  imageOnCurentIndex.isClicked = true;
-                });
-              } else if (imageOnCurentIndex.isClicked == true) {
-                setState(() {
-                  imageOnCurentIndex.isClicked = false;
-                });
-              }
-            },
-            onLongPress: () {
-              moveImage(i).then((value) {
-                setState(() {});
-              });
-            },
-            onScaleUpdate: imageOnCurentIndex.isClicked == true
-                ? (details) {
-                    setState(() {
-                      imageOnCurentIndex.imageWidth =
-                          imageOnCurentIndex.previousImageWidth * details.scale;
-                    });
-                  }
-                : null,
-            onScaleEnd: imageOnCurentIndex.isClicked == true
-                ? (details) {
-                    imageOnCurentIndex.previousImageWidth =
-                        imageOnCurentIndex.imageWidth;
-
-                    setState(() {
-                      imageOnCurentIndex.isClicked = false;
-                    });
-                  }
-                : null,
-            onPanUpdate: imageOnCurentIndex.isClicked == false
-                ? (details) {
-                    imageOnCurentIndex.top =
-                        imageOnCurentIndex.top + details.delta.dy;
-                    imageOnCurentIndex.left =
-                        imageOnCurentIndex.left + details.delta.dx;
-                    setState(() {});
-                  }
-                : null,
-            child: Container(
-              decoration: imageOnCurentIndex.isClicked == true
-                  ? BoxDecoration(
-                      border: Border.all(
-                        color: Colors.blue.shade300,
-                        width: 3,
-                      ),
-                    )
-                  : null,
-              child: Image.file(
-                imageOnCurentIndex.image!,
-                width: imageOnCurentIndex.imageWidth,
-                fit: BoxFit.fill,
-              ),
-            ),
+          // TODO: container yang akan wrap sebuah image, icon, mungkin row dan column juga
+          child: Container(
+            clipBehavior: Clip.none,
+            height: 100,
+            width: 100,
+            // child: const Column(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //       children: [Icon(Icons.arrow_circle_right_outlined)],
+            //     ),
+            //     Expanded(
+            //       child: SizedBox(),
+            //     ),
+            //     Row(
+            //       mainAxisAlignment: MainAxisAlignment.end,
+            //       children: [Icon(Icons.arrow_circle_right_outlined)],
+            //     )
+            //   ],
+            // ),
           ),
         ),
       );
     }
     return data;
   }
+  // List<Widget> dataStack() {
+  //   List<Widget> data = [];
+  //   for (var i = 0; i < globalListImage.length; i++) {
+  //     var imageOnCurentIndex = globalListImage[i];
+  //     data.add(
+  //       Positioned(
+  //         top: imageOnCurentIndex.top,
+  //         left: imageOnCurentIndex.left,
+  //         child: GestureDetector(
+  //           onTapDown: (position) {
+  //             _getTapPosition(position);
+  //           },
+  //           onTap: () {
+  //             if (imageOnCurentIndex.isClicked == false) {
+  //               setState(() {
+  //                 for (var i = 0; i < globalListImage.length; i++) {
+  //                   var imageOnCurentIndex = globalListImage[i];
+  //                   imageOnCurentIndex.isClicked = false;
+  //                 }
+  //                 imageOnCurentIndex.isClicked = true;
+  //               });
+  //             } else if (imageOnCurentIndex.isClicked == true) {
+  //               setState(() {
+  //                 imageOnCurentIndex.isClicked = false;
+  //               });
+  //             }
+  //           },
+  //           onLongPress: () {
+  //             moveImage(i).then((value) {
+  //               setState(() {});
+  //             });
+  //           },
+  //           onScaleUpdate: imageOnCurentIndex.isClicked == true
+  //               ? (details) {
+  //                   setState(() {
+  //                     imageOnCurentIndex.imageWidth =
+  //                         imageOnCurentIndex.previousImageWidth * details.scale;
+  //                   });
+  //                 }
+  //               : null,
+  //           onScaleEnd: imageOnCurentIndex.isClicked == true
+  //               ? (details) {
+  //                   imageOnCurentIndex.previousImageWidth =
+  //                       imageOnCurentIndex.imageWidth;
+
+  //                   setState(() {
+  //                     imageOnCurentIndex.isClicked = false;
+  //                   });
+  //                 }
+  //               : null,
+  //           onPanUpdate: imageOnCurentIndex.isClicked == false
+  //               ? (details) {
+  //                   imageOnCurentIndex.top =
+  //                       imageOnCurentIndex.top + details.delta.dy;
+  //                   imageOnCurentIndex.left =
+  //                       imageOnCurentIndex.left + details.delta.dx;
+  //                   setState(() {});
+  //                 }
+  //               : null,
+  //           child: Container(
+  //             decoration: imageOnCurentIndex.isClicked == true
+  //                 ? BoxDecoration(
+  //                     border: Border.all(
+  //                       color: Colors.blue.shade300,
+  //                       width: 3,
+  //                     ),
+  //                   )
+  //                 : null,
+  //             child: Image.file(
+  //               imageOnCurentIndex.image!,
+  //               width: imageOnCurentIndex.imageWidth,
+  //               fit: BoxFit.fill,
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //   }
+  //   return data;
+  // }
 
   List<Widget> buttonSimpanHapusImpor() {
     List<Widget> data = [];
@@ -251,8 +286,6 @@ class _MyArtboardState extends State<MyArtboard> {
       globalListImage.add(StackImage(image: _selectedImage));
     });
   }
-
-  // TODO: Kerjakan shapeDecoration
 
   Center artboardCanvas(BuildContext context) {
     return Center(
