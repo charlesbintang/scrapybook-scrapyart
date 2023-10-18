@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class MyArtboard extends StatefulWidget {
 class _MyArtboardState extends State<MyArtboard> {
   ScreenshotController screenshotController = ScreenshotController();
   File? _selectedImage;
-  double imageWidth = 200;
+  // double imageWidth = 200;
   Offset _tapPosition = Offset.zero;
   List<StackImage> globalListImage = [];
 
@@ -80,45 +81,172 @@ class _MyArtboardState extends State<MyArtboard> {
           top: imageOnCurentIndex.top,
           left: imageOnCurentIndex.left,
           // TODO: container yang akan wrap sebuah image, icon, mungkin row dan column juga
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent),
-                ),
-                child: Image.file(
-                  imageOnCurentIndex.image!,
-                  fit: BoxFit.fill,
-                  width: imageWidth,
-                ),
-              ),
-              Positioned(
-                right: imageWidth * 44 / 100,
-                bottom: -50,
-                child: const Icon(Icons.wifi_protected_setup),
-              ),
-              Positioned(
-                right: -20,
-                bottom: -20,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Transform.rotate(
-                          angle: 5.5,
-                          child: const Icon(
-                              Icons.arrow_drop_down_circle_outlined,
-                              color: Colors.blueAccent),
-                        ),
-                      ],
+          child: Container(
+            width: imageOnCurentIndex.imageWidth,
+            color: Colors.amber,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(20),
+                  child: GestureDetector(
+                    onTapDown: (position) {
+                      _getTapPosition(position);
+                    },
+                    onTap: () {
+                      print("object1");
+                      if (imageOnCurentIndex.isClicked == false) {
+                        setState(() {
+                          for (var i = 0; i < globalListImage.length; i++) {
+                            var imageOnCurentIndex = globalListImage[i];
+                            imageOnCurentIndex.isClicked = false;
+                          }
+                          imageOnCurentIndex.isClicked = true;
+                        });
+                      } else if (imageOnCurentIndex.isClicked == true) {
+                        setState(() {
+                          imageOnCurentIndex.isClicked = false;
+                        });
+                      }
+                    },
+                    onLongPress: () {
+                      moveImage(i).then((value) {
+                        setState(() {});
+                      });
+                    },
+                    onScaleUpdate: imageOnCurentIndex.isClicked == true
+                        ? (details) {
+                            setState(() {
+                              imageOnCurentIndex.imageWidth =
+                                  imageOnCurentIndex.previousImageWidth *
+                                      details.scale;
+                            });
+                          }
+                        : null,
+                    onScaleEnd: imageOnCurentIndex.isClicked == true
+                        ? (details) {
+                            imageOnCurentIndex.previousImageWidth =
+                                imageOnCurentIndex.imageWidth;
+
+                            setState(() {
+                              imageOnCurentIndex.isClicked = false;
+                            });
+                          }
+                        : null,
+                    onPanUpdate: imageOnCurentIndex.isClicked == false
+                        ? (details) {
+                            imageOnCurentIndex.top =
+                                imageOnCurentIndex.top + details.delta.dy;
+                            imageOnCurentIndex.left =
+                                imageOnCurentIndex.left + details.delta.dx;
+                            setState(() {});
+                          }
+                        : null,
+                    child: Image.file(
+                      imageOnCurentIndex.image!,
+                      fit: BoxFit.fill,
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+                // tombol untuk rotate image
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    imageOnCurentIndex.imageWidth * 44 / 100,
+                    imageOnCurentIndex.imageWidth * 100 / 100,
+                    0,
+                    0,
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      print("object2");
+                    },
+                    child: const Icon(
+                      Icons.autorenew,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                ),
+                // tombol untuk scaling image
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    imageOnCurentIndex.imageWidth * 90 / 100,
+                    imageOnCurentIndex.imageWidth * 90 / 100,
+                    0,
+                    0,
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      print("object3");
+                    },
+                    onHorizontalDragUpdate: (details) {
+                      imageOnCurentIndex.imageWidth =
+                          imageOnCurentIndex.imageWidth + details.delta.dx;
+                      setState(() {});
+                    },
+                    // onPanUpdate: (details) {
+                    //   double a =
+                    //       imageOnCurentIndex.imageWidth + details.delta.dx;
+                    //   double b =
+                    //       imageOnCurentIndex.imageWidth + details.delta.dy;
+                    //   double a2 = a * a;
+                    //   double b2 = b * b;
+                    //   double c2 = a2 * b2;
+                    //   double c = sqrt(c2);
+                    //   imageOnCurentIndex.imageWidth = c;
+                    //   setState(() {});
+                    // },
+                    child: Transform.rotate(
+                      angle: 5.5,
+                      child: const Icon(Icons.arrow_drop_down_circle_outlined,
+                          color: Colors.blueAccent),
+                    ),
+                  ),
+                ),
+
+// ini untuk backup
+
+                // Container(
+                //   decoration: BoxDecoration(
+                //     border: Border.all(color: Colors.blueAccent),
+                //   ),
+                //   child: Image.file(
+                //     imageOnCurentIndex.image!,
+                //     fit: BoxFit.fill,
+                //     width: imageWidth,
+                //   ),
+                // ),
+                // Positioned(
+                //   right: imageWidth * 44 / 100,
+                //   bottom: -50,
+                //   child: GestureDetector(
+                //     onTap: () {
+                //       print("object");
+                //     },
+                //     child: const Icon(Icons.wifi_protected_setup),
+                //   ),
+                // ),
+                // Positioned(
+                //   right: -20,
+                //   bottom: -20,
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.end,
+                //     children: [
+                //       Row(
+                //         mainAxisAlignment: MainAxisAlignment.end,
+                //         children: [
+                //           Transform.rotate(
+                //             angle: 5.5,
+                //             child: const Icon(
+                //                 Icons.arrow_drop_down_circle_outlined,
+                //                 color: Colors.blueAccent),
+                //           ),
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // ),
+              ],
+            ),
           ),
         ),
       );
