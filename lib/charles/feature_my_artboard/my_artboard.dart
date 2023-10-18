@@ -33,6 +33,7 @@ class MyArtboard extends StatefulWidget {
 class _MyArtboardState extends State<MyArtboard> {
   ScreenshotController screenshotController = ScreenshotController();
   File? _selectedImage;
+  double imageWidth = 200;
   Offset _tapPosition = Offset.zero;
   List<StackImage> globalListImage = [];
 
@@ -79,26 +80,45 @@ class _MyArtboardState extends State<MyArtboard> {
           top: imageOnCurentIndex.top,
           left: imageOnCurentIndex.left,
           // TODO: container yang akan wrap sebuah image, icon, mungkin row dan column juga
-          child: Container(
+          child: Stack(
             clipBehavior: Clip.none,
-            height: 100,
-            width: 100,
-            // child: const Column(
-            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //   children: [
-            //     Row(
-            //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //       children: [Icon(Icons.arrow_circle_right_outlined)],
-            //     ),
-            //     Expanded(
-            //       child: SizedBox(),
-            //     ),
-            //     Row(
-            //       mainAxisAlignment: MainAxisAlignment.end,
-            //       children: [Icon(Icons.arrow_circle_right_outlined)],
-            //     )
-            //   ],
-            // ),
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blueAccent),
+                ),
+                child: Image.file(
+                  imageOnCurentIndex.image!,
+                  fit: BoxFit.fill,
+                  width: imageWidth,
+                ),
+              ),
+              Positioned(
+                right: imageWidth * 44 / 100,
+                bottom: -50,
+                child: const Icon(Icons.wifi_protected_setup),
+              ),
+              Positioned(
+                right: -20,
+                bottom: -20,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Transform.rotate(
+                          angle: 5.5,
+                          child: const Icon(
+                              Icons.arrow_drop_down_circle_outlined,
+                              color: Colors.blueAccent),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       );
