@@ -209,37 +209,6 @@ class _MyArtboardState extends State<MyArtboard> {
                         ),
                       )
                     : const SizedBox(),
-                // tombol untuk scaling image
-                // Padding(
-                //   padding: EdgeInsets.fromLTRB(
-                //     imageOnCurentIndex.imageWidth + 20,
-                //     imageOnCurentIndex.imageWidth + 20,
-                //     0,
-                //     0,
-                //   ),
-                //   child: imageOnCurentIndex.isClicked == true
-                //       ? GestureDetector(
-                //           onTap: () {
-                //             print("object3");
-                //           },
-                //           onHorizontalDragUpdate: (details) {
-                //             imageOnCurentIndex.imageWidth = max(
-                //                 20,
-                //                 imageOnCurentIndex.imageWidth +
-                //                     details.delta.dx);
-                //             setState(() {});
-                //           },
-                //           child: Transform.rotate(
-                //             angle: 5.5,
-                //             child: const Icon(
-                //               Icons.arrow_drop_down_circle_outlined,
-                //               color: Colors.blueAccent,
-                //               size: 30,
-                //             ),
-                //           ),
-                //         )
-                //       : const SizedBox(),
-                // ),
               ],
             ),
           ),
@@ -367,8 +336,8 @@ class _MyArtboardState extends State<MyArtboard> {
         controller: screenshotController,
         child: Container(
           color: const Color.fromARGB(255, 255, 255, 255),
-          height: MediaQuery.of(context).size.height - 160, //620,
-          width: MediaQuery.of(context).size.width - 20, //375,
+          height: MediaQuery.of(context).size.height - 160,
+          width: MediaQuery.of(context).size.width - 20,
           margin: const EdgeInsets.only(bottom: 55),
           child: Stack(children: dataStack()),
         ),
