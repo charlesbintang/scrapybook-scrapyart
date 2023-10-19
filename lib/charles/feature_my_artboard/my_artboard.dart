@@ -81,8 +81,7 @@ class _MyArtboardState extends State<MyArtboard> {
           left: imageOnCurentIndex.left,
           // ignore: avoid_unnecessary_containers
           child: Container(
-            child: Stack(
-              clipBehavior: Clip.none,
+            child: Column(
               children: [
                 Container(
                   margin: const EdgeInsets.all(20),
@@ -141,78 +140,106 @@ class _MyArtboardState extends State<MyArtboard> {
                         : null,
                     child: Transform.rotate(
                       angle: imageOnCurentIndex.rotateValue / 180 * pi,
-                      child: Container(
-                        decoration: imageOnCurentIndex.isClicked == true
-                            ? BoxDecoration(
-                                border: Border.all(
-                                    color: Colors.blueAccent, width: 2))
-                            : null,
-                        child: Image.file(
-                          imageOnCurentIndex.image!,
-                          fit: BoxFit.fill,
-                          width: imageOnCurentIndex.imageWidth,
-                        ),
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: imageOnCurentIndex.isClicked == true
+                                ? BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.blueAccent, width: 2))
+                                : null,
+                            child: Image.file(
+                              imageOnCurentIndex.image!,
+                              fit: BoxFit.fill,
+                              width: imageOnCurentIndex.imageWidth,
+                            ),
+                          ),
+                          SizedBox(
+                            width: imageOnCurentIndex.imageWidth + 50,
+                            height: 20,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                imageOnCurentIndex.isClicked == true
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          print("object3");
+                                        },
+                                        onHorizontalDragUpdate: (details) {
+                                          imageOnCurentIndex.imageWidth = max(
+                                              20,
+                                              imageOnCurentIndex.imageWidth +
+                                                  details.delta.dx);
+                                          setState(() {});
+                                        },
+                                        child: Transform.rotate(
+                                          angle: 5.5,
+                                          child: const Icon(
+                                            Icons
+                                                .arrow_drop_down_circle_outlined,
+                                            color: Colors.blueAccent,
+                                            size: 30,
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox(),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
                 // tombol untuk rotate image
-                Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    imageOnCurentIndex.imageWidth * 55 / 100,
-                    imageOnCurentIndex.imageWidth * 120 / 100,
-                    0,
-                    0,
-                  ),
-                  child: imageOnCurentIndex.isClicked == true
-                      ? GestureDetector(
-                          onTap: () {
-                            print("object2");
-                          },
-                          onHorizontalDragUpdate: (details) {
-                            imageOnCurentIndex.rotateValue -= details.delta.dx;
-                            imageOnCurentIndex.rotateValue %= 360;
-                            setState(() {});
-                          },
-                          child: const Icon(
-                            Icons.autorenew,
-                            color: Colors.blueAccent,
-                            size: 30,
-                          ),
-                        )
-                      : const SizedBox(),
-                ),
+                imageOnCurentIndex.isClicked == true
+                    ? GestureDetector(
+                        onTap: () {
+                          print("object2");
+                        },
+                        onHorizontalDragUpdate: (details) {
+                          imageOnCurentIndex.rotateValue -= details.delta.dx;
+                          imageOnCurentIndex.rotateValue %= 360;
+                          setState(() {});
+                        },
+                        child: const Icon(
+                          Icons.autorenew,
+                          color: Colors.blueAccent,
+                          size: 30,
+                        ),
+                      )
+                    : const SizedBox(),
                 // tombol untuk scaling image
-                Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    imageOnCurentIndex.imageWidth + 20,
-                    imageOnCurentIndex.imageWidth + 20,
-                    0,
-                    0,
-                  ),
-                  child: imageOnCurentIndex.isClicked == true
-                      ? GestureDetector(
-                          onTap: () {
-                            print("object3");
-                          },
-                          onHorizontalDragUpdate: (details) {
-                            imageOnCurentIndex.imageWidth = max(
-                                20,
-                                imageOnCurentIndex.imageWidth +
-                                    details.delta.dx);
-                            setState(() {});
-                          },
-                          child: Transform.rotate(
-                            angle: 5.5,
-                            child: const Icon(
-                              Icons.arrow_drop_down_circle_outlined,
-                              color: Colors.blueAccent,
-                              size: 30,
-                            ),
-                          ),
-                        )
-                      : const SizedBox(),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.fromLTRB(
+                //     imageOnCurentIndex.imageWidth + 20,
+                //     imageOnCurentIndex.imageWidth + 20,
+                //     0,
+                //     0,
+                //   ),
+                //   child: imageOnCurentIndex.isClicked == true
+                //       ? GestureDetector(
+                //           onTap: () {
+                //             print("object3");
+                //           },
+                //           onHorizontalDragUpdate: (details) {
+                //             imageOnCurentIndex.imageWidth = max(
+                //                 20,
+                //                 imageOnCurentIndex.imageWidth +
+                //                     details.delta.dx);
+                //             setState(() {});
+                //           },
+                //           child: Transform.rotate(
+                //             angle: 5.5,
+                //             child: const Icon(
+                //               Icons.arrow_drop_down_circle_outlined,
+                //               color: Colors.blueAccent,
+                //               size: 30,
+                //             ),
+                //           ),
+                //         )
+                //       : const SizedBox(),
+                // ),
               ],
             ),
           ),
