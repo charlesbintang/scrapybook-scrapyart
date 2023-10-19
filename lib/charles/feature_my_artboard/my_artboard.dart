@@ -82,8 +82,8 @@ class _MyArtboardState extends State<MyArtboard> {
           left: imageOnCurentIndex.left,
           // TODO: container yang akan wrap sebuah image, icon, mungkin row dan column juga
           child: Container(
-            width: imageOnCurentIndex.imageWidth,
-            color: Colors.amber,
+            // width: imageOnCurentIndex.imageWidth,
+            // color: Colors.amber,
             child: Stack(
               clipBehavior: Clip.none,
               children: [
@@ -145,6 +145,7 @@ class _MyArtboardState extends State<MyArtboard> {
                     child: Image.file(
                       imageOnCurentIndex.image!,
                       fit: BoxFit.fill,
+                      width: imageOnCurentIndex.imageWidth,
                     ),
                   ),
                 ),
@@ -169,8 +170,8 @@ class _MyArtboardState extends State<MyArtboard> {
                 // tombol untuk scaling image
                 Padding(
                   padding: EdgeInsets.fromLTRB(
-                    imageOnCurentIndex.imageWidth * 90 / 100,
-                    imageOnCurentIndex.imageWidth * 90 / 100,
+                    imageOnCurentIndex.imageWidth + 20,
+                    imageOnCurentIndex.imageWidth + 20,
                     0,
                     0,
                   ),
@@ -179,22 +180,10 @@ class _MyArtboardState extends State<MyArtboard> {
                       print("object3");
                     },
                     onHorizontalDragUpdate: (details) {
-                      imageOnCurentIndex.imageWidth =
-                          imageOnCurentIndex.imageWidth + details.delta.dx;
+                      imageOnCurentIndex.imageWidth = max(
+                          20, imageOnCurentIndex.imageWidth + details.delta.dx);
                       setState(() {});
                     },
-                    // onPanUpdate: (details) {
-                    //   double a =
-                    //       imageOnCurentIndex.imageWidth + details.delta.dx;
-                    //   double b =
-                    //       imageOnCurentIndex.imageWidth + details.delta.dy;
-                    //   double a2 = a * a;
-                    //   double b2 = b * b;
-                    //   double c2 = a2 * b2;
-                    //   double c = sqrt(c2);
-                    //   imageOnCurentIndex.imageWidth = c;
-                    //   setState(() {});
-                    // },
                     child: Transform.rotate(
                       angle: 5.5,
                       child: const Icon(Icons.arrow_drop_down_circle_outlined,
