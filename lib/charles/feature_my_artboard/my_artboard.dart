@@ -81,9 +81,8 @@ class _MyArtboardState extends State<MyArtboard> {
           top: imageOnCurentIndex.top,
           left: imageOnCurentIndex.left,
           // TODO: container yang akan wrap sebuah image, icon, mungkin row dan column juga
+          // ignore: avoid_unnecessary_containers
           child: Container(
-            // width: imageOnCurentIndex.imageWidth,
-            // color: Colors.amber,
             child: Stack(
               clipBehavior: Clip.none,
               children: [
@@ -142,10 +141,13 @@ class _MyArtboardState extends State<MyArtboard> {
                             setState(() {});
                           }
                         : null,
-                    child: Image.file(
-                      imageOnCurentIndex.image!,
-                      fit: BoxFit.fill,
-                      width: imageOnCurentIndex.imageWidth,
+                    child: Transform.rotate(
+                      angle: imageOnCurentIndex.rotateValue / 180 * pi,
+                      child: Image.file(
+                        imageOnCurentIndex.image!,
+                        fit: BoxFit.fill,
+                        width: imageOnCurentIndex.imageWidth,
+                      ),
                     ),
                   ),
                 ),
@@ -160,6 +162,11 @@ class _MyArtboardState extends State<MyArtboard> {
                   child: GestureDetector(
                     onTap: () {
                       print("object2");
+                    },
+                    onHorizontalDragUpdate: (details) {
+                      imageOnCurentIndex.rotateValue -= details.delta.dx;
+                      imageOnCurentIndex.rotateValue %= 360;
+                      setState(() {});
                     },
                     child: const Icon(
                       Icons.autorenew,
@@ -192,7 +199,7 @@ class _MyArtboardState extends State<MyArtboard> {
                   ),
                 ),
 
-// ini untuk backup
+                // ini untuk backup
 
                 // Container(
                 //   decoration: BoxDecoration(

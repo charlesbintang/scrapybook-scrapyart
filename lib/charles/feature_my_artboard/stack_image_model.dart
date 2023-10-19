@@ -6,14 +6,16 @@ class StackImage {
   double left;
   double imageWidth;
   double previousImageWidth;
+  double rotateValue;
   bool isClicked;
 
   StackImage({
     required this.image,
-    this.top = 0,
-    this.left = 0,
+    this.top = 0.0,
+    this.left = 0.0,
     this.imageWidth = 200.0,
     this.previousImageWidth = 200.0,
+    this.rotateValue = 0.0,
     this.isClicked = false,
   });
 }
