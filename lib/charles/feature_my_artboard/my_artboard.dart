@@ -34,7 +34,6 @@ class MyArtboard extends StatefulWidget {
 class _MyArtboardState extends State<MyArtboard> {
   ScreenshotController screenshotController = ScreenshotController();
   File? _selectedImage;
-  // double imageWidth = 200;
   Offset _tapPosition = Offset.zero;
   List<StackImage> globalListImage = [];
 
@@ -80,7 +79,6 @@ class _MyArtboardState extends State<MyArtboard> {
         Positioned(
           top: imageOnCurentIndex.top,
           left: imageOnCurentIndex.left,
-          // TODO: container yang akan wrap sebuah image, icon, mungkin row dan column juga
           // ignore: avoid_unnecessary_containers
           child: Container(
             child: Stack(
@@ -143,10 +141,17 @@ class _MyArtboardState extends State<MyArtboard> {
                         : null,
                     child: Transform.rotate(
                       angle: imageOnCurentIndex.rotateValue / 180 * pi,
-                      child: Image.file(
-                        imageOnCurentIndex.image!,
-                        fit: BoxFit.fill,
-                        width: imageOnCurentIndex.imageWidth,
+                      child: Container(
+                        decoration: imageOnCurentIndex.isClicked == true
+                            ? BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.blueAccent, width: 2))
+                            : null,
+                        child: Image.file(
+                          imageOnCurentIndex.image!,
+                          fit: BoxFit.fill,
+                          width: imageOnCurentIndex.imageWidth,
+                        ),
                       ),
                     ),
                   ),
@@ -155,24 +160,27 @@ class _MyArtboardState extends State<MyArtboard> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(
                     imageOnCurentIndex.imageWidth * 55 / 100,
-                    imageOnCurentIndex.imageWidth * 120 / 100 + 20,
+                    imageOnCurentIndex.imageWidth * 120 / 100,
                     0,
                     0,
                   ),
-                  child: GestureDetector(
-                    onTap: () {
-                      print("object2");
-                    },
-                    onHorizontalDragUpdate: (details) {
-                      imageOnCurentIndex.rotateValue -= details.delta.dx;
-                      imageOnCurentIndex.rotateValue %= 360;
-                      setState(() {});
-                    },
-                    child: const Icon(
-                      Icons.autorenew,
-                      color: Colors.blueAccent,
-                    ),
-                  ),
+                  child: imageOnCurentIndex.isClicked == true
+                      ? GestureDetector(
+                          onTap: () {
+                            print("object2");
+                          },
+                          onHorizontalDragUpdate: (details) {
+                            imageOnCurentIndex.rotateValue -= details.delta.dx;
+                            imageOnCurentIndex.rotateValue %= 360;
+                            setState(() {});
+                          },
+                          child: const Icon(
+                            Icons.autorenew,
+                            color: Colors.blueAccent,
+                            size: 30,
+                          ),
+                        )
+                      : const SizedBox(),
                 ),
                 // tombol untuk scaling image
                 Padding(
@@ -182,65 +190,29 @@ class _MyArtboardState extends State<MyArtboard> {
                     0,
                     0,
                   ),
-                  child: GestureDetector(
-                    onTap: () {
-                      print("object3");
-                    },
-                    onHorizontalDragUpdate: (details) {
-                      imageOnCurentIndex.imageWidth = max(
-                          20, imageOnCurentIndex.imageWidth + details.delta.dx);
-                      setState(() {});
-                    },
-                    child: Transform.rotate(
-                      angle: 5.5,
-                      child: const Icon(Icons.arrow_drop_down_circle_outlined,
-                          color: Colors.blueAccent),
-                    ),
-                  ),
+                  child: imageOnCurentIndex.isClicked == true
+                      ? GestureDetector(
+                          onTap: () {
+                            print("object3");
+                          },
+                          onHorizontalDragUpdate: (details) {
+                            imageOnCurentIndex.imageWidth = max(
+                                20,
+                                imageOnCurentIndex.imageWidth +
+                                    details.delta.dx);
+                            setState(() {});
+                          },
+                          child: Transform.rotate(
+                            angle: 5.5,
+                            child: const Icon(
+                              Icons.arrow_drop_down_circle_outlined,
+                              color: Colors.blueAccent,
+                              size: 30,
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
                 ),
-
-                // ini untuk backup
-
-                // Container(
-                //   decoration: BoxDecoration(
-                //     border: Border.all(color: Colors.blueAccent),
-                //   ),
-                //   child: Image.file(
-                //     imageOnCurentIndex.image!,
-                //     fit: BoxFit.fill,
-                //     width: imageWidth,
-                //   ),
-                // ),
-                // Positioned(
-                //   right: imageWidth * 44 / 100,
-                //   bottom: -50,
-                //   child: GestureDetector(
-                //     onTap: () {
-                //       print("object");
-                //     },
-                //     child: const Icon(Icons.wifi_protected_setup),
-                //   ),
-                // ),
-                // Positioned(
-                //   right: -20,
-                //   bottom: -20,
-                //   child: Column(
-                //     mainAxisAlignment: MainAxisAlignment.end,
-                //     children: [
-                //       Row(
-                //         mainAxisAlignment: MainAxisAlignment.end,
-                //         children: [
-                //           Transform.rotate(
-                //             angle: 5.5,
-                //             child: const Icon(
-                //                 Icons.arrow_drop_down_circle_outlined,
-                //                 color: Colors.blueAccent),
-                //           ),
-                //         ],
-                //       ),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -249,86 +221,6 @@ class _MyArtboardState extends State<MyArtboard> {
     }
     return data;
   }
-  // List<Widget> dataStack() {
-  //   List<Widget> data = [];
-  //   for (var i = 0; i < globalListImage.length; i++) {
-  //     var imageOnCurentIndex = globalListImage[i];
-  //     data.add(
-  //       Positioned(
-  //         top: imageOnCurentIndex.top,
-  //         left: imageOnCurentIndex.left,
-  //         child: GestureDetector(
-  //           onTapDown: (position) {
-  //             _getTapPosition(position);
-  //           },
-  //           onTap: () {
-  //             if (imageOnCurentIndex.isClicked == false) {
-  //               setState(() {
-  //                 for (var i = 0; i < globalListImage.length; i++) {
-  //                   var imageOnCurentIndex = globalListImage[i];
-  //                   imageOnCurentIndex.isClicked = false;
-  //                 }
-  //                 imageOnCurentIndex.isClicked = true;
-  //               });
-  //             } else if (imageOnCurentIndex.isClicked == true) {
-  //               setState(() {
-  //                 imageOnCurentIndex.isClicked = false;
-  //               });
-  //             }
-  //           },
-  //           onLongPress: () {
-  //             moveImage(i).then((value) {
-  //               setState(() {});
-  //             });
-  //           },
-  //           onScaleUpdate: imageOnCurentIndex.isClicked == true
-  //               ? (details) {
-  //                   setState(() {
-  //                     imageOnCurentIndex.imageWidth =
-  //                         imageOnCurentIndex.previousImageWidth * details.scale;
-  //                   });
-  //                 }
-  //               : null,
-  //           onScaleEnd: imageOnCurentIndex.isClicked == true
-  //               ? (details) {
-  //                   imageOnCurentIndex.previousImageWidth =
-  //                       imageOnCurentIndex.imageWidth;
-
-  //                   setState(() {
-  //                     imageOnCurentIndex.isClicked = false;
-  //                   });
-  //                 }
-  //               : null,
-  //           onPanUpdate: imageOnCurentIndex.isClicked == false
-  //               ? (details) {
-  //                   imageOnCurentIndex.top =
-  //                       imageOnCurentIndex.top + details.delta.dy;
-  //                   imageOnCurentIndex.left =
-  //                       imageOnCurentIndex.left + details.delta.dx;
-  //                   setState(() {});
-  //                 }
-  //               : null,
-  //           child: Container(
-  //             decoration: imageOnCurentIndex.isClicked == true
-  //                 ? BoxDecoration(
-  //                     border: Border.all(
-  //                       color: Colors.blue.shade300,
-  //                       width: 3,
-  //                     ),
-  //                   )
-  //                 : null,
-  //             child: Image.file(
-  //               imageOnCurentIndex.image!,
-  //               width: imageOnCurentIndex.imageWidth,
-  //               fit: BoxFit.fill,
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //   return data;
-  // }
 
   List<Widget> buttonSimpanHapusImpor() {
     List<Widget> data = [];
@@ -385,18 +277,29 @@ class _MyArtboardState extends State<MyArtboard> {
         globalListImage.removeAt(indexImage);
       },
     );
+    var reset = PopupMenuItem(
+      child: const Text("Reset"),
+      onTap: () {
+        globalListImage[indexImage].rotateValue = 0.0;
+        globalListImage[indexImage].imageWidth = 200.0;
+        globalListImage[indexImage].previousImageWidth = 200.0;
+      },
+    );
 
     // gambar pertama
     if (indexImage == 0) {
       actions.add(up);
       actions.add(delete);
+      actions.add(reset);
     } else if (indexImage == globalListImage.length - 1) {
       actions.add(down);
       actions.add(delete);
+      actions.add(reset);
     } else {
       actions.add(up);
       actions.add(down);
       actions.add(delete);
+      actions.add(reset);
     }
 
     await showMenu(
