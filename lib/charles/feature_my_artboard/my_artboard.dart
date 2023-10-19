@@ -152,8 +152,8 @@ class _MyArtboardState extends State<MyArtboard> {
                 // tombol untuk rotate image
                 Padding(
                   padding: EdgeInsets.fromLTRB(
-                    imageOnCurentIndex.imageWidth * 44 / 100,
-                    imageOnCurentIndex.imageWidth * 100 / 100,
+                    imageOnCurentIndex.imageWidth * 55 / 100,
+                    imageOnCurentIndex.imageWidth * 120 / 100 + 20,
                     0,
                     0,
                   ),
