@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:scrapyart_home/charles/feature_my_artboard/my_artboard.dart';
+import 'package:scrapyart_home/angel/feature_my_artboard/my_artboard.dart';
 
 class CobaArtboard extends StatelessWidget {
   const CobaArtboard({

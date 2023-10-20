@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:scrapyart_home/charles/feature_my_artboard/my_artboard.dart';
+import 'package:scrapyart_home/angel/feature_my_artboard/my_artboard.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
