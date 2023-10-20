@@ -36,6 +36,8 @@ class _MyArtboardState extends State<MyArtboard> {
   File? _selectedImage;
   Offset _tapPosition = Offset.zero;
   List<StackImage> globalListImage = [];
+  double widthScalingIcon = 0;
+  double heightScalingIcon = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +62,19 @@ class _MyArtboardState extends State<MyArtboard> {
     });
   }
 
+  void _getSizeOfTheBox(i) {
+    final RenderBox box =
+        GlobalObjectKey(i).currentContext!.findRenderObject() as RenderBox;
+    // print(box.size.width);
+    // print(box.size.height);
+    setState(() {
+      widthScalingIcon = box.size.width;
+      heightScalingIcon = box.size.height * 200 / 100;
+    });
+  }
+
   // buat kembalikan list widget yang akan di tumpuk
+  // ignore: unused_element
   List<Widget> dataStack() {
     List<Widget> data = [];
     for (var i = 0; i < globalListImage.length; i++) {
@@ -69,184 +83,173 @@ class _MyArtboardState extends State<MyArtboard> {
         Positioned(
           top: imageOnCurentIndex.top,
           left: imageOnCurentIndex.left,
-          child: Container(
-            color: Colors.amber,
-            transformAlignment: Alignment.center,
-            transform:
-                Matrix4.rotationZ(imageOnCurentIndex.rotateValue / 180 * pi),
-            child: Column(
-              children: [
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTapDown: (position) {
-                        _getTapPosition(position);
-                      },
-                      onTap: () {
-                        print("object1");
-                        if (imageOnCurentIndex.isClicked == false) {
-                          setState(() {
-                            for (var i = 0; i < globalListImage.length; i++) {
-                              var imageOnCurentIndex = globalListImage[i];
-                              imageOnCurentIndex.isClicked = false;
-                            }
-                            imageOnCurentIndex.isClicked = true;
-                          });
-                        } else if (imageOnCurentIndex.isClicked == true) {
-                          setState(() {
+          child: GestureDetector(
+            onPanUpdate: imageOnCurentIndex.isClicked == false
+                ? (details) {
+                    imageOnCurentIndex.top =
+                        imageOnCurentIndex.top + details.delta.dy;
+                    imageOnCurentIndex.left =
+                        imageOnCurentIndex.left + details.delta.dx;
+                    setState(() {});
+                  }
+                : null,
+            child: Container(
+              key: GlobalObjectKey(i),
+              // color: Colors.amber,
+              transformAlignment: Alignment.center,
+              transform:
+                  Matrix4.rotationZ(imageOnCurentIndex.rotateValue / 180 * pi),
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTapDown: (position) {
+                      _getTapPosition(position);
+                      _getSizeOfTheBox(i);
+                    },
+                    onTap: () {
+                      print("object1");
+                      if (imageOnCurentIndex.isClicked == false) {
+                        setState(() {
+                          for (var i = 0; i < globalListImage.length; i++) {
+                            var imageOnCurentIndex = globalListImage[i];
                             imageOnCurentIndex.isClicked = false;
-                          });
-                        }
-                      },
-                      onLongPress: () {
-                        moveImage(i).then((value) {
-                          setState(() {});
+                          }
+                          imageOnCurentIndex.isClicked = true;
                         });
-                      },
-                      onScaleUpdate: imageOnCurentIndex.isClicked == true
-                          ? (details) {
-                              setState(() {
-                                imageOnCurentIndex.imageWidth =
-                                    imageOnCurentIndex.previousImageWidth *
-                                        details.scale;
-                              });
-                            }
-                          : null,
-                      onScaleEnd: imageOnCurentIndex.isClicked == true
-                          ? (details) {
-                              imageOnCurentIndex.previousImageWidth =
-                                  imageOnCurentIndex.imageWidth;
+                      } else if (imageOnCurentIndex.isClicked == true) {
+                        setState(() {
+                          imageOnCurentIndex.isClicked = false;
+                        });
+                      }
+                    },
+                    onLongPress: () {
+                      moveImage(i).then((value) {
+                        setState(() {});
+                      });
+                    },
+                    onScaleUpdate: imageOnCurentIndex.isClicked == true
+                        ? (details) {
+                            imageOnCurentIndex.imageScale =
+                                imageOnCurentIndex.previousImageScale *
+                                    details.scale;
+                            _getSizeOfTheBox(i);
+                            setState(() {});
+                            print("sclupdt");
+                          }
+                        : null,
+                    onScaleEnd: imageOnCurentIndex.isClicked == true
+                        ? (details) {
+                            imageOnCurentIndex.previousImageScale =
+                                imageOnCurentIndex.imageScale;
 
-                              setState(() {
-                                imageOnCurentIndex.isClicked = false;
-                              });
-                            }
+                            setState(() {
+                              imageOnCurentIndex.isClicked = false;
+                            });
+                          }
+                        : null,
+                    child: Container(
+                      decoration: imageOnCurentIndex.isClicked == true
+                          ? BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.blueAccent, width: 2))
                           : null,
-                      onPanUpdate: imageOnCurentIndex.isClicked == false
-                          ? (details) {
-                              imageOnCurentIndex.top =
-                                  imageOnCurentIndex.top + details.delta.dy;
-                              imageOnCurentIndex.left =
-                                  imageOnCurentIndex.left + details.delta.dx;
-                              setState(() {});
-                            }
-                          : null,
-                      child: Container(
-                        decoration: imageOnCurentIndex.isClicked == true
-                            ? BoxDecoration(
-                                border: Border.all(
-                                    color: Colors.blueAccent, width: 2))
-                            : null,
-                        child: Image.file(
-                          imageOnCurentIndex.image!,
-                          fit: BoxFit.fill,
-                          width: imageOnCurentIndex.imageWidth,
-                        ),
+                      child: Image.file(
+                        imageOnCurentIndex.image!,
+                        fit: BoxFit.fill,
+                        width: imageOnCurentIndex.imageWidth,
+                        scale: imageOnCurentIndex.imageScale,
                       ),
                     ),
-                    SizedBox(
-                      width: imageOnCurentIndex.imageWidth + 10,
-                      height: 30,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          imageOnCurentIndex.isClicked == true
-                              ? GestureDetector(
-                                  onTap: () {
-                                    print("object3");
-                                  },
-                                  onHorizontalDragUpdate: (details) {
-                                    imageOnCurentIndex.imageWidth = max(
-                                        20,
-                                        imageOnCurentIndex.imageWidth +
-                                            details.delta.dx);
-                                    setState(() {});
-                                  },
-                                  onVerticalDragUpdate: (details) {
-                                    imageOnCurentIndex.imageWidth = max(
-                                        20,
-                                        imageOnCurentIndex.imageWidth +
-                                            details.delta.dy);
-                                    setState(() {});
-                                  },
-                                  child: Transform.rotate(
-                                    angle: 5.5,
-                                    child: const Icon(
-                                      Icons.arrow_drop_down_circle_outlined,
-                                      color: Colors.blueAccent,
-                                      size: 30,
-                                    ),
+                  ),
+                  SizedBox(
+                    width: imageOnCurentIndex.imageWidth + 10,
+                    height: 30,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        imageOnCurentIndex.isClicked == true
+                            ? GestureDetector(
+                                onTap: () {
+                                  print("object3");
+                                },
+                                onHorizontalDragUpdate: (details) {
+                                  imageOnCurentIndex.imageWidth = max(
+                                      20,
+                                      imageOnCurentIndex.imageWidth +
+                                          details.delta.dx);
+                                  _getSizeOfTheBox(i);
+                                  setState(() {});
+                                },
+                                onHorizontalDragEnd: (details) {
+                                  imageOnCurentIndex.previousImageWidth =
+                                      imageOnCurentIndex.previousImageWidth;
+                                  setState(() {
+                                    imageOnCurentIndex.isClicked = false;
+                                  });
+                                  print("Horidragend");
+                                },
+                                child: Transform.rotate(
+                                  angle: 5.5,
+                                  child: const Icon(
+                                    Icons.arrow_drop_down_circle_outlined,
+                                    color: Colors.blueAccent,
+                                    size: 30,
                                   ),
-                                )
-                              : const SizedBox(),
-                        ],
-                      ),
+                                ),
+                              )
+                            : const SizedBox(),
+                      ],
                     ),
-                  ],
-                ),
-                // tombol untuk rotate image
-                imageOnCurentIndex.isClicked == true
-                    ? GestureDetector(
-                        onTap: () {
-                          print("object2");
-                        },
-                        onHorizontalDragUpdate: (details) {
-                          imageOnCurentIndex.rotateValue -= details.delta.dx;
-                          imageOnCurentIndex.rotateValue %= 360;
-                          setState(() {});
-                        },
-                        onVerticalDragUpdate: (details) {
-                          imageOnCurentIndex.rotateValue -= details.delta.dy;
-                          imageOnCurentIndex.rotateValue %= 360;
-                          setState(() {});
-                        },
-                        child: const Icon(
-                          Icons.autorenew,
-                          color: Colors.blueAccent,
-                          size: 30,
-                        ),
-                      )
-                    : const SizedBox(),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
+        ),
+      );
+      // Future.delayed(Durations.extralong4, () {
+      //   RenderBox box = GlobalObjectKey(imageOnCurentIndex)
+      //       .currentContext!
+      //       .findRenderObject() as RenderBox;
+      //   setState(() {
+      //     widthScalingIcon = box.size.width;
+      //     heightScalingIcon = box.size.height * 200 / 100;
+      //   });
+      // });
+      data.add(
+        // tombol untuk rotate image
+        Positioned(
+          top: imageOnCurentIndex.top,
+          left: imageOnCurentIndex.left,
+          width: widthScalingIcon, //boxBorder.size.width,
+          height: heightScalingIcon, //boxBorder.size.height * 200 / 100,
+          child: imageOnCurentIndex.isClicked == true
+              ? GestureDetector(
+                  onTap: () {
+                    print("object2");
+                  },
+                  onHorizontalDragUpdate: (details) {
+                    imageOnCurentIndex.rotateValue -= details.delta.dx;
+                    imageOnCurentIndex.rotateValue %= 360;
+                    setState(() {});
+                  },
+                  onVerticalDragUpdate: (details) {
+                    imageOnCurentIndex.rotateValue -= details.delta.dy;
+                    imageOnCurentIndex.rotateValue %= 360;
+                    setState(() {});
+                  },
+                  child: const Icon(
+                    Icons.autorenew,
+                    color: Colors.blueAccent,
+                    size: 30,
+                  ),
+                )
+              : const SizedBox(),
         ),
       );
     }
     return data;
   }
-
-  // SizedBox(
-  //   width: imageOnCurentIndex.imageWidth + 10,
-  //   height: 30,
-  //   child: Row(
-  //     mainAxisAlignment: MainAxisAlignment.end,
-  //     children: [
-  //       imageOnCurentIndex.isClicked == true
-  //           ? GestureDetector(
-  //               onTap: () {
-  //                 print("object3");
-  //               },
-  //               onHorizontalDragUpdate: (details) {
-  //                 imageOnCurentIndex.imageWidth = max(
-  //                     20,
-  //                     imageOnCurentIndex.imageWidth +
-  //                         details.delta.dx);
-  //                 setState(() {});
-  //               },
-  //               child: Transform.rotate(
-  //                 angle: 5.5,
-  //                 child: const Icon(
-  //                   Icons.arrow_drop_down_circle_outlined,
-  //                   color: Colors.blueAccent,
-  //                   size: 30,
-  //                 ),
-  //               ),
-  //             )
-  //           : const SizedBox(),
-  //     ],
-  //   ),
-  // ),
 
   List<Widget> buttonSimpanHapusImpor() {
     List<Widget> data = [];
@@ -309,6 +312,8 @@ class _MyArtboardState extends State<MyArtboard> {
         globalListImage[indexImage].rotateValue = 0.0;
         globalListImage[indexImage].imageWidth = 200.0;
         globalListImage[indexImage].previousImageWidth = 200.0;
+        globalListImage[indexImage].imageScale = 1;
+        globalListImage[indexImage].previousImageScale = 1;
       },
     );
 
@@ -356,7 +361,11 @@ class _MyArtboardState extends State<MyArtboard> {
     if (returnedImage == null) return;
     setState(() {
       _selectedImage = File(returnedImage.path);
-      globalListImage.add(StackImage(image: _selectedImage));
+      globalListImage.add(
+        StackImage(
+          image: _selectedImage,
+        ),
+      );
     });
   }
 
@@ -370,7 +379,7 @@ class _MyArtboardState extends State<MyArtboard> {
             setState(() {
               for (var i = 0; i < globalListImage.length; i++) {
                 var imageOnCurentIndex = globalListImage[i];
-                // imageOnCurentIndex.isClicked = false;
+                imageOnCurentIndex.isClicked = false;
               }
             });
           },
