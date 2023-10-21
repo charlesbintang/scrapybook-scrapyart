@@ -1,5 +1,7 @@
 import 'dart:io';
 
+enum OnAction { isFalse, isClicked, isScaling }
+
 class StackImage {
   File? image;
   double top;
@@ -9,7 +11,8 @@ class StackImage {
   double imageScale;
   double previousImageScale;
   double rotateValue;
-  bool isClicked;
+  OnAction onClicked;
+  OnAction onScaling;
 
   StackImage({
     required this.image,
@@ -20,6 +23,7 @@ class StackImage {
     this.imageWidth = 200.0,
     this.previousImageWidth = 200.0,
     this.rotateValue = 0.0,
-    this.isClicked = false,
+    this.onClicked = OnAction.isFalse,
+    this.onScaling = OnAction.isFalse,
   });
 }
