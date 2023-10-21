@@ -1,17 +1,16 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'dart:math';
-import 'dart:typed_data';
+// import 'dart:io';
+// import 'dart:math';
+// import 'dart:typed_data';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:flutter/foundation.dart';
+// import 'package:flutter/material.dart';
+// import 'package:image_gallery_saver/image_gallery_saver.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'package:permission_handler/permission_handler.dart';
 import 'package:scrapyart_home/angel/edit_image_viewmodel.dart';
 import 'package:scrapyart_home/angel/feature_my_artboard/image_text.dart';
-import 'package:scrapyart_home/angel/feature_my_artboard/stack_image_model.dart';
+// import 'package:scrapyart_home/angel/feature_my_artboard/stack_image_model.dart';
 import 'package:screenshot/screenshot.dart';
 
 class MyArtboard extends StatefulWidget {
@@ -31,34 +30,34 @@ class MyArtboard extends StatefulWidget {
 }
 
 class _MyArtboardState extends EditImageViewModel {
-  double _sliderValue = 0.0;
+  // double _sliderValue = 0.0;
 
-  List<Color> _colorOptions = [
-    Colors.black,
-    Colors.red,
-    Colors.green,
-    Colors.blue,
-    Colors.yellow,
-    Colors.purple,
-    Colors.orange,
-  ];
-  Color _selectedColor = Colors.black; // Warna awal
+  // List<Color> _colorOptions = [
+  //   Colors.black,
+  //   Colors.red,
+  //   Colors.green,
+  //   Colors.blue,
+  //   Colors.yellow,
+  //   Colors.purple,
+  //   Colors.orange,
+  // ];
+  // Color selectedColor = Colors.black; // Warna awal
 
-  void _updateTextColor(double value) {
-    setState(() {
-      _sliderValue = value;
-      int colorIndex = (_sliderValue * (_colorOptions.length - 1)).round();
-      _selectedColor = _colorOptions[colorIndex];
-    });
-  }
+  // updateTextColor(double value) {
+  //   setState(() {
+  //     _sliderValue = value;
+  //     int colorIndex = (_sliderValue * (_colorOptions.length - 1)).round();
+  //     selectedColor = _colorOptions[colorIndex];
+  //   });
+  // }
 
   ScreenshotController screenshotController = ScreenshotController();
 
-  File? _selectedImage;
+  // File? _selectedImage;
 
   bool isFilePicked = false;
 
-  Offset _tapPosition = Offset.zero;
+  // Offset _tapPosition = Offset.zero;
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -101,9 +100,7 @@ class _MyArtboardState extends EditImageViewModel {
                               onLongPress: () {
                                 print('long press detected');
                               },
-                              onTap: () {
-                                print('single press detected');
-                              },
+                              onTap: () => setCurrentIndex(context, i),
                               child: Draggable(
                                 feedback: ImageText(textInfo: texts[i]),
                                 child: ImageText(textInfo: texts[i]),
@@ -113,6 +110,7 @@ class _MyArtboardState extends EditImageViewModel {
                                   Offset off =
                                       renderBox.globalToLocal(drag.offset);
                                   setState(() {
+                                    texts[i].color = selectedColor;
                                     texts[i].top = off.dy - 120;
                                     texts[i].left = off.dx;
                                   });
@@ -187,9 +185,9 @@ class _MyArtboardState extends EditImageViewModel {
                   IconButton(
                     iconSize: 30,
                     icon: const Icon(
-                      Icons.text_format_outlined,
+                      Icons.text_fields_rounded,
                     ),
-                    onPressed: () => addNewDialog(context),
+                    onPressed: () {},
                   ),
                   IconButton(
                     iconSize: 25,
@@ -229,14 +227,7 @@ class _MyArtboardState extends EditImageViewModel {
             left: 0,
             child: Container(
               height: 40,
-              child: Slider(
-                value: _sliderValue,
-                onChanged: _updateTextColor,
-                min: 0.0,
-                max: 1.0,
-                activeColor: _selectedColor,
-                // inactiveColor: Color.fromARGB(255, 251, 231, 215),
-              ),
+              child: colorSlider(),
             ),
           ),
           // Positioned(
@@ -261,65 +252,44 @@ class _MyArtboardState extends EditImageViewModel {
                   scrollDirection: Axis.horizontal,
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () => addNewDialog(context),
+                      icon: const Icon(
+                        Icons.add_rounded,
+                        color: Colors.black,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: increaseFontSize,
                       icon: const Icon(
                         Icons.text_increase_rounded,
                         color: Colors.black,
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: decreaseFontSize,
                       icon: const Icon(
                         Icons.text_decrease_rounded,
                         color: Colors.black,
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.format_align_left_rounded,
-                        color: Colors.black,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.format_align_center_rounded,
-                        color: Colors.black,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.format_align_justify_rounded,
-                        color: Colors.black,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.format_align_right_rounded,
-                        color: Colors.black,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {},
+                      onPressed: boldText,
                       icon: const Icon(
                         Icons.format_bold_rounded,
                         color: Colors.black,
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: italicText,
                       icon: const Icon(
                         Icons.format_italic_rounded,
                         color: Colors.black,
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: underlineText,
                       icon: const Icon(
-                        Icons.space_bar_rounded,
+                        Icons.format_underline_rounded,
                         color: Colors.black,
                       ),
                     ),

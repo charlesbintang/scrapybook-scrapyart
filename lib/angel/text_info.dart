@@ -9,6 +9,7 @@ class TextInfo {
   FontStyle fontStyle;
   double fontSize;
   TextAlign textAlign;
+  TextDecoration decoration;
 
   TextInfo({
     required this.text,
@@ -19,5 +20,6 @@ class TextInfo {
     required this.fontStyle,
     required this.fontSize,
     required this.textAlign,
+    required this.decoration,
   });
 }
