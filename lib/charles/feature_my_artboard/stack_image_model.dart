@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:image_cropper/image_cropper.dart';
+
 enum OnAction { isFalse, isClicked, isScaling }
 
 class StackImage {
   File? image;
+  CroppedFile? croppedFile;
   double top;
   double left;
   double imageWidth;
@@ -16,6 +19,7 @@ class StackImage {
 
   StackImage({
     required this.image,
+    this.croppedFile,
     this.top = 0.0,
     this.left = 0.0,
     this.imageScale = 1.0,

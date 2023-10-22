@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scrapyart_home/charles/feature_my_artboard/stack_image_model.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 extension on List {
   void moveImage(StackImage element, int shift) {
@@ -34,6 +35,7 @@ class MyArtboard extends StatefulWidget {
 class _MyArtboardState extends State<MyArtboard> {
   ScreenshotController screenshotController = ScreenshotController();
   File? _selectedImage;
+  CroppedFile? croppedFile;
   Offset _tapPosition = Offset.zero;
   List<StackImage> globalListImage = [];
   double widthContainerRender = 0;
@@ -92,17 +94,15 @@ class _MyArtboardState extends State<MyArtboard> {
                 : null,
             child: Container(
               key: GlobalObjectKey(i),
+              width: imageOnCurentIndex.imageWidth,
               transformAlignment: Alignment.center,
               transform:
                   Matrix4.rotationZ(imageOnCurentIndex.rotateValue / 180 * pi),
               alignment: Alignment.center,
               decoration: imageOnCurentIndex.onClicked == OnAction.isClicked
-                  ? imageOnCurentIndex.onScaling == OnAction.isScaling
-                      ? null
-                      : BoxDecoration(
-                          border:
-                              Border.all(color: Colors.blueAccent, width: 2),
-                        )
+                  ? BoxDecoration(
+                      border: Border.all(color: Colors.blueAccent, width: 2),
+                    )
                   : null,
               child: GestureDetector(
                 onTapDown: (position) {
@@ -115,10 +115,8 @@ class _MyArtboardState extends State<MyArtboard> {
                       for (var i = 0; i < globalListImage.length; i++) {
                         var imageOnCurentIndex = globalListImage[i];
                         imageOnCurentIndex.onClicked = OnAction.isFalse;
-                        imageOnCurentIndex.onScaling = OnAction.isFalse;
                       }
                       imageOnCurentIndex.onClicked = OnAction.isClicked;
-                      imageOnCurentIndex.onScaling = OnAction.isFalse;
                     });
                     print(imageOnCurentIndex.onClicked);
                   } else if (imageOnCurentIndex.onClicked ==
@@ -133,12 +131,15 @@ class _MyArtboardState extends State<MyArtboard> {
                     setState(() {});
                   });
                 },
-                child: Image.file(
-                  imageOnCurentIndex.image!,
-                  width: imageOnCurentIndex.imageWidth,
-                  scale: imageOnCurentIndex.imageScale,
-                  fit: BoxFit.fill,
-                ),
+                child: imageOnCurentIndex.croppedFile == null
+                    ? Image.file(
+                        imageOnCurentIndex.image!,
+                        fit: BoxFit.fill,
+                      )
+                    : Image.file(
+                        File(imageOnCurentIndex.croppedFile!.path),
+                        fit: BoxFit.fill,
+                      ),
               ),
             ),
           ),
@@ -148,8 +149,8 @@ class _MyArtboardState extends State<MyArtboard> {
         Positioned(
           top: imageOnCurentIndex.top,
           left: imageOnCurentIndex.left,
-          width: widthContainerRender + 2.5,
-          height: heightContainerRender + 2.5,
+          width: widthContainerRender + 1,
+          height: heightContainerRender + 1,
           child: Container(
             transformAlignment: Alignment.center,
             transform:
@@ -160,57 +161,73 @@ class _MyArtboardState extends State<MyArtboard> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     imageOnCurentIndex.onClicked == OnAction.isClicked
-                        ? imageOnCurentIndex.onScaling == OnAction.isScaling
-                            ? const SizedBox()
-                            : GestureDetector(
-                                onHorizontalDragUpdate: (details) {
-                                  imageOnCurentIndex.imageWidth = max(
-                                      20,
-                                      imageOnCurentIndex.imageWidth +
-                                          details.delta.dx);
-                                  _getSizeOfTheBox(i);
-                                  setState(() {});
-                                },
-                                onHorizontalDragEnd: (details) {
-                                  imageOnCurentIndex.previousImageWidth =
-                                      imageOnCurentIndex.previousImageWidth;
-                                  setState(() {
-                                    imageOnCurentIndex.onClicked ==
-                                        OnAction.isFalse;
-                                  });
-                                },
-                                onVerticalDragUpdate: (details) {
-                                  imageOnCurentIndex.imageWidth = max(
-                                      20,
-                                      imageOnCurentIndex.imageWidth +
-                                          details.delta.dy);
-                                  _getSizeOfTheBox(i);
-                                  setState(() {});
-                                },
-                                onVerticalDragEnd: (details) {
-                                  imageOnCurentIndex.previousImageWidth =
-                                      imageOnCurentIndex.previousImageWidth;
-                                  setState(() {
-                                    imageOnCurentIndex.onClicked ==
-                                        OnAction.isFalse;
-                                  });
-                                },
-                                child: const Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.circle,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    Icon(
-                                      Icons.circle,
-                                      color: Colors.blueAccent,
-                                      size: 15,
-                                    ),
-                                  ],
+                        ? GestureDetector(
+                            onTap: () {
+                              _cropImage(imageOnCurentIndex);
+                            },
+                            // onHorizontalDragUpdate: (details) {
+                            //   imageOnCurentIndex.imageWidth = max(
+                            //       20,
+                            //       imageOnCurentIndex.imageWidth +
+                            //           details.delta.dx);
+                            //   _getSizeOfTheBox(i);
+                            //   setState(() {});
+                            // },
+                            // onHorizontalDragEnd: (details) {
+                            //   imageOnCurentIndex.previousImageWidth =
+                            //       imageOnCurentIndex.previousImageWidth;
+                            //   setState(() {
+                            //     imageOnCurentIndex.onClicked ==
+                            //         OnAction.isFalse;
+                            //   });
+                            // },
+                            // onVerticalDragUpdate: (details) {
+                            //   imageOnCurentIndex.imageWidth = max(
+                            //       20,
+                            //       imageOnCurentIndex.imageWidth +
+                            //           details.delta.dy);
+                            //   _getSizeOfTheBox(i);
+                            //   setState(() {});
+                            // },
+                            // onVerticalDragEnd: (details) {
+                            //   imageOnCurentIndex.previousImageWidth =
+                            //       imageOnCurentIndex.previousImageWidth;
+                            //   setState(() {
+                            //     imageOnCurentIndex.onClicked ==
+                            //         OnAction.isFalse;
+                            //   });
+                            // },
+                            // child: const Stack(
+                            //   alignment: Alignment.center,
+                            //   children: [
+                            //     Icon(
+                            //       Icons.circle,
+                            //       color: Colors.white,
+                            //       size: 20,
+                            //     ),
+                            //     Icon(
+                            //       Icons.circle,
+                            //       color: Colors.blueAccent,
+                            //       size: 15,
+                            //     ),
+                            //   ],
+                            // ),
+                            child: const Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Icon(
+                                  Icons.rectangle_rounded,
+                                  color: Colors.white,
+                                  size: 30,
                                 ),
-                              )
+                                Icon(
+                                  Icons.crop_rounded,
+                                  color: Colors.blueAccent,
+                                  size: 25,
+                                ),
+                              ],
+                            ),
+                          )
                         : const SizedBox(),
                     const Expanded(child: SizedBox()),
                   ],
@@ -221,57 +238,55 @@ class _MyArtboardState extends State<MyArtboard> {
                   children: [
                     const Expanded(child: SizedBox()),
                     imageOnCurentIndex.onClicked == OnAction.isClicked
-                        ? imageOnCurentIndex.onScaling == OnAction.isScaling
-                            ? const SizedBox()
-                            : GestureDetector(
-                                onHorizontalDragUpdate: (details) {
-                                  imageOnCurentIndex.imageWidth = max(
-                                      20,
-                                      imageOnCurentIndex.imageWidth +
-                                          details.delta.dx);
-                                  _getSizeOfTheBox(i);
-                                  setState(() {});
-                                },
-                                onHorizontalDragEnd: (details) {
-                                  imageOnCurentIndex.previousImageWidth =
-                                      imageOnCurentIndex.previousImageWidth;
-                                  setState(() {
-                                    imageOnCurentIndex.onClicked ==
-                                        OnAction.isFalse;
-                                  });
-                                },
-                                onVerticalDragUpdate: (details) {
-                                  imageOnCurentIndex.imageWidth = max(
-                                      20,
-                                      imageOnCurentIndex.imageWidth +
-                                          details.delta.dy);
-                                  _getSizeOfTheBox(i);
-                                  setState(() {});
-                                },
-                                onVerticalDragEnd: (details) {
-                                  imageOnCurentIndex.previousImageWidth =
-                                      imageOnCurentIndex.previousImageWidth;
-                                  setState(() {
-                                    imageOnCurentIndex.onClicked ==
-                                        OnAction.isFalse;
-                                  });
-                                },
-                                child: const Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.circle,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    Icon(
-                                      Icons.circle,
-                                      color: Colors.blueAccent,
-                                      size: 15,
-                                    ),
-                                  ],
+                        ? GestureDetector(
+                            onHorizontalDragUpdate: (details) {
+                              imageOnCurentIndex.imageWidth = max(
+                                  20,
+                                  imageOnCurentIndex.imageWidth +
+                                      details.delta.dx);
+                              _getSizeOfTheBox(i);
+                              setState(() {});
+                            },
+                            onHorizontalDragEnd: (details) {
+                              imageOnCurentIndex.previousImageWidth =
+                                  imageOnCurentIndex.previousImageWidth;
+                              setState(() {
+                                imageOnCurentIndex.onClicked ==
+                                    OnAction.isFalse;
+                              });
+                            },
+                            onVerticalDragUpdate: (details) {
+                              imageOnCurentIndex.imageWidth = max(
+                                  20,
+                                  imageOnCurentIndex.imageWidth +
+                                      details.delta.dy);
+                              _getSizeOfTheBox(i);
+                              setState(() {});
+                            },
+                            onVerticalDragEnd: (details) {
+                              imageOnCurentIndex.previousImageWidth =
+                                  imageOnCurentIndex.previousImageWidth;
+                              setState(() {
+                                imageOnCurentIndex.onClicked ==
+                                    OnAction.isFalse;
+                              });
+                            },
+                            child: const Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Icon(
+                                  Icons.circle,
+                                  color: Colors.white,
+                                  size: 25,
                                 ),
-                              )
+                                Icon(
+                                  Icons.circle,
+                                  color: Colors.blueAccent,
+                                  size: 15,
+                                ),
+                              ],
+                            ),
+                          )
                         : const SizedBox(),
                   ],
                 ),
@@ -288,25 +303,23 @@ class _MyArtboardState extends State<MyArtboard> {
           width: widthContainerRender,
           height: heightContainerRender * 220 / 100,
           child: imageOnCurentIndex.onClicked == OnAction.isClicked
-              ? imageOnCurentIndex.onScaling == OnAction.isScaling
-                  ? const SizedBox()
-                  : GestureDetector(
-                      onHorizontalDragUpdate: (details) {
-                        imageOnCurentIndex.rotateValue -= details.delta.dx;
-                        imageOnCurentIndex.rotateValue %= 360;
-                        setState(() {});
-                      },
-                      onVerticalDragUpdate: (details) {
-                        imageOnCurentIndex.rotateValue -= details.delta.dy;
-                        imageOnCurentIndex.rotateValue %= 360;
-                        setState(() {});
-                      },
-                      child: const Icon(
-                        Icons.autorenew,
-                        color: Colors.blueAccent,
-                        size: 30,
-                      ),
-                    )
+              ? GestureDetector(
+                  onHorizontalDragUpdate: (details) {
+                    imageOnCurentIndex.rotateValue -= details.delta.dx;
+                    imageOnCurentIndex.rotateValue %= 360;
+                    setState(() {});
+                  },
+                  onVerticalDragUpdate: (details) {
+                    imageOnCurentIndex.rotateValue -= details.delta.dy;
+                    imageOnCurentIndex.rotateValue %= 360;
+                    setState(() {});
+                  },
+                  child: const Icon(
+                    Icons.autorenew,
+                    color: Colors.blueAccent,
+                    size: 30,
+                  ),
+                )
               : const SizedBox(),
         ),
       );
@@ -436,6 +449,45 @@ class _MyArtboardState extends State<MyArtboard> {
         ),
       );
     });
+  }
+
+  Future<void> _cropImage(StackImage imageOnCurrentIndex) async {
+    if (imageOnCurrentIndex.image != null) {
+      final croppedFile = await ImageCropper().cropImage(
+        sourcePath: imageOnCurrentIndex.image!.path,
+        compressFormat: ImageCompressFormat.jpg,
+        compressQuality: 100,
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              toolbarColor: Colors.deepOrange,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+          WebUiSettings(
+            context: context,
+            presentStyle: CropperPresentStyle.dialog,
+            boundary: const CroppieBoundary(
+              width: 520,
+              height: 520,
+            ),
+            viewPort:
+                const CroppieViewPort(width: 480, height: 480, type: 'circle'),
+            enableExif: true,
+            enableZoom: true,
+            showZoomer: true,
+          ),
+        ],
+      );
+      if (croppedFile != null) {
+        setState(() {
+          imageOnCurrentIndex.croppedFile = croppedFile;
+        });
+      }
+    }
   }
 
   Center artboardCanvas(BuildContext context) {
