@@ -148,7 +148,7 @@ class _MyArtboardState extends EditImageViewModel {
             child: Container(
               width: 400,
               height: 250,
-              color: Color.fromARGB(255, 240, 240, 240),
+              color: const Color.fromARGB(255, 240, 240, 240),
             ),
           ),
           Positioned(
@@ -225,7 +225,7 @@ class _MyArtboardState extends EditImageViewModel {
             bottom: 200,
             right: 0,
             left: 0,
-            child: Container(
+            child: SizedBox(
               height: 40,
               child: colorSlider(),
             ),

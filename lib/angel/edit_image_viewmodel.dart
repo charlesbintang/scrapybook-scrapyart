@@ -142,14 +142,14 @@ abstract class EditImageViewModel extends State<MyArtboard> {
         actions: <Widget>[
           DefaultButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Back'),
               color: Colors.white,
-              textcolor: Colors.black),
+              textcolor: Colors.black,
+              child: const Text('Back')),
           DefaultButton(
               onPressed: () => addNewsText(context),
-              child: const Text('Add Text'),
               color: const Color.fromARGB(255, 122, 74, 37),
-              textcolor: Colors.white)
+              textcolor: Colors.white,
+              child: const Text('Add Text'))
         ],
       ),
     );
