@@ -51,8 +51,42 @@ class _MyArtboardState extends State<MyArtboard> {
             Text("MyArtboard", style: Theme.of(context).textTheme.titleLarge),
         centerTitle: true,
       ),
-      body: artboardCanvas(context),
-      floatingActionButton: floatingActionButton(),
+      body: Center(
+        child: Screenshot(
+          controller: screenshotController,
+          child: GestureDetector(
+            onTap: () {
+              print("tertekan");
+              setState(() {
+                for (var i = 0; i < globalListImage.length; i++) {
+                  var imageOnCurentIndex = globalListImage[i];
+                  imageOnCurentIndex.onClicked == OnAction.isFalse;
+                }
+              });
+            },
+            child: Container(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              height: MediaQuery.of(context).size.height * 78 / 100,
+              width: MediaQuery.of(context).size.width * 95 / 100,
+              margin: const EdgeInsets.only(bottom: 55),
+              child: Stack(
+                // clipBehavior: Clip.none,
+                children: dataStack(),
+              ),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButton: SizedBox(
+          height: 35,
+          child: ListView.separated(
+              padding: const EdgeInsets.only(left: 25),
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) => buttonSimpanHapusImpor()[index],
+              separatorBuilder: (context, index) => const SizedBox(
+                    width: 10,
+                  ),
+              itemCount: buttonSimpanHapusImpor().length)),
     );
   }
 
@@ -78,6 +112,81 @@ class _MyArtboardState extends State<MyArtboard> {
     List<Widget> data = [];
     for (var i = 0; i < globalListImage.length; i++) {
       var imageOnCurentIndex = globalListImage[i];
+      // data.add(
+      //   Positioned(
+      //     top: imageOnCurentIndex.top,
+      //     left: imageOnCurentIndex.left,
+      //     child: GestureDetector(
+      //       onPanUpdate: imageOnCurentIndex.onClicked == OnAction.isFalse
+      //           ? (details) {
+      //               imageOnCurentIndex.top =
+      //                   imageOnCurentIndex.top + details.delta.dy;
+      //               imageOnCurentIndex.left =
+      //                   imageOnCurentIndex.left + details.delta.dx;
+      //               setState(() {});
+      //             }
+      //           : null,
+      //       child: Container(
+      //         key: GlobalObjectKey(i),
+      //         transformAlignment: Alignment.center,
+      //         height: imageOnCurentIndex.imageHeight,
+      //         width: imageOnCurentIndex.imageWidth,
+      //         transform:
+      //             Matrix4.rotationZ(imageOnCurentIndex.rotateValue / 180 * pi),
+      //         alignment: Alignment.center,
+      //         decoration: BoxDecoration(
+      //           borderRadius: imageOnCurentIndex.boxRound == OnAction.isRounded
+      //               ? BorderRadius.circular(imageOnCurentIndex.boxRoundValue)
+      //               : null,
+      //           image: DecorationImage(
+      //               image: imageOnCurentIndex.croppedFile == null
+      //                   ? FileImage(imageOnCurentIndex.image!)
+      //                   : FileImage(File(imageOnCurentIndex.croppedFile!.path)),
+      //               fit: BoxFit.fill),
+      //           border: imageOnCurentIndex.onClicked == OnAction.isClicked
+      //               ? Border.all(color: Colors.blueAccent, width: 2)
+      //               : null,
+      //         ),
+      //         child: GestureDetector(
+      //           onTapDown: (position) {
+      //             _getTapPosition(position);
+      //             _getSizeOfTheBox(i);
+      //           },
+      //           onTap: () {
+      //             if (imageOnCurentIndex.onClicked == OnAction.isFalse) {
+      //               setState(() {
+      //                 for (var i = 0; i < globalListImage.length; i++) {
+      //                   var imageOnCurentIndex = globalListImage[i];
+      //                   imageOnCurentIndex.onClicked = OnAction.isFalse;
+      //                 }
+      //                 imageOnCurentIndex.onClicked = OnAction.isClicked;
+      //               });
+      //             } else if (imageOnCurentIndex.onClicked ==
+      //                 OnAction.isClicked) {
+      //               imageOnCurentIndex.onClicked = OnAction.isFalse;
+      //             }
+      //           },
+      //           onLongPress: () {
+      //             moveImage(i).then((value) {
+      //               setState(() {});
+      //             });
+      //           },
+      //           // child: imageOnCurentIndex.croppedFile == null
+      //           //     ? Image.file(
+      //           //         imageOnCurentIndex.image!,
+      //           //         width: imageOnCurentIndex.imageWidth,
+      //           //         fit: BoxFit.fill,
+      //           //       )
+      //           //     : Image.file(
+      //           //         File(imageOnCurentIndex.croppedFile!.path),
+      //           //         width: imageOnCurentIndex.imageWidth,
+      //           //         fit: BoxFit.fill,
+      //           //       ),
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      // );
       data.add(
         Positioned(
           top: imageOnCurentIndex.top,
@@ -93,205 +202,383 @@ class _MyArtboardState extends State<MyArtboard> {
                   }
                 : null,
             child: Container(
-              key: GlobalObjectKey(i),
-              transformAlignment: Alignment.center,
-              height: imageOnCurentIndex.imageHeight,
-              width: imageOnCurentIndex.imageWidth,
-              transform:
-                  Matrix4.rotationZ(imageOnCurentIndex.rotateValue / 180 * pi),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: imageOnCurentIndex.boxRound == OnAction.isRounded
-                    ? BorderRadius.circular(imageOnCurentIndex.boxRoundValue)
-                    : null,
-                image: DecorationImage(
-                    image: imageOnCurentIndex.croppedFile == null
-                        ? FileImage(imageOnCurentIndex.image!)
-                        : FileImage(File(imageOnCurentIndex.croppedFile!.path)),
-                    fit: BoxFit.fill),
-                border: imageOnCurentIndex.onClicked == OnAction.isClicked
-                    ? Border.all(color: Colors.blueAccent, width: 2)
-                    : null,
-              ),
-              child: GestureDetector(
-                onTapDown: (position) {
-                  _getTapPosition(position);
-                  _getSizeOfTheBox(i);
-                },
-                onTap: () {
-                  if (imageOnCurentIndex.onClicked == OnAction.isFalse) {
-                    setState(() {
-                      for (var i = 0; i < globalListImage.length; i++) {
-                        var imageOnCurentIndex = globalListImage[i];
-                        imageOnCurentIndex.onClicked = OnAction.isFalse;
-                      }
-                      imageOnCurentIndex.onClicked = OnAction.isClicked;
-                    });
-                  } else if (imageOnCurentIndex.onClicked ==
-                      OnAction.isClicked) {
-                    imageOnCurentIndex.onClicked = OnAction.isFalse;
-                  }
-                },
-                onLongPress: () {
-                  moveImage(i).then((value) {
-                    setState(() {});
-                  });
-                },
-                // child: imageOnCurentIndex.croppedFile == null
-                //     ? Image.file(
-                //         imageOnCurentIndex.image!,
-                //         width: imageOnCurentIndex.imageWidth,
-                //         fit: BoxFit.fill,
-                //       )
-                //     : Image.file(
-                //         File(imageOnCurentIndex.croppedFile!.path),
-                //         width: imageOnCurentIndex.imageWidth,
-                //         fit: BoxFit.fill,
-                //       ),
-              ),
-            ),
-          ),
-        ),
-      );
-      data.add(
-        Positioned(
-          top: imageOnCurentIndex.top,
-          left: imageOnCurentIndex.left,
-          width: widthContainerRender + 1,
-          height: heightContainerRender + 1,
-          child: Container(
-            transformAlignment: Alignment.center,
-            transform:
-                Matrix4.rotationZ(imageOnCurentIndex.rotateValue / 180 * pi),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                key: GlobalObjectKey(i),
+                width: imageOnCurentIndex.imageWidth,
+                height: imageOnCurentIndex.imageHeight,
+                transformAlignment: Alignment.center,
+                transform: Matrix4.rotationZ(
+                    imageOnCurentIndex.rotateValue / 180 * pi),
+                // alignment: Alignment.center,
+                // decoration: BoxDecoration(
+                //   borderRadius: imageOnCurentIndex.boxRound == OnAction.isRounded
+                //       ? BorderRadius.circular(imageOnCurentIndex.boxRoundValue)
+                //       : null,
+                //   image: DecorationImage(
+                //       image: imageOnCurentIndex.croppedFile == null
+                //           ? FileImage(imageOnCurentIndex.image!)
+                //           : FileImage(File(imageOnCurentIndex.croppedFile!.path)),
+                //       fit: BoxFit.fill),
+                //   border: imageOnCurentIndex.onClicked == OnAction.isClicked
+                //       ? Border.all(color: Colors.blueAccent, width: 2)
+                //       : null,
+                // ),
+                child: Stack(
                   children: [
-                    // imageOnCurentIndex.onClicked == OnAction.isClicked
-                    //     ? GestureDetector(
-                    //         onHorizontalDragUpdate: (details) {
-                    //           imageOnCurentIndex.imageWidth = max(
-                    //               20,
-                    //               imageOnCurentIndex.imageWidth +
-                    //                   details.delta.dx);
-                    //           _getSizeOfTheBox(i);
-                    //           setState(() {});
-                    //         },
-                    //         onHorizontalDragEnd: (details) {
-                    //           setState(() {
-                    //             imageOnCurentIndex.onClicked ==
-                    //                 OnAction.isFalse;
-                    //           });
-                    //         },
-                    //         onVerticalDragUpdate: (details) {
-                    //           imageOnCurentIndex.imageHeight =
-                    //               imageOnCurentIndex.imageHeight +
-                    //                   details.delta.dy;
-                    //           _getSizeOfTheBox(i);
-                    //           setState(() {});
-                    //         },
-                    //         onVerticalDragEnd: (details) {
-                    //           setState(() {
-                    //             imageOnCurentIndex.onClicked ==
-                    //                 OnAction.isFalse;
-                    //           });
-                    //         },
-                    //         child: const Stack(
-                    //           alignment: Alignment.center,
-                    //           children: [
-                    //             Icon(
-                    //               Icons.circle,
-                    //               color: Colors.white,
-                    //               size: 25,
-                    //             ),
-                    //             Icon(
-                    //               Icons.circle,
-                    //               color: Colors.blueAccent,
-                    //               size: 15,
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       )
-                    //     : const SizedBox(),
-                  ],
-                ),
-                const Expanded(child: SizedBox()),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Expanded(child: SizedBox()),
-                    imageOnCurentIndex.onClicked == OnAction.isClicked
-                        ? GestureDetector(
-                            // onHorizontalDragUpdate: (details) {
-                            //   imageOnCurentIndex.imageWidth = max(
-                            //       20,
-                            //       imageOnCurentIndex.imageWidth +
-                            //           details.delta.dx);
-                            //   _getSizeOfTheBox(i);
-                            //   setState(() {});
-                            // },
-                            // onHorizontalDragEnd: (details) {
-                            //   setState(() {
-                            //     imageOnCurentIndex.onClicked ==
-                            //         OnAction.isFalse;
-                            //   });
-                            // },
-                            // onVerticalDragUpdate: (details) {
-                            //   imageOnCurentIndex.imageHeight =
-                            //       imageOnCurentIndex.imageHeight +
-                            //           details.delta.dy;
-                            //   _getSizeOfTheBox(i);
-                            //   setState(() {});
-                            // },
-                            // onVerticalDragEnd: (details) {
-                            //   setState(() {
-                            //     imageOnCurentIndex.onClicked ==
-                            //         OnAction.isFalse;
-                            //   });
-                            // },
-                            onTap: () {
-                              print(imageOnCurentIndex.imageHeight);
-                              print(imageOnCurentIndex.imageWidth);
-                            },
-                            onPanUpdate: (details) {
-                              imageOnCurentIndex.imageHeight = max(
-                                  28,
-                                  imageOnCurentIndex.imageHeight +
-                                      details.delta.dy);
-                              imageOnCurentIndex.imageWidth = max(
-                                  92,
-                                  imageOnCurentIndex.imageWidth +
-                                      details.delta.dx);
-                              _getSizeOfTheBox(i);
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      child: Container(
+                        // color: Colors.amber,
+                        width: imageOnCurentIndex.imageWidth - 20,
+                        height: imageOnCurentIndex.imageHeight - 20,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              imageOnCurentIndex.boxRound == OnAction.isRounded
+                                  ? BorderRadius.circular(
+                                      imageOnCurentIndex.boxRoundValue)
+                                  : null,
+                          image: DecorationImage(
+                              image: imageOnCurentIndex.croppedFile == null
+                                  ? FileImage(imageOnCurentIndex.image!)
+                                  : FileImage(File(
+                                      imageOnCurentIndex.croppedFile!.path)),
+                              fit: BoxFit.fill),
+                          border: imageOnCurentIndex.onClicked ==
+                                  OnAction.isClicked
+                              ? Border.all(color: Colors.blueAccent, width: 2)
+                              : null,
+                        ),
+                        child: GestureDetector(
+                          onTapDown: (position) {
+                            _getTapPosition(position);
+                            _getSizeOfTheBox(i);
+                          },
+                          onTap: () {
+                            if (imageOnCurentIndex.onClicked ==
+                                OnAction.isFalse) {
+                              setState(() {
+                                for (var i = 0;
+                                    i < globalListImage.length;
+                                    i++) {
+                                  var imageOnCurentIndex = globalListImage[i];
+                                  imageOnCurentIndex.onClicked =
+                                      OnAction.isFalse;
+                                }
+                                imageOnCurentIndex.onClicked =
+                                    OnAction.isClicked;
+                              });
+                            } else if (imageOnCurentIndex.onClicked ==
+                                OnAction.isClicked) {
+                              imageOnCurentIndex.onClicked = OnAction.isFalse;
+                            }
+                          },
+                          onLongPress: () {
+                            moveImage(i).then((value) {
                               setState(() {});
-                            },
-                            child: const Stack(
-                              alignment: Alignment.center,
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      child: SizedBox(
+                        width: imageOnCurentIndex.imageWidth - 20,
+                        height: imageOnCurentIndex.imageHeight - 20,
+                        child: Column(
+                          children: [
+                            const Expanded(child: SizedBox()),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Icon(
-                                  Icons.circle,
-                                  color: Colors.white,
-                                  size: 25,
-                                ),
-                                Icon(
-                                  Icons.circle,
-                                  color: Colors.blueAccent,
-                                  size: 15,
-                                ),
+                                const Expanded(child: SizedBox()),
+                                imageOnCurentIndex.onClicked ==
+                                        OnAction.isClicked
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          print(imageOnCurentIndex.imageWidth);
+                                          print(imageOnCurentIndex.imageHeight);
+                                        },
+                                        onPanUpdate: (details) {
+                                          _getSizeOfTheBox(i);
+
+                                          imageOnCurentIndex.imageHeight = max(
+                                              70,
+                                              imageOnCurentIndex.imageHeight +
+                                                  details.delta.dy);
+                                          imageOnCurentIndex.imageWidth = max(
+                                              90,
+                                              imageOnCurentIndex.imageWidth +
+                                                  details.delta.dx);
+                                          setState(() {});
+                                        },
+                                        child: const Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.circle,
+                                              color: Colors.white,
+                                              size: 25,
+                                            ),
+                                            Icon(
+                                              Icons.circle,
+                                              color: Colors.blueAccent,
+                                              size: 15,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : const SizedBox(),
                               ],
                             ),
-                          )
-                        : const SizedBox(),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: imageOnCurentIndex.onClicked == OnAction.isClicked
+                          ? GestureDetector(
+                              onHorizontalDragUpdate: (details) {
+                                imageOnCurentIndex.imageWidth = max(
+                                    90,
+                                    imageOnCurentIndex.imageWidth +
+                                        details.delta.dx);
+                                imageOnCurentIndex.imageHeight = max(
+                                    70,
+                                    imageOnCurentIndex.imageHeight +
+                                        details.delta.dx);
+                                _getSizeOfTheBox(i);
+                                setState(() {});
+                              },
+                              onVerticalDragUpdate: (details) {
+                                imageOnCurentIndex.imageWidth = max(
+                                    90,
+                                    imageOnCurentIndex.imageWidth +
+                                        details.delta.dy);
+                                imageOnCurentIndex.imageHeight = max(
+                                    70,
+                                    imageOnCurentIndex.imageHeight +
+                                        details.delta.dy);
+                                _getSizeOfTheBox(i);
+                                setState(() {});
+                              },
+                              child: Transform.rotate(
+                                angle: 45 / 180 * pi,
+                                child: const Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.blueAccent,
+                                  size: 30,
+                                ),
+                              ),
+                            )
+                          : const SizedBox(),
+                    )
                   ],
-                ),
-              ],
-            ),
+                )),
           ),
         ),
       );
+      // tombol resize image
+      // data.add(
+      //   Positioned(
+      //     top: imageOnCurentIndex.top,
+      //     left: imageOnCurentIndex.left,
+      //     width: widthContainerRender + 1,
+      //     height: heightContainerRender + 1,
+      //     child: Container(
+      //       transformAlignment: Alignment.center,
+      //       transform:
+      //           Matrix4.rotationZ(imageOnCurentIndex.rotateValue / 180 * pi),
+      //       child: Column(
+      //         children: [
+      //           const Expanded(child: SizedBox()),
+      //           Row(
+      //             mainAxisAlignment: MainAxisAlignment.start,
+      //             children: [
+      //               const Expanded(child: SizedBox()),
+      //               imageOnCurentIndex.onClicked == OnAction.isClicked
+      //                   ? GestureDetector(
+      //                       onTap: () {
+      //                         print(imageOnCurentIndex.imageHeight);
+      //                         print(imageOnCurentIndex.imageWidth);
+      //                       },
+      //                       onPanUpdate: (details) {
+      //                         imageOnCurentIndex.imageHeight = max(
+      //                             28,
+      //                             imageOnCurentIndex.imageHeight +
+      //                                 details.delta.dy);
+      //                         imageOnCurentIndex.imageWidth = max(
+      //                             92,
+      //                             imageOnCurentIndex.imageWidth +
+      //                                 details.delta.dx);
+      //                         _getSizeOfTheBox(i);
+      //                         setState(() {});
+      //                       },
+      //                       child: const Stack(
+      //                         alignment: Alignment.center,
+      //                         children: [
+      //                           Icon(
+      //                             Icons.circle,
+      //                             color: Colors.white,
+      //                             size: 25,
+      //                           ),
+      //                           Icon(
+      //                             Icons.circle,
+      //                             color: Colors.blueAccent,
+      //                             size: 15,
+      //                           ),
+      //                         ],
+      //                       ),
+      //                     )
+      //                   : const SizedBox(),
+      //             ],
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // );
+      // data.add(
+      //   Positioned(
+      //     top: imageOnCurentIndex.top,
+      //     left: imageOnCurentIndex.left,
+      //     width: widthContainerRender + 23,
+      //     height: heightContainerRender + 23,
+      //     child: Container(
+      //       color: Colors.amber,
+      //       transformAlignment: Alignment.center,
+      //       transform:
+      //           Matrix4.rotationZ(imageOnCurentIndex.rotateValue / 180 * pi),
+      //       child: Column(
+      //         children: [
+      //           const Expanded(child: SizedBox()),
+      //           Row(
+      //             mainAxisAlignment: MainAxisAlignment.start,
+      //             children: [
+      //               const Expanded(child: SizedBox()),
+      //               imageOnCurentIndex.onClicked == OnAction.isClicked
+      //                   ? GestureDetector(
+      //                       onTap: () {
+      //                         print(imageOnCurentIndex.imageHeight);
+      //                         print(imageOnCurentIndex.imageWidth);
+      //                       },
+      //                       onPanUpdate: (details) {
+      //                         imageOnCurentIndex.imageHeight = max(
+      //                             28,
+      //                             imageOnCurentIndex.imageHeight +
+      //                                 details.delta.dy);
+      //                         imageOnCurentIndex.imageWidth = max(
+      //                             92,
+      //                             imageOnCurentIndex.imageWidth +
+      //                                 details.delta.dx);
+      //                         _getSizeOfTheBox(i);
+      //                         setState(() {});
+      //                       },
+      //                       child: Transform.rotate(
+      //                         angle: 45 / 180 * pi,
+      //                         child: const Icon(
+      //                           Icons.arrow_forward_ios,
+      //                           color: Colors.blueAccent,
+      //                           size: 30,
+      //                         ),
+      //                       ),
+      //                     )
+      //                   : const SizedBox(),
+      //             ],
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // );
+      // data.add(
+      //   Positioned(
+      //     top: imageOnCurentIndex.top,
+      //     left: imageOnCurentIndex.left,
+      //     width: widthContainerRender,
+      //     height: heightContainerRender,
+      //     child: Container(
+      //       // color: Colors.amber,
+      //       transformAlignment: Alignment.center,
+      //       transform:
+      //           Matrix4.rotationZ(imageOnCurentIndex.rotateValue / 180 * pi),
+      //       child: Stack(
+      //         clipBehavior: Clip.none,
+      //         children: [
+      //           Positioned(
+      //             right: 10,
+      //             bottom: 10,
+      //             // bottom: 0,
+      //             child: GestureDetector(
+      //               onHorizontalDragUpdate: (details) {
+      //                 imageOnCurentIndex.imageHeight =
+      //                     imageOnCurentIndex.imageHeight + details.delta.dx;
+      //                 imageOnCurentIndex.imageWidth =
+      //                     imageOnCurentIndex.imageWidth + details.delta.dx;
+      //                 setState(() {});
+      //               },
+      //               onVerticalDragUpdate: (details) {
+      //                 imageOnCurentIndex.imageHeight =
+      //                     imageOnCurentIndex.imageHeight + details.delta.dy;
+      //                 imageOnCurentIndex.imageWidth =
+      //                     imageOnCurentIndex.imageWidth + details.delta.dy;
+      //                 setState(() {});
+      //               },
+      //               child: Transform.rotate(
+      //                 angle: 45 / 180 * pi,
+      //                 child: const Icon(
+      //                   Icons.arrow_forward_ios,
+      //                   color: Colors.blueAccent,
+      //                   size: 30,
+      //                 ),
+      //               ),
+      //             ),
+      //           ),
+      //           // const Expanded(child: SizedBox()),
+      //           // Row(
+      //           //   mainAxisAlignment: MainAxisAlignment.start,
+      //           //   children: [
+      //           //     const Expanded(child: SizedBox()),
+      //           //     imageOnCurentIndex.onClicked == OnAction.isClicked
+      //           //         ? GestureDetector(
+      //           //             onTap: () {
+      //           //               print(imageOnCurentIndex.imageHeight);
+      //           //               print(imageOnCurentIndex.imageWidth);
+      //           //             },
+      //           //             onPanUpdate: (details) {
+      //           //               imageOnCurentIndex.imageHeight = max(
+      //           //                   28,
+      //           //                   imageOnCurentIndex.imageHeight +
+      //           //                       details.delta.dy);
+      //           //               imageOnCurentIndex.imageWidth = max(
+      //           //                   92,
+      //           //                   imageOnCurentIndex.imageWidth +
+      //           //                       details.delta.dx);
+      //           //               _getSizeOfTheBox(i);
+      //           //               setState(() {});
+      //           //             },
+      //           //             child: Transform.rotate(
+      //           //               angle: 45 / 180 * pi,
+      //           //               child: const Icon(
+      //           //                 Icons.arrow_forward_ios,
+      //           //                 color: Colors.blueAccent,
+      //           //                 size: 30,
+      //           //               ),
+      //           //             ),
+      //           //           )
+      //           //         : const SizedBox(),
+      //           //   ],
+      //           // ),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // );
+      // tombol untuk rotate image
       data.add(
-        // tombol untuk rotate image
         Positioned(
           top: imageOnCurentIndex.top,
           left: imageOnCurentIndex.left,
