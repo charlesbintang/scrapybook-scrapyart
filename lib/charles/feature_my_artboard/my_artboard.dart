@@ -60,7 +60,7 @@ class _MyArtboardState extends State<MyArtboard> {
               setState(() {
                 for (var i = 0; i < globalListImage.length; i++) {
                   var imageOnCurentIndex = globalListImage[i];
-                  imageOnCurentIndex.onClicked == OnAction.isFalse;
+                  imageOnCurentIndex.onClicked = OnAction.isFalse;
                 }
               });
             },
