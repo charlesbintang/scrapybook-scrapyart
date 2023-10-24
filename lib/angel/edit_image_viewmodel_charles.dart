@@ -6,11 +6,12 @@ import 'package:scrapyart_home/angel/default_button.dart';
 import 'package:scrapyart_home/charles/my_artboard_charles.dart';
 import 'package:scrapyart_home/charles/stack_object_model.dart';
 
+enum ActionCallback { none, showColorSlider, showRotateSlider }
+
 abstract class EditImageViewModelCharles extends MyArtboardCharles {
   TextEditingController textEditingController = TextEditingController();
   TextEditingController creatorText = TextEditingController();
-  // List<TextInfo> globalListObject = [];
-  // int currentIndex = 0;
+  ActionCallback slider = ActionCallback.none;
   double _sliderValue = 0.0;
 
   final List<Color> _colorOptions = [
@@ -123,15 +124,15 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
             hintText: 'Your Text Here..',
           ),
         ),
-        actions: <Widget>[
+        actions: [
           DefaultButton(
-              onPressed: () {}, //=> Navigator.of(context).pop(),
+              onPressed: () => Navigator.of(context).pop(),
               color: Colors.white,
               textcolor: Colors.black,
               child: const Text('Back')),
           DefaultButton(
               onPressed: textEditingController.text.isEmpty
-                  ? () => addNewsText(context)
+                  ? () => Navigator.of(context).pop()
                   : () => addNewsText(context),
               color: const Color.fromARGB(255, 122, 74, 37),
               textcolor: Colors.white,
@@ -192,7 +193,7 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
   Column columRowTextsMenu() {
     return Column(
       children: [
-        colorSlider(),
+        if (slider == ActionCallback.showColorSlider) colorSlider(),
         Row(
           children: [
             const Expanded(child: SizedBox()),
@@ -201,6 +202,17 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
               icon: const Icon(
                 Icons.add_rounded,
                 color: Colors.black,
+              ),
+            ),
+            // if (textEditingController.text.isNotEmpty)
+            IconButton(
+              onPressed: () {
+                slider = ActionCallback.showColorSlider;
+                setState(() {});
+              },
+              icon: Icon(
+                Icons.rectangle_rounded,
+                color: selectedColor,
               ),
             ),
             IconButton(
@@ -240,103 +252,6 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
             ),
             const Expanded(child: SizedBox()),
           ],
-        ),
-      ],
-    );
-  }
-
-  switchListView(String menu) {
-    ListView returnedListView = ListView();
-    switch (menu) {
-      case "texts":
-        returnedListView = textsMenu();
-        break;
-      case "images":
-        returnedListView = imagesMenu();
-        break;
-      default:
-        print("tidak ada list view yang ditampilkan");
-    }
-    return returnedListView;
-  }
-
-  ListView imagesMenu() {
-    return ListView(
-      scrollDirection: Axis.horizontal,
-      children: [
-        IconButton(
-          onPressed: () => pickImageFromGallery(),
-          icon: const Icon(
-            Icons.add_a_photo,
-            color: Colors.black,
-          ),
-        ),
-        // IconButton(
-        //   onPressed: () {
-        // TODO : hapus gambar yang telah dipilih
-        //     }
-        //   },
-        //   icon: const Icon(Icons.hide_image),
-        // ),
-        IconButton(
-          onPressed: () {
-            for (var i = 0; i < globalListObject.length; i++) {
-              globalListObject[i].image = null;
-            }
-            globalListObject.removeWhere((element) => element.image == null);
-            setState(() {});
-          },
-          icon: const Icon(Icons.delete, color: Colors.black),
-        ),
-      ],
-    );
-  }
-
-  ListView textsMenu() {
-    return ListView(
-      scrollDirection: Axis.horizontal,
-      children: [
-        IconButton(
-          onPressed: () => addNewDialog(context),
-          icon: const Icon(
-            Icons.add_rounded,
-            color: Colors.black,
-          ),
-        ),
-        IconButton(
-          onPressed: increaseFontSize,
-          icon: const Icon(
-            Icons.text_increase_rounded,
-            color: Colors.black,
-          ),
-        ),
-        IconButton(
-          onPressed: decreaseFontSize,
-          icon: const Icon(
-            Icons.text_decrease_rounded,
-            color: Colors.black,
-          ),
-        ),
-        IconButton(
-          onPressed: boldText,
-          icon: const Icon(
-            Icons.format_bold_rounded,
-            color: Colors.black,
-          ),
-        ),
-        IconButton(
-          onPressed: italicText,
-          icon: const Icon(
-            Icons.format_italic_rounded,
-            color: Colors.black,
-          ),
-        ),
-        IconButton(
-          onPressed: underlineText,
-          icon: const Icon(
-            Icons.format_underline_rounded,
-            color: Colors.black,
-          ),
         ),
       ],
     );
