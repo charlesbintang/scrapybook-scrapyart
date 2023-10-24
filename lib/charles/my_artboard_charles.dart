@@ -5,13 +5,10 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:scrapyart_home/angel/feature_my_artboard/image_text_charles.dart';
-// import 'package:scrapyart_home/angel/feature_my_artboard/image_text.dart';
 import 'package:scrapyart_home/angel/feature_my_artboard/my_artboard.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-// import 'package:scrapyart_home/angel/text_info.dart';
-// import 'package:scrapyart_home/charles/stack_image_model.dart';
 import 'package:scrapyart_home/charles/stack_object_model.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -45,7 +42,6 @@ abstract class MyArtboardCharles extends State<MyArtboard> {
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
     setState(() {
       tapPosition = renderBox.globalToLocal(tapPostion.globalPosition);
-      print(tapPosition);
     });
   }
 
@@ -174,10 +170,6 @@ abstract class MyArtboardCharles extends State<MyArtboard> {
                                 imageOnCurentIndex.onClicked ==
                                         OnAction.isClicked
                                     ? GestureDetector(
-                                        onTap: () {
-                                          print(imageOnCurentIndex.imageWidth);
-                                          print(imageOnCurentIndex.imageHeight);
-                                        },
                                         onPanUpdate: (details) {
                                           _getSizeOfTheBox(i);
 
@@ -318,7 +310,6 @@ abstract class MyArtboardCharles extends State<MyArtboard> {
                             imageOnCurentIndex.boxRound = OnAction.isRounded;
                           }
                           setState(() {});
-                          print(imageOnCurentIndex.boxRound);
                         },
                         onHorizontalDragUpdate: (details) {
                           imageOnCurentIndex.boxRoundValue = max(
@@ -348,7 +339,7 @@ abstract class MyArtboardCharles extends State<MyArtboard> {
             top: globalListObject[i].top,
             child: GestureDetector(
               onLongPress: () {
-                print('long press detected');
+                // print('long press detected');
               },
               onTap: () => setCurrentIndex(context, i),
               child: Draggable(

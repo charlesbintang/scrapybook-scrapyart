@@ -1,8 +1,6 @@
 // ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
-// import 'package:scrapyart_home/angel/edit_image_viewmodel.dart';
 import 'package:scrapyart_home/angel/edit_image_viewmodel_charles.dart';
-// import 'package:scrapyart_home/angel/feature_my_artboard/image_text.dart';
 import 'package:screenshot/screenshot.dart';
 
 class MyArtboard extends StatefulWidget {
@@ -43,34 +41,6 @@ class _MyArtboardState extends EditImageViewModelCharles {
                       height: MediaQuery.of(context).size.height * 0.3,
                       child: Stack(
                         children: dataStack(),
-                        // children: [
-                        //   for (int i = 0; i < texts.length; i++)
-                        //     Positioned(
-                        //       left: texts[i].left,
-                        //       top: texts[i].top,
-                        //       child: GestureDetector(
-                        //         onLongPress: () {
-                        //           print('long press detected');
-                        //         },
-                        //         onTap: () => setCurrentIndex(context, i),
-                        //         child: Draggable(
-                        //           feedback: ImageText(textInfo: texts[i]),
-                        //           child: ImageText(textInfo: texts[i]),
-                        //           onDragEnd: (drag) {
-                        //             final renderBox =
-                        //                 context.findRenderObject() as RenderBox;
-                        //             Offset off =
-                        //                 renderBox.globalToLocal(drag.offset);
-                        //             setState(() {
-                        //               texts[i].color = selectedColor;
-                        //               texts[i].top = off.dy - 120;
-                        //               texts[i].left = off.dx;
-                        //             });
-                        //           },
-                        //         ),
-                        //       ),
-                        //     ),
-                        // ],
                       ),
                     ),
                   ),
