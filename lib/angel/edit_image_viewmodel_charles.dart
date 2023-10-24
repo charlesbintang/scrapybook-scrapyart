@@ -20,7 +20,11 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
     Colors.blue,
     Colors.yellow,
     Colors.purple,
+    Colors.redAccent,
     Colors.orange,
+    Colors.white,
+    Colors.amber,
+    Colors.brown,
   ];
   // Color selectedColor = Colors.black; // Warna awal
 
@@ -36,32 +40,13 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
   Slider colorSlider() {
     return Slider(
       value: _sliderValue,
-      onChanged: updateTextColor, //updateTextColor,
+      onChanged: updateTextColor,
       min: 0.0,
       max: 1.0,
       activeColor: selectedColor,
       inactiveColor: Colors.transparent,
-      // inactiveColor: Color.fromARGB(255, 251, 231, 215),
     );
   }
-
-  // setTextColor(Color selectedColor) {
-  //   globalListObject[currentIndex].color = selectedColor;
-  // }
-
-  // setCurrentIndex(BuildContext context, index) {
-  //   setState(() {
-  //     currentIndex = index;
-  //   });
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     const SnackBar(
-  //       content: Text(
-  //         "Selected for Styling",
-  //         style: TextStyle(fontSize: 16),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   increaseFontSize() {
     setState(() {
@@ -110,26 +95,14 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
 
   addNewsText(BuildContext context) {
     // ignore: prefer_is_empty
-    if (textEditingController.text.length > 0) {
-      setState(() {
-        globalListObject.add(
-          StackObject(
-            text: textEditingController.text,
-            // left: 0,
-            // top: 0,
-            // color: Colors.black,
-            // fontWeight: FontWeight.normal,
-            // fontStyle: FontStyle.normal,
-            // fontSize: 20,
-            // textAlign: TextAlign.left,
-            // decoration: TextDecoration.none,
-          ),
-        );
-        Navigator.of(context).pop();
-      });
-    } else {
+    setState(() {
+      globalListObject.add(
+        StackObject(
+          text: textEditingController.text,
+        ),
+      );
       Navigator.of(context).pop();
-    }
+    });
   }
 
   addNewDialog(context) {
@@ -152,17 +125,123 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
         ),
         actions: <Widget>[
           DefaultButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {}, //=> Navigator.of(context).pop(),
               color: Colors.white,
               textcolor: Colors.black,
               child: const Text('Back')),
           DefaultButton(
-              onPressed: () {}, //=> addNewsText(context),
+              onPressed: textEditingController.text.isEmpty
+                  ? () => addNewsText(context)
+                  : () => addNewsText(context),
               color: const Color.fromARGB(255, 122, 74, 37),
               textcolor: Colors.white,
               child: const Text('Add Text'))
         ],
       ),
+    );
+  }
+
+  switchMenuItems(String menu) {
+    Widget returnedRowItems = Container();
+    switch (menu) {
+      case "texts":
+        returnedRowItems = columRowTextsMenu();
+        break;
+      case "images":
+        returnedRowItems = rowImagesMenu();
+        break;
+      default:
+        print("tidak ada list view yang ditampilkan");
+    }
+    return returnedRowItems;
+  }
+
+  Row rowImagesMenu() {
+    return Row(
+      children: [
+        const Expanded(child: SizedBox()),
+        IconButton(
+          onPressed: () => pickImageFromGallery(),
+          icon: const Icon(
+            Icons.add_a_photo,
+            color: Colors.black,
+          ),
+        ),
+        // IconButton(
+        //   onPressed: () {
+        // TODO : hapus gambar yang telah dipilih
+        //     }
+        //   },
+        //   icon: const Icon(Icons.hide_image),
+        // ),
+        IconButton(
+          onPressed: () {
+            for (var i = 0; i < globalListObject.length; i++) {
+              globalListObject[i].image = null;
+            }
+            globalListObject.removeWhere((element) => element.image == null);
+            setState(() {});
+          },
+          icon: const Icon(Icons.delete, color: Colors.black),
+        ),
+        const Expanded(child: SizedBox()),
+      ],
+    );
+  }
+
+  Column columRowTextsMenu() {
+    return Column(
+      children: [
+        colorSlider(),
+        Row(
+          children: [
+            const Expanded(child: SizedBox()),
+            IconButton(
+              onPressed: () => addNewDialog(context),
+              icon: const Icon(
+                Icons.add_rounded,
+                color: Colors.black,
+              ),
+            ),
+            IconButton(
+              onPressed: increaseFontSize,
+              icon: const Icon(
+                Icons.text_increase_rounded,
+                color: Colors.black,
+              ),
+            ),
+            IconButton(
+              onPressed: decreaseFontSize,
+              icon: const Icon(
+                Icons.text_decrease_rounded,
+                color: Colors.black,
+              ),
+            ),
+            IconButton(
+              onPressed: boldText,
+              icon: const Icon(
+                Icons.format_bold_rounded,
+                color: Colors.black,
+              ),
+            ),
+            IconButton(
+              onPressed: italicText,
+              icon: const Icon(
+                Icons.format_italic_rounded,
+                color: Colors.black,
+              ),
+            ),
+            IconButton(
+              onPressed: underlineText,
+              icon: const Icon(
+                Icons.format_underline_rounded,
+                color: Colors.black,
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+          ],
+        ),
+      ],
     );
   }
 
@@ -262,52 +341,4 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
       ],
     );
   }
-
-// ListView(
-//                   scrollDirection: Axis.horizontal,
-//                   children: [
-//                     IconButton(
-//                       onPressed: () => addNewDialog(context),
-//                       icon: const Icon(
-//                         Icons.add_rounded,
-//                         color: Colors.black,
-//                       ),
-//                     ),
-//                     IconButton(
-//                       onPressed: increaseFontSize,
-//                       icon: const Icon(
-//                         Icons.text_increase_rounded,
-//                         color: Colors.black,
-//                       ),
-//                     ),
-//                     IconButton(
-//                       onPressed: decreaseFontSize,
-//                       icon: const Icon(
-//                         Icons.text_decrease_rounded,
-//                         color: Colors.black,
-//                       ),
-//                     ),
-//                     IconButton(
-//                       onPressed: boldText,
-//                       icon: const Icon(
-//                         Icons.format_bold_rounded,
-//                         color: Colors.black,
-//                       ),
-//                     ),
-//                     IconButton(
-//                       onPressed: italicText,
-//                       icon: const Icon(
-//                         Icons.format_italic_rounded,
-//                         color: Colors.black,
-//                       ),
-//                     ),
-//                     IconButton(
-//                       onPressed: underlineText,
-//                       icon: const Icon(
-//                         Icons.format_underline_rounded,
-//                         color: Colors.black,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
 }
