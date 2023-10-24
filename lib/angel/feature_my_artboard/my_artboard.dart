@@ -1,71 +1,20 @@
+// ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
-// import 'dart:io';
-// import 'dart:math';
-// import 'dart:typed_data';
-
-// import 'package:flutter/foundation.dart';
-// import 'package:flutter/material.dart';
-// import 'package:image_gallery_saver/image_gallery_saver.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:permission_handler/permission_handler.dart';
-import 'package:scrapyart_home/angel/edit_image_viewmodel.dart';
-import 'package:scrapyart_home/angel/feature_my_artboard/image_text.dart';
-// import 'package:scrapyart_home/angel/feature_my_artboard/stack_image_model.dart';
+// import 'package:scrapyart_home/angel/edit_image_viewmodel.dart';
+import 'package:scrapyart_home/angel/edit_image_viewmodel_charles.dart';
+// import 'package:scrapyart_home/angel/feature_my_artboard/image_text.dart';
 import 'package:screenshot/screenshot.dart';
 
 class MyArtboard extends StatefulWidget {
   const MyArtboard({Key? key}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   @override
   State<MyArtboard> createState() => _MyArtboardState();
 }
 
-class _MyArtboardState extends EditImageViewModel {
-  // double _sliderValue = 0.0;
-
-  // List<Color> _colorOptions = [
-  //   Colors.black,
-  //   Colors.red,
-  //   Colors.green,
-  //   Colors.blue,
-  //   Colors.yellow,
-  //   Colors.purple,
-  //   Colors.orange,
-  // ];
-  // Color selectedColor = Colors.black; // Warna awal
-
-  // updateTextColor(double value) {
-  //   setState(() {
-  //     _sliderValue = value;
-  //     int colorIndex = (_sliderValue * (_colorOptions.length - 1)).round();
-  //     selectedColor = _colorOptions[colorIndex];
-  //   });
-  // }
-
-  ScreenshotController screenshotController = ScreenshotController();
-
-  // File? _selectedImage;
-
-  bool isFilePicked = false;
-
-  // Offset _tapPosition = Offset.zero;
+class _MyArtboardState extends EditImageViewModelCharles {
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       backgroundColor: const Color.fromARGB(218, 255, 255, 255),
       appBar: AppBar(
@@ -77,226 +26,215 @@ class _MyArtboardState extends EditImageViewModel {
       body: SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: Stack(clipBehavior: Clip.none, children: [
-          Center(
-            child: Screenshot(
-              controller: screenshotController,
-              child: Container(
-                color: const Color.fromARGB(255, 255, 255, 255),
-                height: 375,
-                width: 375,
-                margin: const EdgeInsets.only(bottom: 250),
-                // child: Stack(children: dataStack()),
-                child: SafeArea(
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    child: Stack(
-                      children: [
-                        for (int i = 0; i < texts.length; i++)
-                          Positioned(
-                            left: texts[i].left,
-                            top: texts[i].top,
-                            child: GestureDetector(
-                              onLongPress: () {
-                                print('long press detected');
-                              },
-                              onTap: () => setCurrentIndex(context, i),
-                              child: Draggable(
-                                feedback: ImageText(textInfo: texts[i]),
-                                child: ImageText(textInfo: texts[i]),
-                                onDragEnd: (drag) {
-                                  final renderBox =
-                                      context.findRenderObject() as RenderBox;
-                                  Offset off =
-                                      renderBox.globalToLocal(drag.offset);
-                                  setState(() {
-                                    texts[i].color = selectedColor;
-                                    texts[i].top = off.dy - 120;
-                                    texts[i].left = off.dx;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        // creatorText.text.isNotEmpty
-                        //     ? Positioned(
-                        //         left: 0,
-                        //         bottom: 0,
-                        //         child: Text(
-                        //           creatorText.text,
-                        //           style: TextStyle(
-                        //               fontSize: 20,
-                        //               fontWeight: FontWeight.bold,
-                        //               color:
-                        //                   Color.fromARGB(255, 161, 0, 0)
-                        //                       .withOpacity(
-                        //                 0.3,
-                        //               )),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Center(
+              child: Screenshot(
+                controller: screenshotController,
+                child: Container(
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                  height: 375,
+                  width: 375,
+                  margin: const EdgeInsets.only(bottom: 250),
+                  // child: Stack(children: dataStack()),
+                  child: SafeArea(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      child: Stack(
+                        children: dataStack(),
+                        // children: [
+                        //   for (int i = 0; i < texts.length; i++)
+                        //     Positioned(
+                        //       left: texts[i].left,
+                        //       top: texts[i].top,
+                        //       child: GestureDetector(
+                        //         onLongPress: () {
+                        //           print('long press detected');
+                        //         },
+                        //         onTap: () => setCurrentIndex(context, i),
+                        //         child: Draggable(
+                        //           feedback: ImageText(textInfo: texts[i]),
+                        //           child: ImageText(textInfo: texts[i]),
+                        //           onDragEnd: (drag) {
+                        //             final renderBox =
+                        //                 context.findRenderObject() as RenderBox;
+                        //             Offset off =
+                        //                 renderBox.globalToLocal(drag.offset);
+                        //             setState(() {
+                        //               texts[i].color = selectedColor;
+                        //               texts[i].top = off.dy - 120;
+                        //               texts[i].left = off.dx;
+                        //             });
+                        //           },
                         //         ),
-                        //       )
-                        //     : const SizedBox.shrink(),
-                      ],
+                        //       ),
+                        //     ),
+                        // ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: Container(
-              width: 400,
-              height: 250,
-              color: const Color.fromARGB(255, 240, 240, 240),
-            ),
-          ),
-          Positioned(
-            bottom: 150,
-            right: 0,
-            left: 0,
-            child: Container(
-              color: const Color.fromARGB(255, 122, 74, 37),
-              height: 40,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    iconSize: 25,
-                    icon: const Icon(
-                      Icons.note_add_outlined,
-                    ),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    iconSize: 25,
-                    icon: const Icon(
-                      Icons.format_paint_outlined,
-                    ),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    iconSize: 25,
-                    icon: const Icon(
-                      Icons.add_a_photo,
-                    ),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    iconSize: 30,
-                    icon: const Icon(
-                      Icons.text_fields_rounded,
-                    ),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    iconSize: 25,
-                    icon: const Icon(
-                      Icons.square_outlined,
-                    ),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    iconSize: 25,
-                    icon: const Icon(
-                      Icons.face_retouching_natural_rounded,
-                    ),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    iconSize: 25,
-                    icon: const Icon(
-                      Icons.brush_rounded,
-                    ),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    iconSize: 25,
-                    icon: const Icon(
-                      Icons.layers,
-                    ),
-                    onPressed: () {},
-                  ),
-                ],
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: Container(
+                width: 400,
+                height: 250,
+                color: const Color.fromARGB(255, 240, 240, 240),
               ),
             ),
-          ),
-          Positioned(
-            bottom: 200,
-            right: 0,
-            left: 0,
-            child: SizedBox(
-              height: 40,
-              child: colorSlider(),
-            ),
-          ),
-          // Positioned(
-          //   bottom: 100,
-          //   right: 0,
-          //   left: 0,
-          //   child: SizedBox(
-          //     height: 50,
-          //     width: double.infinity,
-          //     child: ListView(
-          //       children: [],
-          //     ),
-          //   ),
-          // ),
-          Positioned(
-            bottom: 100,
-            right: 0,
-            left: 0,
-            child: SizedBox(
-                height: 50,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
+            Positioned(
+              bottom: 150,
+              right: 0,
+              left: 0,
+              child: Container(
+                color: const Color.fromARGB(255, 122, 74, 37),
+                height: 40,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     IconButton(
-                      onPressed: () => addNewDialog(context),
+                      iconSize: 25,
                       icon: const Icon(
-                        Icons.add_rounded,
-                        color: Colors.black,
+                        Icons.note_add_outlined,
                       ),
+                      onPressed: () {},
                     ),
                     IconButton(
-                      onPressed: increaseFontSize,
+                      iconSize: 25,
                       icon: const Icon(
-                        Icons.text_increase_rounded,
-                        color: Colors.black,
+                        Icons.format_paint_outlined,
                       ),
+                      onPressed: () {},
                     ),
                     IconButton(
-                      onPressed: decreaseFontSize,
+                      iconSize: 25,
                       icon: const Icon(
-                        Icons.text_decrease_rounded,
-                        color: Colors.black,
+                        Icons.add_a_photo,
                       ),
+                      onPressed: () {
+                        pickImageFromGallery();
+                      },
                     ),
                     IconButton(
-                      onPressed: boldText,
+                      iconSize: 30,
                       icon: const Icon(
-                        Icons.format_bold_rounded,
-                        color: Colors.black,
+                        Icons.text_fields_rounded,
                       ),
+                      onPressed: () {},
                     ),
                     IconButton(
-                      onPressed: italicText,
+                      iconSize: 25,
                       icon: const Icon(
-                        Icons.format_italic_rounded,
-                        color: Colors.black,
+                        Icons.square_outlined,
                       ),
+                      onPressed: () {},
                     ),
                     IconButton(
-                      onPressed: underlineText,
+                      iconSize: 25,
                       icon: const Icon(
-                        Icons.format_underline_rounded,
-                        color: Colors.black,
+                        Icons.face_retouching_natural_rounded,
                       ),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      iconSize: 25,
+                      icon: const Icon(
+                        Icons.brush_rounded,
+                      ),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      iconSize: 25,
+                      icon: const Icon(
+                        Icons.layers,
+                      ),
+                      onPressed: () {},
                     ),
                   ],
-                )),
-          )
-        ]),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 200,
+              right: 0,
+              left: 0,
+              child: SizedBox(
+                height: 40,
+                child: colorSlider(),
+              ),
+            ),
+            // Positioned(
+            //   bottom: 100,
+            //   right: 0,
+            //   left: 0,
+            //   child: SizedBox(
+            //     height: 50,
+            //     width: double.infinity,
+            //     child: ListView(
+            //       children: [],
+            //     ),
+            //   ),
+            // ),
+            Positioned(
+              bottom: 100,
+              right: 0,
+              left: 0,
+              child: SizedBox(
+                  height: 50,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      IconButton(
+                        onPressed: () => addNewDialog(context),
+                        icon: const Icon(
+                          Icons.add_rounded,
+                          color: Colors.black,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: increaseFontSize,
+                        icon: const Icon(
+                          Icons.text_increase_rounded,
+                          color: Colors.black,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: decreaseFontSize,
+                        icon: const Icon(
+                          Icons.text_decrease_rounded,
+                          color: Colors.black,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: boldText,
+                        icon: const Icon(
+                          Icons.format_bold_rounded,
+                          color: Colors.black,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: italicText,
+                        icon: const Icon(
+                          Icons.format_italic_rounded,
+                          color: Colors.black,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: underlineText,
+                        icon: const Icon(
+                          Icons.format_underline_rounded,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  )),
+            )
+          ],
+        ),
       ),
     );
   }
