@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:scrapyart_home/angel/default_button.dart';
 // import 'package:scrapyart_home/angel/text_info.dart';
@@ -125,8 +127,9 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
         );
         Navigator.of(context).pop();
       });
+    } else {
+      Navigator.of(context).pop();
     }
-    Navigator.of(context).pop();
   }
 
   addNewDialog(context) {
@@ -154,7 +157,7 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
               textcolor: Colors.black,
               child: const Text('Back')),
           DefaultButton(
-              onPressed: () => addNewsText(context),
+              onPressed: () {}, //=> addNewsText(context),
               color: const Color.fromARGB(255, 122, 74, 37),
               textcolor: Colors.white,
               child: const Text('Add Text'))
@@ -162,4 +165,149 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
       ),
     );
   }
+
+  switchListView(String menu) {
+    ListView returnedListView = ListView();
+    switch (menu) {
+      case "texts":
+        returnedListView = textsMenu();
+        break;
+      case "images":
+        returnedListView = imagesMenu();
+        break;
+      default:
+        print("tidak ada list view yang ditampilkan");
+    }
+    return returnedListView;
+  }
+
+  ListView imagesMenu() {
+    return ListView(
+      scrollDirection: Axis.horizontal,
+      children: [
+        IconButton(
+          onPressed: () => pickImageFromGallery(),
+          icon: const Icon(
+            Icons.add_a_photo,
+            color: Colors.black,
+          ),
+        ),
+        // IconButton(
+        //   onPressed: () {
+        // TODO : hapus gambar yang telah dipilih
+        //     }
+        //   },
+        //   icon: const Icon(Icons.hide_image),
+        // ),
+        IconButton(
+          onPressed: () {
+            for (var i = 0; i < globalListObject.length; i++) {
+              globalListObject[i].image = null;
+            }
+            globalListObject.removeWhere((element) => element.image == null);
+            setState(() {});
+          },
+          icon: const Icon(Icons.delete, color: Colors.black),
+        ),
+      ],
+    );
+  }
+
+  ListView textsMenu() {
+    return ListView(
+      scrollDirection: Axis.horizontal,
+      children: [
+        IconButton(
+          onPressed: () => addNewDialog(context),
+          icon: const Icon(
+            Icons.add_rounded,
+            color: Colors.black,
+          ),
+        ),
+        IconButton(
+          onPressed: increaseFontSize,
+          icon: const Icon(
+            Icons.text_increase_rounded,
+            color: Colors.black,
+          ),
+        ),
+        IconButton(
+          onPressed: decreaseFontSize,
+          icon: const Icon(
+            Icons.text_decrease_rounded,
+            color: Colors.black,
+          ),
+        ),
+        IconButton(
+          onPressed: boldText,
+          icon: const Icon(
+            Icons.format_bold_rounded,
+            color: Colors.black,
+          ),
+        ),
+        IconButton(
+          onPressed: italicText,
+          icon: const Icon(
+            Icons.format_italic_rounded,
+            color: Colors.black,
+          ),
+        ),
+        IconButton(
+          onPressed: underlineText,
+          icon: const Icon(
+            Icons.format_underline_rounded,
+            color: Colors.black,
+          ),
+        ),
+      ],
+    );
+  }
+
+// ListView(
+//                   scrollDirection: Axis.horizontal,
+//                   children: [
+//                     IconButton(
+//                       onPressed: () => addNewDialog(context),
+//                       icon: const Icon(
+//                         Icons.add_rounded,
+//                         color: Colors.black,
+//                       ),
+//                     ),
+//                     IconButton(
+//                       onPressed: increaseFontSize,
+//                       icon: const Icon(
+//                         Icons.text_increase_rounded,
+//                         color: Colors.black,
+//                       ),
+//                     ),
+//                     IconButton(
+//                       onPressed: decreaseFontSize,
+//                       icon: const Icon(
+//                         Icons.text_decrease_rounded,
+//                         color: Colors.black,
+//                       ),
+//                     ),
+//                     IconButton(
+//                       onPressed: boldText,
+//                       icon: const Icon(
+//                         Icons.format_bold_rounded,
+//                         color: Colors.black,
+//                       ),
+//                     ),
+//                     IconButton(
+//                       onPressed: italicText,
+//                       icon: const Icon(
+//                         Icons.format_italic_rounded,
+//                         color: Colors.black,
+//                       ),
+//                     ),
+//                     IconButton(
+//                       onPressed: underlineText,
+//                       icon: const Icon(
+//                         Icons.format_underline_rounded,
+//                         color: Colors.black,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
 }

@@ -32,7 +32,6 @@ abstract class MyArtboardCharles extends State<MyArtboard> {
   CroppedFile? croppedFile;
   Offset tapPosition = Offset.zero;
   List<StackObject> globalListObject = [];
-  // List<TextInfo> texts = [];
   int currentIndex = 0;
   double widthContainerRender = 0;
   double heightContainerRender = 0;
@@ -101,7 +100,6 @@ abstract class MyArtboardCharles extends State<MyArtboard> {
                       left: 0,
                       top: 0,
                       child: Container(
-                        // color: Colors.amber,
                         width: imageOnCurentIndex.imageWidth - 20,
                         height: imageOnCurentIndex.imageHeight - 20,
                         decoration: BoxDecoration(
@@ -360,33 +358,6 @@ abstract class MyArtboardCharles extends State<MyArtboard> {
         );
       }
     }
-    // for (int i = 0; i < texts.length; i++) {
-    //   data.add(
-    //     Positioned(
-    //       left: texts[i].left,
-    //       top: texts[i].top,
-    //       child: GestureDetector(
-    //         onLongPress: () {
-    //           print('long press detected');
-    //         },
-    //         onTap: () => setCurrentIndex(context, i),
-    //         child: Draggable(
-    //           feedback: ImageText(textInfo: texts[i]),
-    //           child: ImageText(textInfo: texts[i]),
-    //           onDragEnd: (drag) {
-    //             final renderBox = context.findRenderObject() as RenderBox;
-    //             Offset off = renderBox.globalToLocal(drag.offset);
-    //             setState(() {
-    //               texts[i].color = selectedColor;
-    //               texts[i].top = off.dy - 120;
-    //               texts[i].left = off.dx;
-    //             });
-    //           },
-    //         ),
-    //       ),
-    //     ),
-    //   );
-    // }
     return data;
   }
 
