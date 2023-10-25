@@ -44,7 +44,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
   double canvasHeight = 0.0;
   final textController = TextEditingController(
       text:
-          '#2F19DB'); // The initial value can be provided directly to the controller.
+          'FF000000'); // The initial value can be provided directly to the controller.
 
   void getTapPosition(TapDownDetails tapPostion) {
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
@@ -74,8 +74,6 @@ abstract class ImageTextModel extends State<MyArtboard> {
       ),
     );
   }
-
-  // buat kembalikan list widget yang akan di tumpuk
 
   List<Widget> buttonSimpanHapusImpor() {
     List<Widget> data = [];
@@ -148,7 +146,6 @@ abstract class ImageTextModel extends State<MyArtboard> {
 
     // gambar pertama
     if (indexImage == 0 && indexImage + globalListObject.length == 1) {
-      // actions.add(down);
       actions.add(delete);
       actions.add(reset);
     } else if (indexImage == 0 && indexImage + globalListObject.length > 1) {
@@ -196,7 +193,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
       selectedImage = File(returnedImage.path);
       globalListObject.add(
         StackObject(
-          // pickImageFromGallery harus menyertakan image didalamnya
+          /// pickImageFromGallery harus menyertakan image didalamnya
           image: selectedImage,
         ),
       );
@@ -270,30 +267,6 @@ abstract class ImageTextModel extends State<MyArtboard> {
 
   ActionCallback isTextAdded = ActionCallback.none;
   ActionCallback isImageAdded = ActionCallback.none;
-  // double sliderValue = 0.0;
-
-  // final List<Color> _colorOptions = [
-  //   Colors.black,
-  //   Colors.red,
-  //   Colors.green,
-  //   Colors.blue,
-  //   Colors.yellow,
-  //   Colors.purple,
-  //   Colors.redAccent,
-  //   Colors.orange,
-  //   Colors.white,
-  //   Colors.amber,
-  //   Colors.brown,
-  // ];
-
-  // void updateTextColor(double value) {
-  //   setState(() {
-  //     sliderValue = value;
-  //     int colorIndex = (sliderValue * (_colorOptions.length - 1)).round();
-  //     selectedColor = _colorOptions[colorIndex];
-  //   });
-  //   globalListObject[currentIndex].color = selectedColor;
-  // }
 
   increaseFontSize() {
     setState(() {

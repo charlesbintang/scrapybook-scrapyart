@@ -87,13 +87,12 @@ abstract class ImageTextController extends ImageTextModel {
                     content: Column(
                       children: [
                         ColorPicker(
-                          pickerColor: globalListObject[currentIndex]
-                              .color, //widget.pickerColor,
+                          pickerColor: globalListObject[currentIndex].color,
                           onColorChanged: changeColor,
                           colorPickerWidth: 300,
                           pickerAreaHeightPercent: 0.7,
                           displayThumbColor: true,
-                          paletteType: PaletteType.hsvWithHue,
+                          paletteType: PaletteType.hsl,
                           labelTypes: const [],
                           pickerAreaBorderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(2),
@@ -129,6 +128,8 @@ abstract class ImageTextController extends ImageTextModel {
                             ),
                             autofocus: true,
                             maxLength: 9,
+                            onEditingComplete: () =>
+                                Navigator.of(context).pop(),
                             inputFormatters: [
                               // Any custom input formatter can be passed
                               // here or use any Form validator you want.
