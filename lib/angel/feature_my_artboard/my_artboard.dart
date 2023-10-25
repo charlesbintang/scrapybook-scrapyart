@@ -60,7 +60,7 @@ class _MyArtboardState extends ImageTextController {
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 12 / 100,
+                        height: MediaQuery.of(context).size.height * 15 / 100,
                         child: switchMenuItems(menu), //switchListView(menu),
                       )
                     ],
