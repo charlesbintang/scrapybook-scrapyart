@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
-import 'package:scrapyart_home/angel/edit_image_viewmodel_charles.dart';
+import 'package:scrapyart_home/angel/feature_my_artboard/image_text_controller.dart';
 import 'package:screenshot/screenshot.dart';
 
 class MyArtboard extends StatefulWidget {
@@ -10,7 +10,7 @@ class MyArtboard extends StatefulWidget {
   State<MyArtboard> createState() => _MyArtboardState();
 }
 
-class _MyArtboardState extends EditImageViewModelCharles {
+class _MyArtboardState extends ImageTextController {
   String menu = "images";
 
   @override
