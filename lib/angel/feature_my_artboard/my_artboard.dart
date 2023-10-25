@@ -67,138 +67,6 @@ class _MyArtboardState extends ImageTextController {
                   ),
                 ),
               ),
-              // Positioned(
-              //   bottom: 150,
-              //   right: 0,
-              //   left: 0,
-              //   child: Container(
-              //     color: const Color.fromARGB(255, 122, 74, 37),
-              //     height: 40,
-              //     child: menusButton(),
-              //   ),
-              // ),
-              // Positioned(
-              //   bottom: 200,
-              //   right: 0,
-              //   left: 0,
-              //   child: SizedBox(
-              //     height: 40,
-              //     child: colorSlider(),
-              //   ),
-              // ),
-              // // Positioned(
-              // //   bottom: 100,
-              // //   right: 0,
-              // //   left: 0,
-              // //   child: SizedBox(
-              // //     height: 50,
-              // //     child: ListView(
-              // //       scrollDirection: Axis.horizontal,
-              // //       children: [
-              // //         IconButton(
-              // //           onPressed: () => addNewDialog(context),
-              // //           icon: const Icon(
-              // //             Icons.add_rounded,
-              // //             color: Colors.black,
-              // //           ),
-              // //         ),
-              // //         IconButton(
-              // //           onPressed: increaseFontSize,
-              // //           icon: const Icon(
-              // //             Icons.text_increase_rounded,
-              // //             color: Colors.black,
-              // //           ),
-              // //         ),
-              // //         IconButton(
-              // //           onPressed: decreaseFontSize,
-              // //           icon: const Icon(
-              // //             Icons.text_decrease_rounded,
-              // //             color: Colors.black,
-              // //           ),
-              // //         ),
-              // //         IconButton(
-              // //           onPressed: boldText,
-              // //           icon: const Icon(
-              // //             Icons.format_bold_rounded,
-              // //             color: Colors.black,
-              // //           ),
-              // //         ),
-              // //         IconButton(
-              // //           onPressed: italicText,
-              // //           icon: const Icon(
-              // //             Icons.format_italic_rounded,
-              // //             color: Colors.black,
-              // //           ),
-              // //         ),
-              // //         IconButton(
-              // //           onPressed: underlineText,
-              // //           icon: const Icon(
-              // //             Icons.format_underline_rounded,
-              // //             color: Colors.black,
-              // //           ),
-              // //         ),
-              // //       ],
-              // //     ),
-              // //   ),
-              // // )
-              // Positioned(
-              //   bottom: 25,
-              //   child: Center(
-              //     child: SizedBox(
-              //       height: 50,
-              //       width: 450,
-              //       child: switchListView(menu),
-
-              //       // ListView(
-              //       //   scrollDirection: Axis.horizontal,
-              //       //   children: [
-              //       //     IconButton(
-              //       //       onPressed: () => addNewDialog(context),
-              //       //       icon: const Icon(
-              //       //         Icons.add_rounded,
-              //       //         color: Colors.black,
-              //       //       ),
-              //       //     ),
-              //       //     IconButton(
-              //       //       onPressed: increaseFontSize,
-              //       //       icon: const Icon(
-              //       //         Icons.text_increase_rounded,
-              //       //         color: Colors.black,
-              //       //       ),
-              //       //     ),
-              //       //     IconButton(
-              //       //       onPressed: decreaseFontSize,
-              //       //       icon: const Icon(
-              //       //         Icons.text_decrease_rounded,
-              //       //         color: Colors.black,
-              //       //       ),
-              //       //     ),
-              //       //     IconButton(
-              //       //       onPressed: boldText,
-              //       //       icon: const Icon(
-              //       //         Icons.format_bold_rounded,
-              //       //         color: Colors.black,
-              //       //       ),
-              //       //     ),
-              //       //     IconButton(
-              //       //       onPressed: italicText,
-              //       //       icon: const Icon(
-              //       //         Icons.format_italic_rounded,
-              //       //         color: Colors.black,
-              //       //       ),
-              //       //     ),
-              //       //     IconButton(
-              //       //       onPressed: underlineText,
-              //       //       icon: const Icon(
-              //       //         Icons.format_underline_rounded,
-              //       //         color: Colors.black,
-              //       //       ),
-              //       //     ),
-              //       //   ],
-              //       // ),
-              //     ),
-              //   ),
-              // )
             ],
           ),
         ),
@@ -213,14 +81,23 @@ class _MyArtboardState extends ImageTextController {
         IconButton(
           iconSize: 25,
           icon: const Icon(
-            Icons.note_add_outlined,
+            Icons.save_alt,
+          ),
+          onPressed: () => saveToGallery(context),
+        ),
+        IconButton(
+          iconSize: 25,
+          icon: const Icon(
+            Icons.format_paint_outlined,
+            color: Colors.white30,
           ),
           onPressed: () {},
         ),
         IconButton(
           iconSize: 25,
           icon: const Icon(
-            Icons.format_paint_outlined,
+            Icons.square_outlined,
+            color: Colors.white30,
           ),
           onPressed: () {},
         ),
@@ -249,7 +126,8 @@ class _MyArtboardState extends ImageTextController {
         IconButton(
           iconSize: 25,
           icon: const Icon(
-            Icons.square_outlined,
+            Icons.brush_rounded,
+            color: Colors.white30,
           ),
           onPressed: () {},
         ),
@@ -257,13 +135,7 @@ class _MyArtboardState extends ImageTextController {
           iconSize: 25,
           icon: const Icon(
             Icons.face_retouching_natural_rounded,
-          ),
-          onPressed: () {},
-        ),
-        IconButton(
-          iconSize: 25,
-          icon: const Icon(
-            Icons.brush_rounded,
+            color: Colors.white30,
           ),
           onPressed: () {},
         ),
@@ -271,6 +143,7 @@ class _MyArtboardState extends ImageTextController {
           iconSize: 25,
           icon: const Icon(
             Icons.layers,
+            color: Colors.white30,
           ),
           onPressed: () {},
         ),

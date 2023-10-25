@@ -43,11 +43,16 @@ abstract class ImageTextController extends ImageTextModel {
         //   },
         //   icon: const Icon(Icons.hide_image),
         // ),
-        IconButton(
-          onPressed: deleteAllImage,
-          icon: const Icon(
-            Icons.delete,
-            color: Colors.black,
+        AbsorbPointer(
+          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          child: IconButton(
+            onPressed: deleteAllImage,
+            icon: Icon(
+              Icons.delete,
+              color: isTextAdded == ActionCallback.textAdded
+                  ? Colors.black
+                  : Colors.black45,
+            ),
           ),
         ),
         const Expanded(child: SizedBox()),
