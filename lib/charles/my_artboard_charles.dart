@@ -55,6 +55,7 @@ abstract class MyArtboardCharles extends State<MyArtboard> {
   }
 
   setCurrentIndex(BuildContext context, index) {
+    print("diklik");
     setState(() {
       currentIndex = index;
     });
@@ -335,15 +336,9 @@ abstract class MyArtboardCharles extends State<MyArtboard> {
       if (globalListObject[i].text.isNotEmpty) {
         data.add(
           Positioned(
-            left: globalListObject[i].left + canvasWidth,
-            top: globalListObject[i].top + canvasHeight,
+            left: globalListObject[i].left,
+            top: globalListObject[i].top,
             child: GestureDetector(
-              onTapDown: (details) {
-                setState(() {
-                  canvasHeight = 0;
-                  canvasWidth = 0;
-                });
-              },
               onLongPress: () {
                 // print('long press detected');
               },
@@ -351,11 +346,11 @@ abstract class MyArtboardCharles extends State<MyArtboard> {
               child: Draggable(
                 feedback: ImageTextCharles(stackObject: globalListObject[i]),
                 child: ImageTextCharles(stackObject: globalListObject[i]),
+                onDragStarted: () {},
                 onDragEnd: (drag) {
                   final renderBox = context.findRenderObject() as RenderBox;
                   Offset off = renderBox.globalToLocal(drag.offset);
                   setState(() {
-                    globalListObject[i].color = selectedColor;
                     globalListObject[i].top = off.dy - 120;
                     globalListObject[i].left = off.dx - 18;
                   });

@@ -6,12 +6,17 @@ import 'package:scrapyart_home/angel/default_button.dart';
 import 'package:scrapyart_home/charles/my_artboard_charles.dart';
 import 'package:scrapyart_home/charles/stack_object_model.dart';
 
-enum ActionCallback { none, showColorSlider, showRotateSlider }
+enum ActionCallback {
+  none,
+  imageAdded,
+  textAdded,
+}
 
 abstract class EditImageViewModelCharles extends MyArtboardCharles {
   TextEditingController textEditingController = TextEditingController();
   TextEditingController creatorText = TextEditingController();
-  ActionCallback slider = ActionCallback.none;
+
+  ActionCallback isTextAdded = ActionCallback.none;
   double _sliderValue = 0.0;
 
   final List<Color> _colorOptions = [
@@ -27,7 +32,6 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
     Colors.amber,
     Colors.brown,
   ];
-  // Color selectedColor = Colors.black; // Warna awal
 
   void updateTextColor(double value) {
     setState(() {
@@ -36,17 +40,6 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
       selectedColor = _colorOptions[colorIndex];
     });
     globalListObject[currentIndex].color = selectedColor;
-  }
-
-  Slider colorSlider() {
-    return Slider(
-      value: _sliderValue,
-      onChanged: updateTextColor,
-      min: 0.0,
-      max: 1.0,
-      activeColor: selectedColor,
-      inactiveColor: Colors.transparent,
-    );
   }
 
   increaseFontSize() {
@@ -95,7 +88,6 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
   }
 
   addNewsText(BuildContext context) {
-    // ignore: prefer_is_empty
     if (textEditingController.text.isNotEmpty) {
       setState(() {
         globalListObject.add(
@@ -103,6 +95,7 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
             text: textEditingController.text,
           ),
         );
+        isTextAdded = ActionCallback.textAdded;
       });
       Navigator.of(context).pop();
     } else {
@@ -136,9 +129,6 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
               child: const Text('Back')),
           DefaultButton(
               onPressed: () => addNewsText(context),
-              // textEditingController.text.isEmpty
-              //     ? () => Navigator.of(context).pop()
-              //     : () => addNewsText(context),
               color: const Color.fromARGB(255, 122, 74, 37),
               textcolor: Colors.white,
               child: const Text('Add Text'))
@@ -203,8 +193,19 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
   Column columRowTextsMenu() {
     return Column(
       children: [
-        // if (slider == ActionCallback.showColorSlider)
-        colorSlider(),
+        AbsorbPointer(
+          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          child: Slider(
+            value: _sliderValue,
+            onChanged: updateTextColor,
+            min: 0.0,
+            max: 1.0,
+            activeColor: isTextAdded == ActionCallback.textAdded
+                ? selectedColor
+                : Colors.black45,
+            inactiveColor: Colors.transparent,
+          ),
+        ),
         Row(
           children: [
             const Expanded(child: SizedBox()),
@@ -215,50 +216,78 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
                 color: Colors.black,
               ),
             ),
-            // if (textEditingController.text.isNotEmpty)
-            IconButton(
-              onPressed: () {
-                slider = ActionCallback.showColorSlider;
-                setState(() {});
-              },
-              icon: Icon(
-                Icons.rectangle_rounded,
-                color: selectedColor,
+            AbsorbPointer(
+              absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+              child: IconButton(
+                onPressed: () {
+                  setState(() {});
+                },
+                icon: Icon(
+                  Icons.rectangle_rounded,
+                  color: isTextAdded == ActionCallback.textAdded
+                      ? selectedColor
+                      : Colors.black45,
+                ),
               ),
             ),
-            IconButton(
-              onPressed: increaseFontSize,
-              icon: const Icon(
-                Icons.text_increase_rounded,
-                color: Colors.black,
+            AbsorbPointer(
+              absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+              child: IconButton(
+                onPressed: increaseFontSize,
+                icon: Icon(
+                  Icons.text_increase_rounded,
+                  color: isTextAdded == ActionCallback.textAdded
+                      ? Colors.black
+                      : Colors.black45,
+                ),
               ),
             ),
-            IconButton(
-              onPressed: decreaseFontSize,
-              icon: const Icon(
-                Icons.text_decrease_rounded,
-                color: Colors.black,
+            AbsorbPointer(
+              absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+              child: IconButton(
+                onPressed: decreaseFontSize,
+                icon: Icon(
+                  Icons.text_decrease_rounded,
+                  color: isTextAdded == ActionCallback.textAdded
+                      ? Colors.black
+                      : Colors.black45,
+                ),
               ),
             ),
-            IconButton(
-              onPressed: boldText,
-              icon: const Icon(
-                Icons.format_bold_rounded,
-                color: Colors.black,
+            AbsorbPointer(
+              absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+              child: IconButton(
+                onPressed: boldText,
+                icon: Icon(
+                  Icons.format_bold_rounded,
+                  color: isTextAdded == ActionCallback.textAdded
+                      ? Colors.black
+                      : Colors.black45,
+                ),
               ),
             ),
-            IconButton(
-              onPressed: italicText,
-              icon: const Icon(
-                Icons.format_italic_rounded,
-                color: Colors.black,
+            AbsorbPointer(
+              absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+              child: IconButton(
+                onPressed: italicText,
+                icon: Icon(
+                  Icons.format_italic_rounded,
+                  color: isTextAdded == ActionCallback.textAdded
+                      ? Colors.black
+                      : Colors.black45,
+                ),
               ),
             ),
-            IconButton(
-              onPressed: underlineText,
-              icon: const Icon(
-                Icons.format_underline_rounded,
-                color: Colors.black,
+            AbsorbPointer(
+              absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+              child: IconButton(
+                onPressed: underlineText,
+                icon: Icon(
+                  Icons.format_underline_rounded,
+                  color: isTextAdded == ActionCallback.textAdded
+                      ? Colors.black
+                      : Colors.black45,
+                ),
               ),
             ),
             const Expanded(child: SizedBox()),

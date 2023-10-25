@@ -11,25 +11,7 @@ class MyArtboard extends StatefulWidget {
 }
 
 class _MyArtboardState extends EditImageViewModelCharles {
-  final GlobalKey _canvas = GlobalKey();
   String menu = "images";
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => getCanvasSize());
-  }
-
-  getCanvasSize() {
-    RenderBox canvasBox =
-        _canvas.currentContext!.findRenderObject() as RenderBox;
-    setState(() {
-      canvasWidth = ((canvasBox.size.width * 50 / 100));
-      canvasHeight = ((canvasBox.size.height * 69.4 / 100) / 2);
-    });
-    print(canvasWidth);
-    print(canvasHeight);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +34,6 @@ class _MyArtboardState extends EditImageViewModelCharles {
                 child: Screenshot(
                   controller: screenshotController,
                   child: Container(
-                    key: _canvas,
                     color: Colors.white,
                     height: MediaQuery.of(context).size.height * 57 / 100,
                     width: MediaQuery.of(context).size.width * 90 / 100,
