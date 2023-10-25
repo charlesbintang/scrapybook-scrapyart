@@ -4,12 +4,12 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:scrapyart_home/angel/feature_my_artboard/image_text_charles.dart';
+import 'package:scrapyart_home/angel/image_text_charles.dart';
 import 'package:scrapyart_home/angel/feature_my_artboard/my_artboard.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:scrapyart_home/charles/stack_object_model.dart';
+import 'package:scrapyart_home/angel/stack_object_model.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:image_cropper/image_cropper.dart';
 
@@ -26,7 +26,7 @@ extension on List {
   }
 }
 
-abstract class MyArtboardCharles extends State<MyArtboard> {
+abstract class ImageTextModel extends State<MyArtboard> {
   File? selectedImage;
   ScreenshotController screenshotController = ScreenshotController();
   CroppedFile? croppedFile;

@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:scrapyart_home/angel/default_button.dart';
+import 'package:scrapyart_home/angel/feature_my_artboard/image_text_model.dart';
+import 'package:scrapyart_home/angel/stack_object_model.dart';
 // import 'package:scrapyart_home/angel/text_info.dart';
-import 'package:scrapyart_home/charles/my_artboard_charles.dart';
-import 'package:scrapyart_home/charles/stack_object_model.dart';
 
 enum ActionCallback {
   none,
@@ -12,7 +12,7 @@ enum ActionCallback {
   textAdded,
 }
 
-abstract class EditImageViewModelCharles extends MyArtboardCharles {
+abstract class ImageTextController extends ImageTextModel {
   TextEditingController textEditingController = TextEditingController();
   TextEditingController creatorText = TextEditingController();
 

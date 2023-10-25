@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scrapyart_home/charles/stack_object_model.dart';
+import 'package:scrapyart_home/angel/stack_object_model.dart';
 
 class ImageTextCharles extends StatelessWidget {
   final StackObject stackObject;
