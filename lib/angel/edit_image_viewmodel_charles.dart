@@ -96,14 +96,18 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
 
   addNewsText(BuildContext context) {
     // ignore: prefer_is_empty
-    setState(() {
-      globalListObject.add(
-        StackObject(
-          text: textEditingController.text,
-        ),
-      );
+    if (textEditingController.text.isNotEmpty) {
+      setState(() {
+        globalListObject.add(
+          StackObject(
+            text: textEditingController.text,
+          ),
+        );
+      });
       Navigator.of(context).pop();
-    });
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   addNewDialog(context) {
@@ -131,15 +135,24 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
               textcolor: Colors.black,
               child: const Text('Back')),
           DefaultButton(
-              onPressed: textEditingController.text.isEmpty
-                  ? () => Navigator.of(context).pop()
-                  : () => addNewsText(context),
+              onPressed: () => addNewsText(context),
+              // textEditingController.text.isEmpty
+              //     ? () => Navigator.of(context).pop()
+              //     : () => addNewsText(context),
               color: const Color.fromARGB(255, 122, 74, 37),
               textcolor: Colors.white,
               child: const Text('Add Text'))
         ],
       ),
     );
+  }
+
+  deleteAllImage() {
+    for (var i = 0; i < globalListObject.length; i++) {
+      globalListObject[i].image = null;
+    }
+    globalListObject.removeWhere((element) => element.image == null);
+    setState(() {});
   }
 
   switchMenuItems(String menu) {
@@ -176,14 +189,11 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
         //   icon: const Icon(Icons.hide_image),
         // ),
         IconButton(
-          onPressed: () {
-            for (var i = 0; i < globalListObject.length; i++) {
-              globalListObject[i].image = null;
-            }
-            globalListObject.removeWhere((element) => element.image == null);
-            setState(() {});
-          },
-          icon: const Icon(Icons.delete, color: Colors.black),
+          onPressed: () => deleteAllImage,
+          icon: const Icon(
+            Icons.delete,
+            color: Colors.black,
+          ),
         ),
         const Expanded(child: SizedBox()),
       ],
@@ -193,7 +203,8 @@ abstract class EditImageViewModelCharles extends MyArtboardCharles {
   Column columRowTextsMenu() {
     return Column(
       children: [
-        if (slider == ActionCallback.showColorSlider) colorSlider(),
+        // if (slider == ActionCallback.showColorSlider)
+        colorSlider(),
         Row(
           children: [
             const Expanded(child: SizedBox()),

@@ -35,6 +35,8 @@ abstract class MyArtboardCharles extends State<MyArtboard> {
   int currentIndex = 0;
   double widthContainerRender = 0;
   double heightContainerRender = 0;
+  double canvasWidth = 0.0;
+  double canvasHeight = 0.0;
   Color selectedColor = Colors.black; // Warna awal
 
   void _getTapPosition(TapDownDetails tapPostion) {
@@ -333,9 +335,15 @@ abstract class MyArtboardCharles extends State<MyArtboard> {
       if (globalListObject[i].text.isNotEmpty) {
         data.add(
           Positioned(
-            left: globalListObject[i].left,
-            top: globalListObject[i].top,
+            left: globalListObject[i].left + canvasWidth,
+            top: globalListObject[i].top + canvasHeight,
             child: GestureDetector(
+              onTapDown: (details) {
+                setState(() {
+                  canvasHeight = 0;
+                  canvasWidth = 0;
+                });
+              },
               onLongPress: () {
                 // print('long press detected');
               },
@@ -349,7 +357,7 @@ abstract class MyArtboardCharles extends State<MyArtboard> {
                   setState(() {
                     globalListObject[i].color = selectedColor;
                     globalListObject[i].top = off.dy - 120;
-                    globalListObject[i].left = off.dx;
+                    globalListObject[i].left = off.dx - 18;
                   });
                 },
               ),
