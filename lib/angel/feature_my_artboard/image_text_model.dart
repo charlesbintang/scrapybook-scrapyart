@@ -1,8 +1,8 @@
 // ignore_for_file: avoid_print
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scrapyart_home/angel/default_button.dart';
 import 'package:scrapyart_home/angel/feature_my_artboard/my_artboard.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -42,7 +42,9 @@ abstract class ImageTextModel extends State<MyArtboard> {
   double heightContainerRender = 0;
   double canvasWidth = 0.0;
   double canvasHeight = 0.0;
-  Color selectedColor = Colors.black; // Warna awal
+  final textController = TextEditingController(
+      text:
+          '#2F19DB'); // The initial value can be provided directly to the controller.
 
   void getTapPosition(TapDownDetails tapPostion) {
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
@@ -60,7 +62,6 @@ abstract class ImageTextModel extends State<MyArtboard> {
   }
 
   setCurrentIndex(BuildContext context, index) {
-    print("diklik");
     setState(() {
       currentIndex = index;
     });
@@ -199,6 +200,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
           image: selectedImage,
         ),
       );
+      isImageAdded = ActionCallback.imageAdded;
     });
   }
 
@@ -267,30 +269,31 @@ abstract class ImageTextModel extends State<MyArtboard> {
   TextEditingController creatorText = TextEditingController();
 
   ActionCallback isTextAdded = ActionCallback.none;
-  double sliderValue = 0.0;
+  ActionCallback isImageAdded = ActionCallback.none;
+  // double sliderValue = 0.0;
 
-  final List<Color> _colorOptions = [
-    Colors.black,
-    Colors.red,
-    Colors.green,
-    Colors.blue,
-    Colors.yellow,
-    Colors.purple,
-    Colors.redAccent,
-    Colors.orange,
-    Colors.white,
-    Colors.amber,
-    Colors.brown,
-  ];
+  // final List<Color> _colorOptions = [
+  //   Colors.black,
+  //   Colors.red,
+  //   Colors.green,
+  //   Colors.blue,
+  //   Colors.yellow,
+  //   Colors.purple,
+  //   Colors.redAccent,
+  //   Colors.orange,
+  //   Colors.white,
+  //   Colors.amber,
+  //   Colors.brown,
+  // ];
 
-  void updateTextColor(double value) {
-    setState(() {
-      sliderValue = value;
-      int colorIndex = (sliderValue * (_colorOptions.length - 1)).round();
-      selectedColor = _colorOptions[colorIndex];
-    });
-    globalListObject[currentIndex].color = selectedColor;
-  }
+  // void updateTextColor(double value) {
+  //   setState(() {
+  //     sliderValue = value;
+  //     int colorIndex = (sliderValue * (_colorOptions.length - 1)).round();
+  //     selectedColor = _colorOptions[colorIndex];
+  //   });
+  //   globalListObject[currentIndex].color = selectedColor;
+  // }
 
   increaseFontSize() {
     setState(() {
@@ -391,7 +394,20 @@ abstract class ImageTextModel extends State<MyArtboard> {
     for (var i = 0; i < globalListObject.length; i++) {
       globalListObject[i].image = null;
     }
-    globalListObject.removeWhere((element) => element.image == null);
+    globalListObject
+        .removeWhere((element) => element.image == null && element.text == "");
+    isImageAdded = ActionCallback.none;
     setState(() {});
   }
+
+  void copyToClipboard(String input) {
+    String textToCopy = input.replaceFirst('#', '').toUpperCase();
+    if (textToCopy.startsWith('FF') && textToCopy.length == 8) {
+      textToCopy = textToCopy.replaceFirst('FF', '');
+    }
+    Clipboard.setData(ClipboardData(text: '#$textToCopy'));
+  }
+
+  void changeColor(Color color) =>
+      setState(() => globalListObject[currentIndex].color = color);
 }

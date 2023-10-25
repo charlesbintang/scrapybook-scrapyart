@@ -7,14 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:scrapyart_home/angel/feature_my_artboard/image_text_model.dart';
 import 'package:scrapyart_home/angel/image_text_charles.dart';
 import 'package:scrapyart_home/angel/stack_object_model.dart';
-// import 'package:scrapyart_home/angel/text_info.dart';
+import 'package:flutter/cupertino.dart' show CupertinoTextField;
+import 'package:flutter/services.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 abstract class ImageTextController extends ImageTextModel {
   switchMenuItems(String menu) {
     Widget returnedRowItems = Container();
     switch (menu) {
       case "texts":
-        returnedRowItems = columRowTextsMenu();
+        returnedRowItems = rowTextsMenu();
         break;
       case "images":
         returnedRowItems = rowImagesMenu();
@@ -44,12 +46,12 @@ abstract class ImageTextController extends ImageTextModel {
         //   icon: const Icon(Icons.hide_image),
         // ),
         AbsorbPointer(
-          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          absorbing: isImageAdded == ActionCallback.imageAdded ? false : true,
           child: IconButton(
             onPressed: deleteAllImage,
             icon: Icon(
               Icons.delete,
-              color: isTextAdded == ActionCallback.textAdded
+              color: isImageAdded == ActionCallback.imageAdded
                   ? Colors.black
                   : Colors.black45,
             ),
@@ -60,112 +62,267 @@ abstract class ImageTextController extends ImageTextModel {
     );
   }
 
-  Column columRowTextsMenu() {
-    return Column(
+  Row rowTextsMenu() {
+    return Row(
       children: [
-        AbsorbPointer(
-          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-          child: Slider(
-            value: sliderValue,
-            onChanged: updateTextColor,
-            min: 0.0,
-            max: 1.0,
-            activeColor: isTextAdded == ActionCallback.textAdded
-                ? selectedColor
-                : Colors.black45,
-            inactiveColor: Colors.transparent,
+        const Expanded(child: SizedBox()),
+        IconButton(
+          onPressed: () => addNewDialog(context),
+          icon: const Icon(
+            Icons.add_rounded,
+            color: Colors.black,
           ),
         ),
-        Row(
-          children: [
-            const Expanded(child: SizedBox()),
-            IconButton(
-              onPressed: () => addNewDialog(context),
-              icon: const Icon(
-                Icons.add_rounded,
-                color: Colors.black,
-              ),
-            ),
-            AbsorbPointer(
-              absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-              child: IconButton(
-                onPressed: () {
-                  setState(() {});
+        AbsorbPointer(
+          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          child: IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    scrollable: true,
+                    titlePadding: const EdgeInsets.all(0),
+                    contentPadding: const EdgeInsets.all(0),
+                    content: Column(
+                      children: [
+                        ColorPicker(
+                          pickerColor: globalListObject[currentIndex]
+                              .color, //widget.pickerColor,
+                          onColorChanged: changeColor,
+                          colorPickerWidth: 300,
+                          pickerAreaHeightPercent: 0.7,
+                          displayThumbColor: true,
+                          paletteType: PaletteType.hsvWithHue,
+                          labelTypes: const [],
+                          pickerAreaBorderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(2),
+                            topRight: Radius.circular(2),
+                          ),
+                          hexInputController: textController, // <- here
+                          portraitOnly: true,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          /* It can be any text field, for example:
+
+                            * TextField
+                            * TextFormField
+                            * CupertinoTextField
+                            * EditableText
+                            * any text field from 3-rd party package
+                            * your own text field
+
+                            so basically anything that supports/uses
+                            a TextEditingController for an editable text.
+                            */
+                          child: CupertinoTextField(
+                            controller: textController,
+                            // Everything below is purely optional.
+                            prefix: const Padding(
+                                padding: EdgeInsets.only(left: 8),
+                                child: Icon(Icons.tag)),
+                            suffix: IconButton(
+                              icon: const Icon(Icons.content_paste_rounded),
+                              onPressed: () =>
+                                  copyToClipboard(textController.text),
+                            ),
+                            autofocus: true,
+                            maxLength: 9,
+                            inputFormatters: [
+                              // Any custom input formatter can be passed
+                              // here or use any Form validator you want.
+                              UpperCaseTextFormatter(),
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(kValidHexPattern)),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  );
                 },
-                icon: Icon(
-                  Icons.rectangle_rounded,
-                  color: isTextAdded == ActionCallback.textAdded
-                      ? selectedColor
-                      : Colors.black45,
-                ),
-              ),
+              );
+            },
+            icon: Icon(
+              Icons.rectangle_rounded,
+              color: isTextAdded == ActionCallback.textAdded
+                  ? globalListObject[currentIndex].color
+                  : Colors.black45,
             ),
-            AbsorbPointer(
-              absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-              child: IconButton(
-                onPressed: increaseFontSize,
-                icon: Icon(
-                  Icons.text_increase_rounded,
-                  color: isTextAdded == ActionCallback.textAdded
-                      ? Colors.black
-                      : Colors.black45,
-                ),
-              ),
-            ),
-            AbsorbPointer(
-              absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-              child: IconButton(
-                onPressed: decreaseFontSize,
-                icon: Icon(
-                  Icons.text_decrease_rounded,
-                  color: isTextAdded == ActionCallback.textAdded
-                      ? Colors.black
-                      : Colors.black45,
-                ),
-              ),
-            ),
-            AbsorbPointer(
-              absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-              child: IconButton(
-                onPressed: boldText,
-                icon: Icon(
-                  Icons.format_bold_rounded,
-                  color: isTextAdded == ActionCallback.textAdded
-                      ? Colors.black
-                      : Colors.black45,
-                ),
-              ),
-            ),
-            AbsorbPointer(
-              absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-              child: IconButton(
-                onPressed: italicText,
-                icon: Icon(
-                  Icons.format_italic_rounded,
-                  color: isTextAdded == ActionCallback.textAdded
-                      ? Colors.black
-                      : Colors.black45,
-                ),
-              ),
-            ),
-            AbsorbPointer(
-              absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-              child: IconButton(
-                onPressed: underlineText,
-                icon: Icon(
-                  Icons.format_underline_rounded,
-                  color: isTextAdded == ActionCallback.textAdded
-                      ? Colors.black
-                      : Colors.black45,
-                ),
-              ),
-            ),
-            const Expanded(child: SizedBox()),
-          ],
+          ),
         ),
+        AbsorbPointer(
+          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          child: IconButton(
+            onPressed: increaseFontSize,
+            icon: Icon(
+              Icons.text_increase_rounded,
+              color: isTextAdded == ActionCallback.textAdded
+                  ? Colors.black
+                  : Colors.black45,
+            ),
+          ),
+        ),
+        AbsorbPointer(
+          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          child: IconButton(
+            onPressed: decreaseFontSize,
+            icon: Icon(
+              Icons.text_decrease_rounded,
+              color: isTextAdded == ActionCallback.textAdded
+                  ? Colors.black
+                  : Colors.black45,
+            ),
+          ),
+        ),
+        AbsorbPointer(
+          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          child: IconButton(
+            onPressed: boldText,
+            icon: Icon(
+              Icons.format_bold_rounded,
+              color: isTextAdded == ActionCallback.textAdded
+                  ? Colors.black
+                  : Colors.black45,
+            ),
+          ),
+        ),
+        AbsorbPointer(
+          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          child: IconButton(
+            onPressed: italicText,
+            icon: Icon(
+              Icons.format_italic_rounded,
+              color: isTextAdded == ActionCallback.textAdded
+                  ? Colors.black
+                  : Colors.black45,
+            ),
+          ),
+        ),
+        AbsorbPointer(
+          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          child: IconButton(
+            onPressed: underlineText,
+            icon: Icon(
+              Icons.format_underline_rounded,
+              color: isTextAdded == ActionCallback.textAdded
+                  ? Colors.black
+                  : Colors.black45,
+            ),
+          ),
+        ),
+        const Expanded(child: SizedBox()),
       ],
     );
   }
+  // Column rowTextsMenu() {
+  //   return Column(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: [
+  //       // AbsorbPointer(
+  //       //   absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+  //       //   child: Slider(
+  //       //     value: sliderValue,
+  //       //     onChanged: updateTextColor,
+  //       //     min: 0.0,
+  //       //     max: 1.0,
+  //       //     activeColor: isTextAdded == ActionCallback.textAdded
+  //       //         ? selectedColor
+  //       //         : Colors.black45,
+  //       //     inactiveColor: Colors.transparent,
+  //       //   ),
+  //       // ),
+  //       Row(
+  //         children: [
+  //           const Expanded(child: SizedBox()),
+  //           IconButton(
+  //             onPressed: () => addNewDialog(context),
+  //             icon: const Icon(
+  //               Icons.add_rounded,
+  //               color: Colors.black,
+  //             ),
+  //           ),
+  //           AbsorbPointer(
+  //             absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+  //             child: IconButton(
+  //               onPressed: () {
+  //                 setState(() {});
+  //               },
+  //               icon: Icon(
+  //                 Icons.rectangle_rounded,
+  //                 color: isTextAdded == ActionCallback.textAdded
+  //                     ? selectedColor
+  //                     : Colors.black45,
+  //               ),
+  //             ),
+  //           ),
+  //           AbsorbPointer(
+  //             absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+  //             child: IconButton(
+  //               onPressed: increaseFontSize,
+  //               icon: Icon(
+  //                 Icons.text_increase_rounded,
+  //                 color: isTextAdded == ActionCallback.textAdded
+  //                     ? Colors.black
+  //                     : Colors.black45,
+  //               ),
+  //             ),
+  //           ),
+  //           AbsorbPointer(
+  //             absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+  //             child: IconButton(
+  //               onPressed: decreaseFontSize,
+  //               icon: Icon(
+  //                 Icons.text_decrease_rounded,
+  //                 color: isTextAdded == ActionCallback.textAdded
+  //                     ? Colors.black
+  //                     : Colors.black45,
+  //               ),
+  //             ),
+  //           ),
+  //           AbsorbPointer(
+  //             absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+  //             child: IconButton(
+  //               onPressed: boldText,
+  //               icon: Icon(
+  //                 Icons.format_bold_rounded,
+  //                 color: isTextAdded == ActionCallback.textAdded
+  //                     ? Colors.black
+  //                     : Colors.black45,
+  //               ),
+  //             ),
+  //           ),
+  //           AbsorbPointer(
+  //             absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+  //             child: IconButton(
+  //               onPressed: italicText,
+  //               icon: Icon(
+  //                 Icons.format_italic_rounded,
+  //                 color: isTextAdded == ActionCallback.textAdded
+  //                     ? Colors.black
+  //                     : Colors.black45,
+  //               ),
+  //             ),
+  //           ),
+  //           AbsorbPointer(
+  //             absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+  //             child: IconButton(
+  //               onPressed: underlineText,
+  //               icon: Icon(
+  //                 Icons.format_underline_rounded,
+  //                 color: isTextAdded == ActionCallback.textAdded
+  //                     ? Colors.black
+  //                     : Colors.black45,
+  //               ),
+  //             ),
+  //           ),
+  //           const Expanded(child: SizedBox()),
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
 
   List<Widget> dataStack() {
     List<Widget> data = [];
@@ -436,8 +593,13 @@ abstract class ImageTextController extends ImageTextModel {
             left: globalListObject[i].left,
             top: globalListObject[i].top,
             child: GestureDetector(
+              onTapDown: (position) {
+                getTapPosition(position);
+              },
               onLongPress: () {
-                // print('long press detected');
+                moveImage(i).then((value) {
+                  setState(() {});
+                });
               },
               onTap: () => setCurrentIndex(context, i),
               child: Draggable(
