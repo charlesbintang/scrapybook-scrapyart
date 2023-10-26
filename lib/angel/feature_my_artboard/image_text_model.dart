@@ -16,6 +16,7 @@ enum ActionCallback {
   none,
   imageAdded,
   textAdded,
+  isClicked,
 }
 
 extension on List {
@@ -34,6 +35,7 @@ extension on List {
 abstract class ImageTextModel extends State<MyArtboard> {
   File? selectedImage;
   ScreenshotController screenshotController = ScreenshotController();
+  TextEditingController textEditingController = TextEditingController();
   CroppedFile? croppedFile;
   Offset tapPosition = Offset.zero;
   List<StackObject> globalListObject = [];
@@ -45,6 +47,10 @@ abstract class ImageTextModel extends State<MyArtboard> {
   final textController = TextEditingController(
       text:
           'FF000000'); // The initial value can be provided directly to the controller.
+  ActionCallback isClicked = ActionCallback.none;
+  ActionCallback isTextAdded = ActionCallback.none;
+  ActionCallback isImageAdded = ActionCallback.none;
+  String menu = "images";
 
   void getTapPosition(TapDownDetails tapPostion) {
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
@@ -63,6 +69,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
 
   setCurrentIndex(BuildContext context, index) {
     setState(() {
+      isClicked = ActionCallback.isClicked;
       currentIndex = index;
     });
     ScaffoldMessenger.of(context).showSnackBar(
@@ -127,15 +134,20 @@ abstract class ImageTextModel extends State<MyArtboard> {
     var delete = PopupMenuItem(
       child: const Text("Hapus"),
       onTap: () {
-        if (globalListObject[indexImage].text.isNotEmpty) {
+        if (indexImage == 0 && indexImage + globalListObject.length == 1) {
           isTextAdded = ActionCallback.none;
+          isImageAdded = ActionCallback.none;
+          isClicked = ActionCallback.none;
+        }
+        if (globalListObject[indexImage].text.isNotEmpty) {
+          isClicked = ActionCallback.none;
           Future.delayed(Durations.short1, () {
             globalListObject.removeAt(indexImage);
             setState(() {});
           });
         }
         if (globalListObject[indexImage].image != null) {
-          isImageAdded = ActionCallback.none;
+          isClicked = ActionCallback.none;
           Future.delayed(Durations.short1, () {
             globalListObject.removeAt(indexImage);
             setState(() {});
@@ -283,13 +295,6 @@ abstract class ImageTextModel extends State<MyArtboard> {
     await ImageGallerySaver.saveImage(bytes, name: name);
   }
 
-  TextEditingController textEditingController = TextEditingController();
-  TextEditingController creatorText = TextEditingController();
-
-  ActionCallback isTextAdded = ActionCallback.none;
-  ActionCallback isImageAdded = ActionCallback.none;
-  String menu = "images";
-
   increaseFontSize() {
     setState(() {
       globalListObject[currentIndex].fontSize =
@@ -385,13 +390,22 @@ abstract class ImageTextModel extends State<MyArtboard> {
     );
   }
 
-  deleteAllImage() {
+  deleteAllImages() {
     for (var i = 0; i < globalListObject.length; i++) {
       globalListObject[i].image = null;
     }
     globalListObject
         .removeWhere((element) => element.image == null && element.text == "");
     isImageAdded = ActionCallback.none;
+    setState(() {});
+  }
+
+  deleteAllTexts() {
+    for (var i = 0; i < globalListObject.length; i++) {
+      globalListObject[i].text = "";
+    }
+    globalListObject.removeWhere((element) => element.text == "");
+    isTextAdded = ActionCallback.none;
     setState(() {});
   }
 

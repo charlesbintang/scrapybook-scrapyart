@@ -48,7 +48,7 @@ abstract class ImageTextController extends ImageTextModel {
         AbsorbPointer(
           absorbing: isImageAdded == ActionCallback.imageAdded ? false : true,
           child: IconButton(
-            onPressed: deleteAllImage,
+            onPressed: deleteAllImages,
             icon: Icon(
               Icons.delete,
               color: isImageAdded == ActionCallback.imageAdded
@@ -148,7 +148,9 @@ abstract class ImageTextController extends ImageTextModel {
             icon: Icon(
               Icons.rectangle_rounded,
               color: isTextAdded == ActionCallback.textAdded
-                  ? globalListObject[currentIndex].color
+                  ? isClicked == ActionCallback.isClicked
+                      ? globalListObject[currentIndex].color
+                      : Colors.black45
                   : Colors.black45,
             ),
           ),
@@ -207,6 +209,18 @@ abstract class ImageTextController extends ImageTextModel {
             onPressed: underlineText,
             icon: Icon(
               Icons.format_underline_rounded,
+              color: isTextAdded == ActionCallback.textAdded
+                  ? Colors.black
+                  : Colors.black45,
+            ),
+          ),
+        ),
+        AbsorbPointer(
+          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          child: IconButton(
+            onPressed: deleteAllTexts,
+            icon: Icon(
+              Icons.delete,
               color: isTextAdded == ActionCallback.textAdded
                   ? Colors.black
                   : Colors.black45,
@@ -408,8 +422,8 @@ abstract class ImageTextController extends ImageTextModel {
     for (var i = 0; i < globalListObject.length; i++) {
       if (globalListObject[i].image != null) {
         var imageOnCurentIndex = globalListObject[i];
+        // images
         data.addAll([
-          // images
           Positioned(
             top: imageOnCurentIndex.top,
             left: imageOnCurentIndex.left,
