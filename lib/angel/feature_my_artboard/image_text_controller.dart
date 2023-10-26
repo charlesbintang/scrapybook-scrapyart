@@ -217,6 +217,84 @@ abstract class ImageTextController extends ImageTextModel {
       ],
     );
   }
+
+  Row menusButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        IconButton(
+          iconSize: 25,
+          icon: const Icon(
+            Icons.save_alt,
+          ),
+          onPressed: () => saveToGallery(context),
+        ),
+        IconButton(
+          iconSize: 25,
+          icon: const Icon(
+            Icons.format_paint_outlined,
+            color: Colors.white30,
+          ),
+          onPressed: () {},
+        ),
+        IconButton(
+          iconSize: 25,
+          icon: const Icon(
+            Icons.square_outlined,
+            color: Colors.white30,
+          ),
+          onPressed: () {},
+        ),
+        IconButton(
+          iconSize: 25,
+          icon: const Icon(
+            Icons.photo,
+          ),
+          onPressed: () {
+            setState(() {
+              menu = "images";
+            });
+          },
+        ),
+        IconButton(
+          iconSize: 30,
+          icon: const Icon(
+            Icons.text_fields_rounded,
+          ),
+          onPressed: () {
+            setState(() {
+              menu = "texts";
+            });
+          },
+        ),
+        IconButton(
+          iconSize: 25,
+          icon: const Icon(
+            Icons.brush_rounded,
+            color: Colors.white30,
+          ),
+          onPressed: () {},
+        ),
+        IconButton(
+          iconSize: 25,
+          icon: const Icon(
+            Icons.face_retouching_natural_rounded,
+            color: Colors.white30,
+          ),
+          onPressed: () {},
+        ),
+        IconButton(
+          iconSize: 25,
+          icon: const Icon(
+            Icons.layers,
+            color: Colors.white30,
+          ),
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
+
   // Column rowTextsMenu() {
   //   return Column(
   //     mainAxisAlignment: MainAxisAlignment.center,

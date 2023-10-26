@@ -128,19 +128,38 @@ abstract class ImageTextModel extends State<MyArtboard> {
       child: const Text("Hapus"),
       onTap: () {
         globalListObject.removeAt(indexImage);
+        for (var i = 0; i < globalListObject.length; i++) {
+          if (globalListObject[i].text == "" &&
+              globalListObject[i].image == null) {
+            isTextAdded = ActionCallback.none;
+            isImageAdded = ActionCallback.none;
+          } else if (globalListObject[i].text == "") {
+            isTextAdded = ActionCallback.none;
+          } else if (globalListObject[i].image == null) {
+            isImageAdded = ActionCallback.none;
+          }
+        }
       },
     );
     var reset = PopupMenuItem(
       child: const Text("Reset"),
       onTap: () {
-        globalListObject[indexImage].croppedFile = null;
-        globalListObject[indexImage].rotateValue = 0.0;
-        globalListObject[indexImage].imageWidth = 200.0;
-        globalListObject[indexImage].imageHeight = 200.0;
-        globalListObject[indexImage].boxRoundValue = 15.0;
-        globalListObject[indexImage].onClicked = OnAction.isFalse;
-        globalListObject[indexImage].onScaling = OnAction.isFalse;
-        globalListObject[indexImage].boxRound = OnAction.isFalse;
+        if (globalListObject[indexImage].image != null) {
+          globalListObject[indexImage].croppedFile = null;
+          globalListObject[indexImage].rotateValue = 0.0;
+          globalListObject[indexImage].imageWidth = 200.0;
+          globalListObject[indexImage].imageHeight = 200.0;
+          globalListObject[indexImage].boxRoundValue = 15.0;
+          globalListObject[indexImage].onClicked = OnAction.isFalse;
+          globalListObject[indexImage].onScaling = OnAction.isFalse;
+          globalListObject[indexImage].boxRound = OnAction.isFalse;
+        } else if (globalListObject[indexImage].text.isNotEmpty) {
+          globalListObject[indexImage].color = Colors.black;
+          globalListObject[indexImage].fontWeight = FontWeight.normal;
+          globalListObject[indexImage].fontStyle = FontStyle.normal;
+          globalListObject[indexImage].fontSize = 20;
+          globalListObject[indexImage].decoration = TextDecoration.none;
+        }
       },
     );
 
@@ -267,6 +286,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
 
   ActionCallback isTextAdded = ActionCallback.none;
   ActionCallback isImageAdded = ActionCallback.none;
+  String menu = "images";
 
   increaseFontSize() {
     setState(() {
