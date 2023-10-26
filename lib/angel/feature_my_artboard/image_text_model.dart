@@ -127,18 +127,31 @@ abstract class ImageTextModel extends State<MyArtboard> {
     var delete = PopupMenuItem(
       child: const Text("Hapus"),
       onTap: () {
-        globalListObject.removeAt(indexImage);
-        for (var i = 0; i < globalListObject.length; i++) {
-          if (globalListObject[i].text == "" &&
-              globalListObject[i].image == null) {
-            isTextAdded = ActionCallback.none;
-            isImageAdded = ActionCallback.none;
-          } else if (globalListObject[i].text == "") {
-            isTextAdded = ActionCallback.none;
-          } else if (globalListObject[i].image == null) {
-            isImageAdded = ActionCallback.none;
-          }
+        if (globalListObject[indexImage].text.isNotEmpty) {
+          isTextAdded = ActionCallback.none;
+          Future.delayed(Durations.short1, () {
+            globalListObject.removeAt(indexImage);
+            setState(() {});
+          });
         }
+        if (globalListObject[indexImage].image != null) {
+          isImageAdded = ActionCallback.none;
+          Future.delayed(Durations.short1, () {
+            globalListObject.removeAt(indexImage);
+            setState(() {});
+          });
+        }
+        // for (var i = 0; i < globalListObject.length; i++) {
+        //   if (globalListObject[i].text == "" &&
+        //       globalListObject[i].image == null) {
+        //     isTextAdded = ActionCallback.none;
+        //     isImageAdded = ActionCallback.none;
+        //   } else if (globalListObject[i].text == "") {
+        //     isTextAdded = ActionCallback.none;
+        //   } else if (globalListObject[i].image == null) {
+        //     isImageAdded = ActionCallback.none;
+        //   }
+        // }
       },
     );
     var reset = PopupMenuItem(
