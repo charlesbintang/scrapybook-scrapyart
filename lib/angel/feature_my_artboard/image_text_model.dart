@@ -141,17 +141,6 @@ abstract class ImageTextModel extends State<MyArtboard> {
             setState(() {});
           });
         }
-        // for (var i = 0; i < globalListObject.length; i++) {
-        //   if (globalListObject[i].text == "" &&
-        //       globalListObject[i].image == null) {
-        //     isTextAdded = ActionCallback.none;
-        //     isImageAdded = ActionCallback.none;
-        //   } else if (globalListObject[i].text == "") {
-        //     isTextAdded = ActionCallback.none;
-        //   } else if (globalListObject[i].image == null) {
-        //     isImageAdded = ActionCallback.none;
-        //   }
-        // }
       },
     );
     var reset = PopupMenuItem(
