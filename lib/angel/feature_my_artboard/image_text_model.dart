@@ -35,7 +35,11 @@ extension on List {
 abstract class ImageTextModel extends State<MyArtboard> {
   File? selectedImage;
   ScreenshotController screenshotController = ScreenshotController();
+  TextEditingController newTextController = TextEditingController();
   TextEditingController textEditingController = TextEditingController();
+  TextEditingController textColorController = TextEditingController(
+      text:
+          'FF000000'); // The initial value can be provided directly to the controller.
   CroppedFile? croppedFile;
   Offset tapPosition = Offset.zero;
   List<StackObject> globalListObject = [];
@@ -44,9 +48,6 @@ abstract class ImageTextModel extends State<MyArtboard> {
   double heightContainerRender = 0;
   double canvasWidth = 0.0;
   double canvasHeight = 0.0;
-  final textController = TextEditingController(
-      text:
-          'FF000000'); // The initial value can be provided directly to the controller.
   ActionCallback isClicked = ActionCallback.none;
   ActionCallback isTextAdded = ActionCallback.none;
   ActionCallback isImageAdded = ActionCallback.none;
@@ -341,13 +342,14 @@ abstract class ImageTextModel extends State<MyArtboard> {
   }
 
   addNewsText(BuildContext context) {
-    if (textEditingController.text.isNotEmpty) {
+    if (newTextController.text.isNotEmpty) {
       setState(() {
         globalListObject.add(
           StackObject(
-            text: textEditingController.text,
+            text: newTextController.text,
           ),
         );
+        newTextController.text = "";
         isTextAdded = ActionCallback.textAdded;
       });
       Navigator.of(context).pop();
@@ -364,7 +366,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
           'Add New Text',
         ),
         content: TextField(
-          controller: textEditingController,
+          controller: newTextController,
           maxLines: 5,
           decoration: const InputDecoration(
             suffixIcon: Icon(
@@ -385,6 +387,45 @@ abstract class ImageTextModel extends State<MyArtboard> {
               color: const Color.fromARGB(255, 122, 74, 37),
               textcolor: Colors.white,
               child: const Text('Add Text'))
+        ],
+      ),
+    );
+  }
+
+  Future<dynamic> editText(int i) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text(
+          'Edit Text',
+        ),
+        content: TextField(
+          controller: textEditingController,
+          maxLines: 5,
+          decoration: InputDecoration(
+            suffixIcon: const Icon(
+              Icons.edit,
+            ),
+            filled: true,
+            hintText: globalListObject[i].text,
+          ),
+        ),
+        actions: [
+          DefaultButton(
+              onPressed: () => Navigator.of(context).pop(),
+              color: Colors.white,
+              textcolor: Colors.black,
+              child: const Text('Back')),
+          DefaultButton(
+              onPressed: () {
+                setState(() {
+                  globalListObject[i].text = textEditingController.text;
+                });
+                Navigator.of(context).pop();
+              },
+              color: const Color.fromARGB(255, 122, 74, 37),
+              textcolor: Colors.white,
+              child: const Text('Save'))
         ],
       ),
     );

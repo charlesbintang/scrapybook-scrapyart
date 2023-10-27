@@ -98,7 +98,7 @@ abstract class ImageTextController extends ImageTextModel {
                             topLeft: Radius.circular(2),
                             topRight: Radius.circular(2),
                           ),
-                          hexInputController: textController, // <- here
+                          hexInputController: textColorController, // <- here
                           portraitOnly: true,
                         ),
                         Padding(
@@ -116,7 +116,7 @@ abstract class ImageTextController extends ImageTextModel {
                             a TextEditingController for an editable text.
                             */
                           child: CupertinoTextField(
-                            controller: textController,
+                            controller: textColorController,
                             // Everything below is purely optional.
                             prefix: const Padding(
                                 padding: EdgeInsets.only(left: 8),
@@ -124,7 +124,7 @@ abstract class ImageTextController extends ImageTextModel {
                             suffix: IconButton(
                               icon: const Icon(Icons.content_paste_rounded),
                               onPressed: () =>
-                                  copyToClipboard(textController.text),
+                                  copyToClipboard(textColorController.text),
                             ),
                             autofocus: true,
                             maxLength: 9,
@@ -308,114 +308,6 @@ abstract class ImageTextController extends ImageTextModel {
       ],
     );
   }
-
-  // Column rowTextsMenu() {
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     children: [
-  //       // AbsorbPointer(
-  //       //   absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-  //       //   child: Slider(
-  //       //     value: sliderValue,
-  //       //     onChanged: updateTextColor,
-  //       //     min: 0.0,
-  //       //     max: 1.0,
-  //       //     activeColor: isTextAdded == ActionCallback.textAdded
-  //       //         ? selectedColor
-  //       //         : Colors.black45,
-  //       //     inactiveColor: Colors.transparent,
-  //       //   ),
-  //       // ),
-  //       Row(
-  //         children: [
-  //           const Expanded(child: SizedBox()),
-  //           IconButton(
-  //             onPressed: () => addNewDialog(context),
-  //             icon: const Icon(
-  //               Icons.add_rounded,
-  //               color: Colors.black,
-  //             ),
-  //           ),
-  //           AbsorbPointer(
-  //             absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-  //             child: IconButton(
-  //               onPressed: () {
-  //                 setState(() {});
-  //               },
-  //               icon: Icon(
-  //                 Icons.rectangle_rounded,
-  //                 color: isTextAdded == ActionCallback.textAdded
-  //                     ? selectedColor
-  //                     : Colors.black45,
-  //               ),
-  //             ),
-  //           ),
-  //           AbsorbPointer(
-  //             absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-  //             child: IconButton(
-  //               onPressed: increaseFontSize,
-  //               icon: Icon(
-  //                 Icons.text_increase_rounded,
-  //                 color: isTextAdded == ActionCallback.textAdded
-  //                     ? Colors.black
-  //                     : Colors.black45,
-  //               ),
-  //             ),
-  //           ),
-  //           AbsorbPointer(
-  //             absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-  //             child: IconButton(
-  //               onPressed: decreaseFontSize,
-  //               icon: Icon(
-  //                 Icons.text_decrease_rounded,
-  //                 color: isTextAdded == ActionCallback.textAdded
-  //                     ? Colors.black
-  //                     : Colors.black45,
-  //               ),
-  //             ),
-  //           ),
-  //           AbsorbPointer(
-  //             absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-  //             child: IconButton(
-  //               onPressed: boldText,
-  //               icon: Icon(
-  //                 Icons.format_bold_rounded,
-  //                 color: isTextAdded == ActionCallback.textAdded
-  //                     ? Colors.black
-  //                     : Colors.black45,
-  //               ),
-  //             ),
-  //           ),
-  //           AbsorbPointer(
-  //             absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-  //             child: IconButton(
-  //               onPressed: italicText,
-  //               icon: Icon(
-  //                 Icons.format_italic_rounded,
-  //                 color: isTextAdded == ActionCallback.textAdded
-  //                     ? Colors.black
-  //                     : Colors.black45,
-  //               ),
-  //             ),
-  //           ),
-  //           AbsorbPointer(
-  //             absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
-  //             child: IconButton(
-  //               onPressed: underlineText,
-  //               icon: Icon(
-  //                 Icons.format_underline_rounded,
-  //                 color: isTextAdded == ActionCallback.textAdded
-  //                     ? Colors.black
-  //                     : Colors.black45,
-  //               ),
-  //             ),
-  //           ),
-  //           const Expanded(child: SizedBox()),
-  //         ],
-  //       ),
-  //     ],
-  //   );
-  // }
 
   List<Widget> dataStack() {
     List<Widget> data = [];
@@ -693,6 +585,10 @@ abstract class ImageTextController extends ImageTextModel {
                 moveImage(i).then((value) {
                   setState(() {});
                 });
+              },
+              onDoubleTap: () {
+                textEditingController.text = globalListObject[i].text;
+                editText(i);
               },
               onTap: () => setCurrentIndex(context, i),
               child: Draggable(
