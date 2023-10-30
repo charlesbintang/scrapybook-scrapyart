@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_print
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:scrapyart_home/angel/image_text_charles.dart';
@@ -54,6 +55,26 @@ abstract class ImageTextModel extends State<MyArtboard> {
   ActionCallback isTextAdded = ActionCallback.none;
   ActionCallback isImageAdded = ActionCallback.none;
   String menu = "images";
+  List<String> assetFiles = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getAssetFiles();
+  }
+
+  Future<void> getAssetFiles() async {
+    final manifestContent = await rootBundle.loadString('AssetManifest.json');
+    final Map<String, dynamic> manifestMap = json.decode(manifestContent);
+
+    final assetPaths = manifestMap.keys
+        .where((String key) => key.startsWith('lib/assets/'))
+        .toList();
+
+    assetFiles = List<String>.from(assetPaths);
+
+    setState(() {});
+  }
 
   void getTapPosition(TapDownDetails tapPostion) {
     final RenderBox renderBox = context.findRenderObject() as RenderBox;

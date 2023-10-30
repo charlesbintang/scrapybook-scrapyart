@@ -9,58 +9,60 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 abstract class ImageTextController extends ImageTextModel {
   switchMenuItems(String menu) {
-    Widget returnedRowItems = Container();
     switch (menu) {
       case "texts":
-        returnedRowItems = rowTextsMenu();
-        break;
+        return rowTextsMenu();
       case "images":
-        returnedRowItems = rowImagesMenu();
-        break;
+        return rowImagesMenu();
       default:
         print("tidak ada list view yang ditampilkan");
     }
-    return returnedRowItems;
   }
 
-  Row rowImagesMenu() {
-    return Row(
-      children: [
-        const Expanded(child: SizedBox()),
-        IconButton(
-          onPressed: () => pickImageFromGallery(),
-          icon: const Icon(
-            Icons.add_a_photo,
-            color: Colors.black,
+  Wrap rowImagesMenu() {
+    List<Widget> data = [];
+    data.addAll([
+      IconButton(
+        onPressed: () => pickImageFromGallery(),
+        icon: const Icon(
+          Icons.add_photo_alternate_outlined,
+          color: Colors.black,
+        ),
+      ),
+      AbsorbPointer(
+        absorbing: isImageAdded == ActionCallback.imageAdded ? false : true,
+        child: IconButton(
+          onPressed: deleteAllImages,
+          icon: Icon(
+            Icons.delete,
+            color: isImageAdded == ActionCallback.imageAdded
+                ? Colors.black
+                : Colors.black45,
           ),
         ),
-        AbsorbPointer(
-          absorbing: isImageAdded == ActionCallback.imageAdded ? false : true,
-          child: IconButton(
-            onPressed: deleteAllImages,
-            icon: Icon(
-              Icons.delete,
-              color: isImageAdded == ActionCallback.imageAdded
-                  ? Colors.black
-                  : Colors.black45,
-            ),
-          ),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: Container(
-            width: 25,
-            height: 25,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.fitWidth,
-                image: AssetImage("lib/assets/google_logo.png"),
+      ),
+    ]);
+    if (assetFiles.isNotEmpty) {
+      for (var i = 0; i < assetFiles.length; i++) {
+        data.add(
+          IconButton(
+            onPressed: () {},
+            icon: Container(
+              width: 25,
+              height: 25,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.fitWidth,
+                  image: AssetImage(assetFiles[i]),
+                ),
               ),
             ),
           ),
-        ),
-        const Expanded(child: SizedBox()),
-      ],
+        );
+      }
+    }
+    return Wrap(
+      children: data,
     );
   }
 
