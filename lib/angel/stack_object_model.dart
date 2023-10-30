@@ -23,6 +23,7 @@ class StackObject {
   FontStyle fontStyle;
   double fontSize;
   TextDecoration decoration;
+  String assetImage;
 
   StackObject({
     this.image,
@@ -42,5 +43,6 @@ class StackObject {
     this.fontStyle = FontStyle.normal,
     this.fontSize = 20,
     this.decoration = TextDecoration.none,
+    this.assetImage = "",
   });
 }

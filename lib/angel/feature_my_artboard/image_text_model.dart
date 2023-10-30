@@ -18,7 +18,7 @@ enum ActionCallback {
   none,
   imageAdded,
   textAdded,
-  isClicked,
+  isButtonClicked,
 }
 
 extension on List {
@@ -50,7 +50,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
   double heightContainerRender = 0;
   double canvasWidth = 0.0;
   double canvasHeight = 0.0;
-  ActionCallback isClicked = ActionCallback.none;
+  ActionCallback isButtonClicked = ActionCallback.none;
   ActionCallback isTextAdded = ActionCallback.none;
   ActionCallback isImageAdded = ActionCallback.none;
   String menu = "images";
@@ -72,7 +72,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
 
   setCurrentIndex(BuildContext context, index) {
     setState(() {
-      isClicked = ActionCallback.isClicked;
+      isButtonClicked = ActionCallback.isButtonClicked;
       currentIndex = index;
     });
     ScaffoldMessenger.of(context).showSnackBar(
@@ -140,17 +140,17 @@ abstract class ImageTextModel extends State<MyArtboard> {
         if (indexImage == 0 && indexImage + globalListObject.length == 1) {
           isTextAdded = ActionCallback.none;
           isImageAdded = ActionCallback.none;
-          isClicked = ActionCallback.none;
+          isButtonClicked = ActionCallback.none;
         }
         if (globalListObject[indexImage].text.isNotEmpty) {
-          isClicked = ActionCallback.none;
+          isButtonClicked = ActionCallback.none;
           Future.delayed(Durations.short1, () {
             globalListObject.removeAt(indexImage);
             setState(() {});
           });
         }
         if (globalListObject[indexImage].image != null) {
-          isClicked = ActionCallback.none;
+          isButtonClicked = ActionCallback.none;
           Future.delayed(Durations.short1, () {
             globalListObject.removeAt(indexImage);
             setState(() {});
@@ -460,7 +460,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
   void changeColor(Color color) =>
       setState(() => globalListObject[currentIndex].color = color);
 
-  bool isImageOrTextAdded() {
+  bool isObjectAdded() {
     if (globalListObject.isNotEmpty) {
       return false;
     } else {
@@ -471,9 +471,268 @@ abstract class ImageTextModel extends State<MyArtboard> {
   List<Widget> dataStack() {
     List<Widget> data = [];
     for (var i = 0; i < globalListObject.length; i++) {
+      // images
       if (globalListObject[i].image != null) {
         var imageOnCurentIndex = globalListObject[i];
-        // images
+        data.addAll([
+          Positioned(
+            top: imageOnCurentIndex.top,
+            left: imageOnCurentIndex.left,
+            child: GestureDetector(
+              onPanUpdate: imageOnCurentIndex.onClicked == OnAction.isFalse
+                  ? (details) {
+                      imageOnCurentIndex.top =
+                          imageOnCurentIndex.top + details.delta.dy;
+                      imageOnCurentIndex.left =
+                          imageOnCurentIndex.left + details.delta.dx;
+                      setState(() {});
+                    }
+                  : null,
+              child: Container(
+                key: GlobalObjectKey(i),
+                width: imageOnCurentIndex.imageWidth,
+                height: imageOnCurentIndex.imageHeight,
+                transformAlignment: Alignment.center,
+                transform: Matrix4.rotationZ(
+                    imageOnCurentIndex.rotateValue / 180 * pi),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      child: Container(
+                        width: imageOnCurentIndex.imageWidth - 20,
+                        height: imageOnCurentIndex.imageHeight - 20,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              imageOnCurentIndex.boxRound == OnAction.isRounded
+                                  ? BorderRadius.circular(
+                                      imageOnCurentIndex.boxRoundValue)
+                                  : null,
+                          image: DecorationImage(
+                              image: imageOnCurentIndex.croppedFile == null
+                                  ? FileImage(imageOnCurentIndex.image!)
+                                  : FileImage(File(
+                                      imageOnCurentIndex.croppedFile!.path)),
+                              fit: BoxFit.fill),
+                          border: imageOnCurentIndex.onClicked ==
+                                  OnAction.isClicked
+                              ? Border.all(color: Colors.blueAccent, width: 2)
+                              : null,
+                        ),
+                        child: GestureDetector(
+                          onTapDown: (position) {
+                            getTapPosition(position);
+                            getSizeOfTheBox(i);
+                          },
+                          onTap: () {
+                            if (imageOnCurentIndex.onClicked ==
+                                OnAction.isFalse) {
+                              setState(() {
+                                for (var i = 0;
+                                    i < globalListObject.length;
+                                    i++) {
+                                  var imageOnCurentIndex = globalListObject[i];
+                                  imageOnCurentIndex.onClicked =
+                                      OnAction.isFalse;
+                                }
+                                imageOnCurentIndex.onClicked =
+                                    OnAction.isClicked;
+                              });
+                            } else if (imageOnCurentIndex.onClicked ==
+                                OnAction.isClicked) {
+                              imageOnCurentIndex.onClicked = OnAction.isFalse;
+                            }
+                          },
+                          onLongPress: () {
+                            moveImage(i).then((value) {
+                              setState(() {});
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    // tombol resize image
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      child: SizedBox(
+                        width: imageOnCurentIndex.imageWidth - 20,
+                        height: imageOnCurentIndex.imageHeight - 20,
+                        child: Column(
+                          children: [
+                            const Expanded(child: SizedBox()),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Expanded(child: SizedBox()),
+                                imageOnCurentIndex.onClicked ==
+                                        OnAction.isClicked
+                                    ? GestureDetector(
+                                        onPanUpdate: (details) {
+                                          getSizeOfTheBox(i);
+
+                                          imageOnCurentIndex.imageHeight = max(
+                                              70,
+                                              imageOnCurentIndex.imageHeight +
+                                                  details.delta.dy);
+                                          imageOnCurentIndex.imageWidth = max(
+                                              90,
+                                              imageOnCurentIndex.imageWidth +
+                                                  details.delta.dx);
+                                          setState(() {});
+                                        },
+                                        child: const Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.circle,
+                                              color: Colors.white,
+                                              size: 25,
+                                            ),
+                                            Icon(
+                                              Icons.circle,
+                                              color: Colors.blueAccent,
+                                              size: 15,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : const SizedBox(),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // tombol scaling image
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: imageOnCurentIndex.onClicked == OnAction.isClicked
+                          ? GestureDetector(
+                              onHorizontalDragUpdate: (details) {
+                                imageOnCurentIndex.imageWidth = max(
+                                    90,
+                                    imageOnCurentIndex.imageWidth +
+                                        details.delta.dx);
+                                imageOnCurentIndex.imageHeight = max(
+                                    70,
+                                    imageOnCurentIndex.imageHeight +
+                                        details.delta.dx);
+                                getSizeOfTheBox(i);
+                                setState(() {});
+                              },
+                              onVerticalDragUpdate: (details) {
+                                imageOnCurentIndex.imageWidth = max(
+                                    90,
+                                    imageOnCurentIndex.imageWidth +
+                                        details.delta.dy);
+                                imageOnCurentIndex.imageHeight = max(
+                                    70,
+                                    imageOnCurentIndex.imageHeight +
+                                        details.delta.dy);
+                                getSizeOfTheBox(i);
+                                setState(() {});
+                              },
+                              child: Transform.rotate(
+                                angle: 45 / 180 * pi,
+                                child: const Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.blueAccent,
+                                  size: 30,
+                                ),
+                              ),
+                            )
+                          : const SizedBox(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // tombol untuk crop, rotate, dan border image
+          Positioned(
+            top: imageOnCurentIndex.top,
+            left: imageOnCurentIndex.left,
+            width: widthContainerRender + 1,
+            height: heightContainerRender * 235 / 100,
+            child: imageOnCurentIndex.onClicked == OnAction.isClicked
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Expanded(child: SizedBox()),
+                      GestureDetector(
+                        onTap: () {
+                          imageOnCurentIndex.onClicked = OnAction.isFalse;
+                          cropImage(imageOnCurentIndex);
+                        },
+                        child: const Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Icon(
+                              Icons.crop_rounded,
+                              color: Colors.blueAccent,
+                              size: 25,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        child: GestureDetector(
+                          onHorizontalDragUpdate: (details) {
+                            imageOnCurentIndex.rotateValue -= details.delta.dx;
+                            imageOnCurentIndex.rotateValue %= 360;
+                            setState(() {});
+                          },
+                          onVerticalDragUpdate: (details) {
+                            imageOnCurentIndex.rotateValue -= details.delta.dy;
+                            imageOnCurentIndex.rotateValue %= 360;
+                            setState(() {});
+                          },
+                          child: const Icon(
+                            Icons.autorenew,
+                            color: Colors.blueAccent,
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          if (imageOnCurentIndex.boxRound ==
+                              OnAction.isRounded) {
+                            imageOnCurentIndex.boxRoundValue = 15.0;
+                            imageOnCurentIndex.boxRound = OnAction.isFalse;
+                          } else {
+                            imageOnCurentIndex.boxRoundValue = 15.0;
+                            imageOnCurentIndex.boxRound = OnAction.isRounded;
+                          }
+                          setState(() {});
+                        },
+                        onHorizontalDragUpdate: (details) {
+                          imageOnCurentIndex.boxRoundValue = max(
+                              10,
+                              imageOnCurentIndex.boxRoundValue +
+                                  details.delta.dx);
+                          setState(() {});
+                        },
+                        child: const Icon(
+                          Icons.border_all_rounded,
+                          color: Colors.blueAccent,
+                          size: 25,
+                        ),
+                      ),
+                      const Expanded(child: SizedBox()),
+                    ],
+                  )
+                : const SizedBox(),
+          ),
+        ]);
+      }
+      // asset images
+      if (globalListObject[i].assetImage.isNotEmpty) {
+        var imageOnCurentIndex = globalListObject[i];
         data.addAll([
           Positioned(
             top: imageOnCurentIndex.top,

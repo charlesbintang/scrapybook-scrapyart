@@ -34,13 +34,6 @@ abstract class ImageTextController extends ImageTextModel {
             color: Colors.black,
           ),
         ),
-        // IconButton(
-        //   onPressed: () {
-        // TODO : hapus gambar yang telah dipilih
-        //     }
-        //   },
-        //   icon: const Icon(Icons.hide_image),
-        // ),
         AbsorbPointer(
           absorbing: isImageAdded == ActionCallback.imageAdded ? false : true,
           child: IconButton(
@@ -50,6 +43,19 @@ abstract class ImageTextController extends ImageTextModel {
               color: isImageAdded == ActionCallback.imageAdded
                   ? Colors.black
                   : Colors.black45,
+            ),
+          ),
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: Container(
+            width: 25,
+            height: 25,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.fitWidth,
+                image: AssetImage("lib/assets/google_logo.png"),
+              ),
             ),
           ),
         ),
@@ -144,7 +150,7 @@ abstract class ImageTextController extends ImageTextModel {
             icon: Icon(
               Icons.rectangle_rounded,
               color: isTextAdded == ActionCallback.textAdded
-                  ? isClicked == ActionCallback.isClicked
+                  ? isButtonClicked == ActionCallback.isButtonClicked
                       ? globalListObject[currentIndex].color
                       : Colors.black45
                   : Colors.black45,
@@ -233,13 +239,12 @@ abstract class ImageTextController extends ImageTextModel {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         AbsorbPointer(
-          absorbing: isImageOrTextAdded(),
+          absorbing: isObjectAdded(),
           child: IconButton(
             iconSize: 25,
             icon: Icon(
               Icons.save_alt,
-              color:
-                  isImageOrTextAdded() == false ? Colors.white : Colors.white30,
+              color: isObjectAdded() == false ? Colors.white : Colors.white30,
             ),
             onPressed: () {
               for (var i = 0; i < globalListObject.length; i++) {
@@ -250,21 +255,25 @@ abstract class ImageTextController extends ImageTextModel {
             },
           ),
         ),
-        IconButton(
-          iconSize: 25,
-          icon: const Icon(
-            Icons.format_paint_outlined,
-            color: Colors.white30,
+        AbsorbPointer(
+          child: IconButton(
+            iconSize: 25,
+            icon: const Icon(
+              Icons.format_paint_outlined,
+              color: Colors.white30,
+            ),
+            onPressed: () {},
           ),
-          onPressed: () {},
         ),
-        IconButton(
-          iconSize: 25,
-          icon: const Icon(
-            Icons.square_outlined,
-            color: Colors.white30,
+        AbsorbPointer(
+          child: IconButton(
+            iconSize: 25,
+            icon: const Icon(
+              Icons.square_outlined,
+              color: Colors.white30,
+            ),
+            onPressed: () {},
           ),
-          onPressed: () {},
         ),
         IconButton(
           iconSize: 25,
@@ -288,29 +297,35 @@ abstract class ImageTextController extends ImageTextModel {
             });
           },
         ),
-        IconButton(
-          iconSize: 25,
-          icon: const Icon(
-            Icons.brush_rounded,
-            color: Colors.white30,
+        AbsorbPointer(
+          child: IconButton(
+            iconSize: 25,
+            icon: const Icon(
+              Icons.brush_rounded,
+              color: Colors.white30,
+            ),
+            onPressed: () {},
           ),
-          onPressed: () {},
         ),
-        IconButton(
-          iconSize: 25,
-          icon: const Icon(
-            Icons.face_retouching_natural_rounded,
-            color: Colors.white30,
+        AbsorbPointer(
+          child: IconButton(
+            iconSize: 25,
+            icon: const Icon(
+              Icons.face_retouching_natural_rounded,
+              color: Colors.white30,
+            ),
+            onPressed: () {},
           ),
-          onPressed: () {},
         ),
-        IconButton(
-          iconSize: 25,
-          icon: const Icon(
-            Icons.layers,
-            color: Colors.white30,
+        AbsorbPointer(
+          child: IconButton(
+            iconSize: 25,
+            icon: const Icon(
+              Icons.layers,
+              color: Colors.white30,
+            ),
+            onPressed: () {},
           ),
-          onPressed: () {},
         ),
       ],
     );
