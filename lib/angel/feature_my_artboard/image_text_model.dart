@@ -170,7 +170,8 @@ abstract class ImageTextModel extends State<MyArtboard> {
             setState(() {});
           });
         }
-        if (globalListObject[indexImage].image != null) {
+        if (globalListObject[indexImage].image != null ||
+            globalListObject[indexImage].assetImage.isNotEmpty) {
           isButtonClicked = ActionCallback.none;
           Future.delayed(Durations.short1, () {
             globalListObject.removeAt(indexImage);
@@ -259,9 +260,12 @@ abstract class ImageTextModel extends State<MyArtboard> {
   }
 
   Future<void> cropImage(StackObject imageOnCurrentIndex) async {
-    if (imageOnCurrentIndex.image != null) {
+    if (imageOnCurrentIndex.image != null ||
+        imageOnCurrentIndex.assetImage.isNotEmpty) {
       final croppedFile = await ImageCropper().cropImage(
-        sourcePath: imageOnCurrentIndex.image!.path,
+        sourcePath: imageOnCurrentIndex.image != null
+            ? imageOnCurrentIndex.image!.path
+            : imageOnCurrentIndex.assetImage,
         compressFormat: ImageCompressFormat.jpg,
         compressQuality: 100,
         uiSettings: [
@@ -789,12 +793,16 @@ abstract class ImageTextModel extends State<MyArtboard> {
                                   ? BorderRadius.circular(
                                       imageOnCurentIndex.boxRoundValue)
                                   : null,
-                          image: DecorationImage(
-                              image: imageOnCurentIndex.croppedFile == null
-                                  ? FileImage(imageOnCurentIndex.image!)
-                                  : FileImage(File(
-                                      imageOnCurentIndex.croppedFile!.path)),
-                              fit: BoxFit.fill),
+                          image: imageOnCurentIndex.croppedFile == null
+                              ? DecorationImage(
+                                  image:
+                                      AssetImage(imageOnCurentIndex.assetImage),
+                                  fit: BoxFit.fill)
+                              : DecorationImage(
+                                  image: FileImage(
+                                    File(imageOnCurentIndex.croppedFile!.path),
+                                  ),
+                                ),
                           border: imageOnCurentIndex.onClicked ==
                                   OnAction.isClicked
                               ? Border.all(color: Colors.blueAccent, width: 2)
@@ -942,22 +950,23 @@ abstract class ImageTextModel extends State<MyArtboard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Expanded(child: SizedBox()),
-                      GestureDetector(
-                        onTap: () {
-                          imageOnCurentIndex.onClicked = OnAction.isFalse;
-                          cropImage(imageOnCurentIndex);
-                        },
-                        child: const Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.crop_rounded,
-                              color: Colors.blueAccent,
-                              size: 25,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // SEDANG DICOMMENT KARENA FITUR BELUM BERHASIL
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     imageOnCurentIndex.onClicked = OnAction.isFalse;
+                      //     cropImage(imageOnCurentIndex);
+                      //   },
+                      //   child: const Stack(
+                      //     alignment: Alignment.center,
+                      //     children: [
+                      //       Icon(
+                      //         Icons.crop_rounded,
+                      //         color: Colors.blueAccent,
+                      //         size: 25,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: GestureDetector(

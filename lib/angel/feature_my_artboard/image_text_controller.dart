@@ -46,16 +46,21 @@ abstract class ImageTextController extends ImageTextModel {
       for (var i = 0; i < assetFiles.length; i++) {
         data.add(
           IconButton(
-            onPressed: () {},
-            icon: Container(
-              width: 25,
-              height: 25,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.fitWidth,
-                  image: AssetImage(assetFiles[i]),
+            onPressed: () {
+              // print("asset ke $i");
+              globalListObject.add(
+                StackObject(
+                  /// pickImageFromGallery harus menyertakan image didalamnya
+                  assetImage: assetFiles[i],
                 ),
-              ),
+              );
+              isImageAdded = ActionCallback.imageAdded;
+              setState(() {});
+            },
+            icon: Image.asset(
+              assetFiles[i],
+              width: 25,
+              fit: BoxFit.fitWidth,
             ),
           ),
         );
