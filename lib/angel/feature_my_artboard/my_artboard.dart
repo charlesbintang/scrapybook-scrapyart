@@ -28,9 +28,9 @@ class _MyArtboardState extends ImageTextController {
           child: Stack(
             clipBehavior: Clip.none,
             children: [
-              Center(
-                child: Screenshot(
-                  controller: screenshotController,
+              Screenshot(
+                controller: screenshotController,
+                child: Center(
                   child: Container(
                     color: Colors.white,
                     height: MediaQuery.of(context).size.height * 57 / 100,
