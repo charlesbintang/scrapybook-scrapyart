@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:scrapyart_home/angel/my_artboard_feature/drawing_point.dart';
 import 'package:scrapyart_home/angel/my_artboard_feature/image_text_charles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,6 +58,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
   ActionCallback isImageAdded = ActionCallback.none;
   String menu = "images";
   List<String> assetFiles = [];
+  List<DrawingPoint> drawingPoint = [];
 
   @override
   void initState() {

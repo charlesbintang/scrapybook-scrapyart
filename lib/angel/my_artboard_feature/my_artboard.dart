@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
+import 'package:scrapyart_home/angel/my_artboard_feature/drawing_line.dart';
+import 'package:scrapyart_home/angel/my_artboard_feature/drawing_point.dart';
 import 'package:scrapyart_home/angel/my_artboard_feature/image_text_controller.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -31,14 +33,56 @@ class _MyArtboardState extends ImageTextController {
               Screenshot(
                 controller: screenshotController,
                 child: Center(
-                  child: Container(
-                    color: Colors.white,
-                    height: MediaQuery.of(context).size.height * 57 / 100,
-                    width: MediaQuery.of(context).size.width * 90 / 100,
-                    margin: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.height * 25 / 100),
-                    child: Stack(
-                      children: dataStack(),
+                  child: GestureDetector(
+                    onPanStart: (DragStartDetails details) {
+                      setState(() {
+                        drawingPoint.add(
+                          DrawingPoint(
+                            details.localPosition,
+                            Paint()
+                              //TODO: kerjakan selectedColor dan strokeWidth
+                              ..color = Colors.black //selectedColor
+                              ..isAntiAlias = true
+                              ..strokeWidth = 10.0 //strokeWidth
+                              ..strokeCap = StrokeCap.round,
+                          ),
+                        );
+                      });
+                    },
+                    onPanUpdate: (DragUpdateDetails details) {
+                      setState(() {
+                        drawingPoint.add(
+                          DrawingPoint(
+                            details.localPosition,
+                            Paint()
+                              //TODO: kerjakan selectedColor dan strokeWidth
+                              ..color = Colors.black //selectedColor
+                              ..isAntiAlias = true
+                              ..strokeWidth = 10.0 //strokeWidth
+                              ..strokeCap = StrokeCap.round,
+                          ),
+                        );
+                      });
+                    },
+                    onPanEnd: (DragEndDetails details) {
+                      setState(() {
+                        drawingPoint.add(DrawingPoint(
+                            const Offset(-10.0, -10.0),
+                            Paint()..color = Colors.transparent));
+                      });
+                    },
+                    child: CustomPaint(
+                      painter: DrawingLine(drawingPoint),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 57 / 100,
+                        width: MediaQuery.of(context).size.width * 90 / 100,
+                        margin: EdgeInsets.only(
+                            bottom:
+                                MediaQuery.of(context).size.height * 25 / 100),
+                        child: Stack(
+                          children: dataStack(),
+                        ),
+                      ),
                     ),
                   ),
                 ),
