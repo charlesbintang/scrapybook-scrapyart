@@ -24,6 +24,8 @@ class StackObject {
   double fontSize;
   TextDecoration decoration;
   String assetImage;
+  Offset? offset;
+  Paint? paint;
 
   StackObject({
     this.image,
@@ -44,5 +46,7 @@ class StackObject {
     this.fontSize = 20,
     this.decoration = TextDecoration.none,
     this.assetImage = "",
+    this.offset,
+    this.paint,
   });
 }

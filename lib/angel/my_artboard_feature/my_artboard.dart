@@ -1,8 +1,7 @@
 // ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
-import 'package:scrapyart_home/angel/my_artboard_feature/drawing_line.dart';
-import 'package:scrapyart_home/angel/my_artboard_feature/drawing_point.dart';
 import 'package:scrapyart_home/angel/my_artboard_feature/image_text_controller.dart';
+import 'package:scrapyart_home/angel/my_artboard_feature/stack_object_model.dart';
 import 'package:screenshot/screenshot.dart';
 
 class MyArtboard extends StatefulWidget {
@@ -34,54 +33,55 @@ class _MyArtboardState extends ImageTextController {
                 controller: screenshotController,
                 child: Center(
                   child: GestureDetector(
-                    onPanStart: (DragStartDetails details) {
-                      setState(() {
-                        drawingPoint.add(
-                          DrawingPoint(
-                            details.localPosition,
-                            Paint()
-                              //TODO: kerjakan selectedColor dan strokeWidth
-                              ..color = Colors.black //selectedColor
-                              ..isAntiAlias = true
-                              ..strokeWidth = 10.0 //strokeWidth
-                              ..strokeCap = StrokeCap.round,
-                          ),
-                        );
-                      });
+                    onTap: () {
+                      for (var i = 0; i < globalListObject.length; i++) {
+                        var objectOnCurrentIndex = globalListObject[i];
+                        objectOnCurrentIndex.onClicked = OnAction.isFalse;
+                      }
+                      setState(() {});
                     },
-                    onPanUpdate: (DragUpdateDetails details) {
+                    onPanStart: (details) {
                       setState(() {
-                        drawingPoint.add(
-                          DrawingPoint(
-                            details.localPosition,
-                            Paint()
-                              //TODO: kerjakan selectedColor dan strokeWidth
-                              ..color = Colors.black //selectedColor
-                              ..isAntiAlias = true
-                              ..strokeWidth = 10.0 //strokeWidth
-                              ..strokeCap = StrokeCap.round,
-                          ),
-                        );
+                        globalListObject.add(StackObject(
+                          offset: details.localPosition,
+                          paint: Paint()
+                            ..color = Colors.black
+                            ..isAntiAlias = true
+                            ..strokeWidth = 10.0
+                            ..strokeCap = StrokeCap.round,
+                        ));
                       });
+                      print("start");
+                    },
+                    onPanUpdate: (details) {
+                      setState(() {
+                        globalListObject.add(StackObject(
+                          offset: details.localPosition,
+                          paint: Paint()
+                            ..color = Colors.black
+                            ..isAntiAlias = true
+                            ..strokeWidth = 10.0
+                            ..strokeCap = StrokeCap.round,
+                        ));
+                      });
+                      print("update");
                     },
                     onPanEnd: (DragEndDetails details) {
                       setState(() {
-                        drawingPoint.add(DrawingPoint(
-                            const Offset(-10.0, -10.0),
-                            Paint()..color = Colors.transparent));
+                        globalListObject
+                            .add(StackObject(offset: null, paint: null));
                       });
+                      print("end");
                     },
-                    child: CustomPaint(
-                      painter: DrawingLine(drawingPoint),
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 57 / 100,
-                        width: MediaQuery.of(context).size.width * 90 / 100,
-                        margin: EdgeInsets.only(
-                            bottom:
-                                MediaQuery.of(context).size.height * 25 / 100),
-                        child: Stack(
-                          children: dataStack(),
-                        ),
+                    child: Container(
+                      color: Colors.white,
+                      height: MediaQuery.of(context).size.height * 57 / 100,
+                      width: MediaQuery.of(context).size.width * 90 / 100,
+                      margin: EdgeInsets.only(
+                          bottom:
+                              MediaQuery.of(context).size.height * 25 / 100),
+                      child: Stack(
+                        children: dataStack(),
                       ),
                     ),
                   ),

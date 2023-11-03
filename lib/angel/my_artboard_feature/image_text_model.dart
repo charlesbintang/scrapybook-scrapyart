@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:scrapyart_home/angel/my_artboard_feature/drawing_line.dart';
 import 'package:scrapyart_home/angel/my_artboard_feature/drawing_point.dart';
 import 'package:scrapyart_home/angel/my_artboard_feature/image_text_charles.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ enum ActionCallback {
   imageAdded,
   textAdded,
   isButtonClicked,
+  endOfBrush,
 }
 
 extension on List {
@@ -56,7 +58,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
   ActionCallback isButtonBrushClicked = ActionCallback.none;
   ActionCallback isTextAdded = ActionCallback.none;
   ActionCallback isImageAdded = ActionCallback.none;
-  String menu = "images";
+  String menu = "image";
   List<String> assetFiles = [];
   List<DrawingPoint> drawingPoint = [];
 
@@ -501,49 +503,49 @@ abstract class ImageTextModel extends State<MyArtboard> {
     for (var i = 0; i < globalListObject.length; i++) {
       // images
       if (globalListObject[i].image != null) {
-        var imageOnCurentIndex = globalListObject[i];
+        var objectOnCurrentIndex = globalListObject[i];
         data.addAll([
           Positioned(
-            top: imageOnCurentIndex.top,
-            left: imageOnCurentIndex.left,
+            top: objectOnCurrentIndex.top,
+            left: objectOnCurrentIndex.left,
             child: GestureDetector(
-              onPanUpdate: imageOnCurentIndex.onClicked == OnAction.isFalse
+              onPanUpdate: objectOnCurrentIndex.onClicked == OnAction.isFalse
                   ? (details) {
-                      imageOnCurentIndex.top =
-                          imageOnCurentIndex.top + details.delta.dy;
-                      imageOnCurentIndex.left =
-                          imageOnCurentIndex.left + details.delta.dx;
+                      objectOnCurrentIndex.top =
+                          objectOnCurrentIndex.top + details.delta.dy;
+                      objectOnCurrentIndex.left =
+                          objectOnCurrentIndex.left + details.delta.dx;
                       setState(() {});
                     }
                   : null,
               child: Container(
                 key: GlobalObjectKey(i),
-                width: imageOnCurentIndex.imageWidth,
-                height: imageOnCurentIndex.imageHeight,
+                width: objectOnCurrentIndex.imageWidth,
+                height: objectOnCurrentIndex.imageHeight,
                 transformAlignment: Alignment.center,
                 transform: Matrix4.rotationZ(
-                    imageOnCurentIndex.rotateValue / 180 * pi),
+                    objectOnCurrentIndex.rotateValue / 180 * pi),
                 child: Stack(
                   children: [
                     Positioned(
                       left: 0,
                       top: 0,
                       child: Container(
-                        width: imageOnCurentIndex.imageWidth - 20,
-                        height: imageOnCurentIndex.imageHeight - 20,
+                        width: objectOnCurrentIndex.imageWidth - 20,
+                        height: objectOnCurrentIndex.imageHeight - 20,
                         decoration: BoxDecoration(
-                          borderRadius:
-                              imageOnCurentIndex.boxRound == OnAction.isRounded
-                                  ? BorderRadius.circular(
-                                      imageOnCurentIndex.boxRoundValue)
-                                  : null,
+                          borderRadius: objectOnCurrentIndex.boxRound ==
+                                  OnAction.isRounded
+                              ? BorderRadius.circular(
+                                  objectOnCurrentIndex.boxRoundValue)
+                              : null,
                           image: DecorationImage(
-                              image: imageOnCurentIndex.croppedFile == null
-                                  ? FileImage(imageOnCurentIndex.image!)
+                              image: objectOnCurrentIndex.croppedFile == null
+                                  ? FileImage(objectOnCurrentIndex.image!)
                                   : FileImage(File(
-                                      imageOnCurentIndex.croppedFile!.path)),
+                                      objectOnCurrentIndex.croppedFile!.path)),
                               fit: BoxFit.fill),
-                          border: imageOnCurentIndex.onClicked ==
+                          border: objectOnCurrentIndex.onClicked ==
                                   OnAction.isClicked
                               ? Border.all(color: Colors.blueAccent, width: 2)
                               : null,
@@ -554,22 +556,23 @@ abstract class ImageTextModel extends State<MyArtboard> {
                             getSizeOfTheBox(i);
                           },
                           onTap: () {
-                            if (imageOnCurentIndex.onClicked ==
+                            if (objectOnCurrentIndex.onClicked ==
                                 OnAction.isFalse) {
                               setState(() {
                                 for (var i = 0;
                                     i < globalListObject.length;
                                     i++) {
-                                  var imageOnCurentIndex = globalListObject[i];
-                                  imageOnCurentIndex.onClicked =
+                                  var objectOnCurrentIndex =
+                                      globalListObject[i];
+                                  objectOnCurrentIndex.onClicked =
                                       OnAction.isFalse;
                                 }
-                                imageOnCurentIndex.onClicked =
+                                objectOnCurrentIndex.onClicked =
                                     OnAction.isClicked;
                               });
-                            } else if (imageOnCurentIndex.onClicked ==
+                            } else if (objectOnCurrentIndex.onClicked ==
                                 OnAction.isClicked) {
-                              imageOnCurentIndex.onClicked = OnAction.isFalse;
+                              objectOnCurrentIndex.onClicked = OnAction.isFalse;
                             }
                           },
                           onLongPress: () {
@@ -585,8 +588,8 @@ abstract class ImageTextModel extends State<MyArtboard> {
                       top: 0,
                       left: 0,
                       child: SizedBox(
-                        width: imageOnCurentIndex.imageWidth - 20,
-                        height: imageOnCurentIndex.imageHeight - 20,
+                        width: objectOnCurrentIndex.imageWidth - 20,
+                        height: objectOnCurrentIndex.imageHeight - 20,
                         child: Column(
                           children: [
                             const Expanded(child: SizedBox()),
@@ -594,19 +597,21 @@ abstract class ImageTextModel extends State<MyArtboard> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 const Expanded(child: SizedBox()),
-                                imageOnCurentIndex.onClicked ==
+                                objectOnCurrentIndex.onClicked ==
                                         OnAction.isClicked
                                     ? GestureDetector(
                                         onPanUpdate: (details) {
                                           getSizeOfTheBox(i);
 
-                                          imageOnCurentIndex.imageHeight = max(
-                                              70,
-                                              imageOnCurentIndex.imageHeight +
-                                                  details.delta.dy);
-                                          imageOnCurentIndex.imageWidth = max(
+                                          objectOnCurrentIndex.imageHeight =
+                                              max(
+                                                  70,
+                                                  objectOnCurrentIndex
+                                                          .imageHeight +
+                                                      details.delta.dy);
+                                          objectOnCurrentIndex.imageWidth = max(
                                               90,
-                                              imageOnCurentIndex.imageWidth +
+                                              objectOnCurrentIndex.imageWidth +
                                                   details.delta.dx);
                                           setState(() {});
                                         },
@@ -637,42 +642,43 @@ abstract class ImageTextModel extends State<MyArtboard> {
                     Positioned(
                       right: 0,
                       bottom: 0,
-                      child: imageOnCurentIndex.onClicked == OnAction.isClicked
-                          ? GestureDetector(
-                              onHorizontalDragUpdate: (details) {
-                                imageOnCurentIndex.imageWidth = max(
-                                    90,
-                                    imageOnCurentIndex.imageWidth +
-                                        details.delta.dx);
-                                imageOnCurentIndex.imageHeight = max(
-                                    70,
-                                    imageOnCurentIndex.imageHeight +
-                                        details.delta.dx);
-                                getSizeOfTheBox(i);
-                                setState(() {});
-                              },
-                              onVerticalDragUpdate: (details) {
-                                imageOnCurentIndex.imageWidth = max(
-                                    90,
-                                    imageOnCurentIndex.imageWidth +
-                                        details.delta.dy);
-                                imageOnCurentIndex.imageHeight = max(
-                                    70,
-                                    imageOnCurentIndex.imageHeight +
-                                        details.delta.dy);
-                                getSizeOfTheBox(i);
-                                setState(() {});
-                              },
-                              child: Transform.rotate(
-                                angle: 45 / 180 * pi,
-                                child: const Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.blueAccent,
-                                  size: 30,
-                                ),
-                              ),
-                            )
-                          : const SizedBox(),
+                      child:
+                          objectOnCurrentIndex.onClicked == OnAction.isClicked
+                              ? GestureDetector(
+                                  onHorizontalDragUpdate: (details) {
+                                    objectOnCurrentIndex.imageWidth = max(
+                                        90,
+                                        objectOnCurrentIndex.imageWidth +
+                                            details.delta.dx);
+                                    objectOnCurrentIndex.imageHeight = max(
+                                        70,
+                                        objectOnCurrentIndex.imageHeight +
+                                            details.delta.dx);
+                                    getSizeOfTheBox(i);
+                                    setState(() {});
+                                  },
+                                  onVerticalDragUpdate: (details) {
+                                    objectOnCurrentIndex.imageWidth = max(
+                                        90,
+                                        objectOnCurrentIndex.imageWidth +
+                                            details.delta.dy);
+                                    objectOnCurrentIndex.imageHeight = max(
+                                        70,
+                                        objectOnCurrentIndex.imageHeight +
+                                            details.delta.dy);
+                                    getSizeOfTheBox(i);
+                                    setState(() {});
+                                  },
+                                  child: Transform.rotate(
+                                    angle: 45 / 180 * pi,
+                                    child: const Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Colors.blueAccent,
+                                      size: 30,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox(),
                     ),
                   ],
                 ),
@@ -681,19 +687,19 @@ abstract class ImageTextModel extends State<MyArtboard> {
           ),
           // tombol untuk crop, rotate, dan border image
           Positioned(
-            top: imageOnCurentIndex.top,
-            left: imageOnCurentIndex.left,
+            top: objectOnCurrentIndex.top,
+            left: objectOnCurrentIndex.left,
             width: widthContainerRender + 1,
             height: heightContainerRender * 235 / 100,
-            child: imageOnCurentIndex.onClicked == OnAction.isClicked
+            child: objectOnCurrentIndex.onClicked == OnAction.isClicked
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Expanded(child: SizedBox()),
                       GestureDetector(
                         onTap: () {
-                          imageOnCurentIndex.onClicked = OnAction.isFalse;
-                          cropImage(imageOnCurentIndex);
+                          objectOnCurrentIndex.onClicked = OnAction.isFalse;
+                          cropImage(objectOnCurrentIndex);
                         },
                         child: const Stack(
                           alignment: Alignment.center,
@@ -710,13 +716,15 @@ abstract class ImageTextModel extends State<MyArtboard> {
                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: GestureDetector(
                           onHorizontalDragUpdate: (details) {
-                            imageOnCurentIndex.rotateValue -= details.delta.dx;
-                            imageOnCurentIndex.rotateValue %= 360;
+                            objectOnCurrentIndex.rotateValue -=
+                                details.delta.dx;
+                            objectOnCurrentIndex.rotateValue %= 360;
                             setState(() {});
                           },
                           onVerticalDragUpdate: (details) {
-                            imageOnCurentIndex.rotateValue -= details.delta.dy;
-                            imageOnCurentIndex.rotateValue %= 360;
+                            objectOnCurrentIndex.rotateValue -=
+                                details.delta.dy;
+                            objectOnCurrentIndex.rotateValue %= 360;
                             setState(() {});
                           },
                           child: const Icon(
@@ -728,20 +736,20 @@ abstract class ImageTextModel extends State<MyArtboard> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          if (imageOnCurentIndex.boxRound ==
+                          if (objectOnCurrentIndex.boxRound ==
                               OnAction.isRounded) {
-                            imageOnCurentIndex.boxRoundValue = 15.0;
-                            imageOnCurentIndex.boxRound = OnAction.isFalse;
+                            objectOnCurrentIndex.boxRoundValue = 15.0;
+                            objectOnCurrentIndex.boxRound = OnAction.isFalse;
                           } else {
-                            imageOnCurentIndex.boxRoundValue = 15.0;
-                            imageOnCurentIndex.boxRound = OnAction.isRounded;
+                            objectOnCurrentIndex.boxRoundValue = 15.0;
+                            objectOnCurrentIndex.boxRound = OnAction.isRounded;
                           }
                           setState(() {});
                         },
                         onHorizontalDragUpdate: (details) {
-                          imageOnCurentIndex.boxRoundValue = max(
+                          objectOnCurrentIndex.boxRoundValue = max(
                               10,
-                              imageOnCurentIndex.boxRoundValue +
+                              objectOnCurrentIndex.boxRoundValue +
                                   details.delta.dx);
                           setState(() {});
                         },
@@ -760,53 +768,54 @@ abstract class ImageTextModel extends State<MyArtboard> {
       }
       // asset images
       if (globalListObject[i].assetImage.isNotEmpty) {
-        var imageOnCurentIndex = globalListObject[i];
+        var objectOnCurrentIndex = globalListObject[i];
         data.addAll([
           Positioned(
-            top: imageOnCurentIndex.top,
-            left: imageOnCurentIndex.left,
+            top: objectOnCurrentIndex.top,
+            left: objectOnCurrentIndex.left,
             child: GestureDetector(
-              onPanUpdate: imageOnCurentIndex.onClicked == OnAction.isFalse
+              onPanUpdate: objectOnCurrentIndex.onClicked == OnAction.isFalse
                   ? (details) {
-                      imageOnCurentIndex.top =
-                          imageOnCurentIndex.top + details.delta.dy;
-                      imageOnCurentIndex.left =
-                          imageOnCurentIndex.left + details.delta.dx;
+                      objectOnCurrentIndex.top =
+                          objectOnCurrentIndex.top + details.delta.dy;
+                      objectOnCurrentIndex.left =
+                          objectOnCurrentIndex.left + details.delta.dx;
                       setState(() {});
                     }
                   : null,
               child: Container(
                 key: GlobalObjectKey(i),
-                width: imageOnCurentIndex.imageWidth,
-                height: imageOnCurentIndex.imageHeight,
+                width: objectOnCurrentIndex.imageWidth,
+                height: objectOnCurrentIndex.imageHeight,
                 transformAlignment: Alignment.center,
                 transform: Matrix4.rotationZ(
-                    imageOnCurentIndex.rotateValue / 180 * pi),
+                    objectOnCurrentIndex.rotateValue / 180 * pi),
                 child: Stack(
                   children: [
                     Positioned(
                       left: 0,
                       top: 0,
                       child: Container(
-                        width: imageOnCurentIndex.imageWidth - 20,
-                        height: imageOnCurentIndex.imageHeight - 20,
+                        width: objectOnCurrentIndex.imageWidth - 20,
+                        height: objectOnCurrentIndex.imageHeight - 20,
                         decoration: BoxDecoration(
-                          borderRadius:
-                              imageOnCurentIndex.boxRound == OnAction.isRounded
-                                  ? BorderRadius.circular(
-                                      imageOnCurentIndex.boxRoundValue)
-                                  : null,
-                          image: imageOnCurentIndex.croppedFile == null
+                          borderRadius: objectOnCurrentIndex.boxRound ==
+                                  OnAction.isRounded
+                              ? BorderRadius.circular(
+                                  objectOnCurrentIndex.boxRoundValue)
+                              : null,
+                          image: objectOnCurrentIndex.croppedFile == null
                               ? DecorationImage(
-                                  image:
-                                      AssetImage(imageOnCurentIndex.assetImage),
+                                  image: AssetImage(
+                                      objectOnCurrentIndex.assetImage),
                                   fit: BoxFit.fill)
                               : DecorationImage(
                                   image: FileImage(
-                                    File(imageOnCurentIndex.croppedFile!.path),
+                                    File(
+                                        objectOnCurrentIndex.croppedFile!.path),
                                   ),
                                 ),
-                          border: imageOnCurentIndex.onClicked ==
+                          border: objectOnCurrentIndex.onClicked ==
                                   OnAction.isClicked
                               ? Border.all(color: Colors.blueAccent, width: 2)
                               : null,
@@ -817,22 +826,23 @@ abstract class ImageTextModel extends State<MyArtboard> {
                             getSizeOfTheBox(i);
                           },
                           onTap: () {
-                            if (imageOnCurentIndex.onClicked ==
+                            if (objectOnCurrentIndex.onClicked ==
                                 OnAction.isFalse) {
                               setState(() {
                                 for (var i = 0;
                                     i < globalListObject.length;
                                     i++) {
-                                  var imageOnCurentIndex = globalListObject[i];
-                                  imageOnCurentIndex.onClicked =
+                                  var objectOnCurrentIndex =
+                                      globalListObject[i];
+                                  objectOnCurrentIndex.onClicked =
                                       OnAction.isFalse;
                                 }
-                                imageOnCurentIndex.onClicked =
+                                objectOnCurrentIndex.onClicked =
                                     OnAction.isClicked;
                               });
-                            } else if (imageOnCurentIndex.onClicked ==
+                            } else if (objectOnCurrentIndex.onClicked ==
                                 OnAction.isClicked) {
-                              imageOnCurentIndex.onClicked = OnAction.isFalse;
+                              objectOnCurrentIndex.onClicked = OnAction.isFalse;
                             }
                           },
                           onLongPress: () {
@@ -848,8 +858,8 @@ abstract class ImageTextModel extends State<MyArtboard> {
                       top: 0,
                       left: 0,
                       child: SizedBox(
-                        width: imageOnCurentIndex.imageWidth - 20,
-                        height: imageOnCurentIndex.imageHeight - 20,
+                        width: objectOnCurrentIndex.imageWidth - 20,
+                        height: objectOnCurrentIndex.imageHeight - 20,
                         child: Column(
                           children: [
                             const Expanded(child: SizedBox()),
@@ -857,19 +867,21 @@ abstract class ImageTextModel extends State<MyArtboard> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 const Expanded(child: SizedBox()),
-                                imageOnCurentIndex.onClicked ==
+                                objectOnCurrentIndex.onClicked ==
                                         OnAction.isClicked
                                     ? GestureDetector(
                                         onPanUpdate: (details) {
                                           getSizeOfTheBox(i);
 
-                                          imageOnCurentIndex.imageHeight = max(
-                                              70,
-                                              imageOnCurentIndex.imageHeight +
-                                                  details.delta.dy);
-                                          imageOnCurentIndex.imageWidth = max(
+                                          objectOnCurrentIndex.imageHeight =
+                                              max(
+                                                  70,
+                                                  objectOnCurrentIndex
+                                                          .imageHeight +
+                                                      details.delta.dy);
+                                          objectOnCurrentIndex.imageWidth = max(
                                               90,
-                                              imageOnCurentIndex.imageWidth +
+                                              objectOnCurrentIndex.imageWidth +
                                                   details.delta.dx);
                                           setState(() {});
                                         },
@@ -900,42 +912,43 @@ abstract class ImageTextModel extends State<MyArtboard> {
                     Positioned(
                       right: 0,
                       bottom: 0,
-                      child: imageOnCurentIndex.onClicked == OnAction.isClicked
-                          ? GestureDetector(
-                              onHorizontalDragUpdate: (details) {
-                                imageOnCurentIndex.imageWidth = max(
-                                    90,
-                                    imageOnCurentIndex.imageWidth +
-                                        details.delta.dx);
-                                imageOnCurentIndex.imageHeight = max(
-                                    70,
-                                    imageOnCurentIndex.imageHeight +
-                                        details.delta.dx);
-                                getSizeOfTheBox(i);
-                                setState(() {});
-                              },
-                              onVerticalDragUpdate: (details) {
-                                imageOnCurentIndex.imageWidth = max(
-                                    90,
-                                    imageOnCurentIndex.imageWidth +
-                                        details.delta.dy);
-                                imageOnCurentIndex.imageHeight = max(
-                                    70,
-                                    imageOnCurentIndex.imageHeight +
-                                        details.delta.dy);
-                                getSizeOfTheBox(i);
-                                setState(() {});
-                              },
-                              child: Transform.rotate(
-                                angle: 45 / 180 * pi,
-                                child: const Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.blueAccent,
-                                  size: 30,
-                                ),
-                              ),
-                            )
-                          : const SizedBox(),
+                      child:
+                          objectOnCurrentIndex.onClicked == OnAction.isClicked
+                              ? GestureDetector(
+                                  onHorizontalDragUpdate: (details) {
+                                    objectOnCurrentIndex.imageWidth = max(
+                                        90,
+                                        objectOnCurrentIndex.imageWidth +
+                                            details.delta.dx);
+                                    objectOnCurrentIndex.imageHeight = max(
+                                        70,
+                                        objectOnCurrentIndex.imageHeight +
+                                            details.delta.dx);
+                                    getSizeOfTheBox(i);
+                                    setState(() {});
+                                  },
+                                  onVerticalDragUpdate: (details) {
+                                    objectOnCurrentIndex.imageWidth = max(
+                                        90,
+                                        objectOnCurrentIndex.imageWidth +
+                                            details.delta.dy);
+                                    objectOnCurrentIndex.imageHeight = max(
+                                        70,
+                                        objectOnCurrentIndex.imageHeight +
+                                            details.delta.dy);
+                                    getSizeOfTheBox(i);
+                                    setState(() {});
+                                  },
+                                  child: Transform.rotate(
+                                    angle: 45 / 180 * pi,
+                                    child: const Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Colors.blueAccent,
+                                      size: 30,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox(),
                     ),
                   ],
                 ),
@@ -944,43 +957,28 @@ abstract class ImageTextModel extends State<MyArtboard> {
           ),
           // tombol untuk crop, rotate, dan border image
           Positioned(
-            top: imageOnCurentIndex.top,
-            left: imageOnCurentIndex.left,
+            top: objectOnCurrentIndex.top,
+            left: objectOnCurrentIndex.left,
             width: widthContainerRender + 1,
             height: heightContainerRender * 235 / 100,
-            child: imageOnCurentIndex.onClicked == OnAction.isClicked
+            child: objectOnCurrentIndex.onClicked == OnAction.isClicked
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Expanded(child: SizedBox()),
-                      // SEDANG DICOMMENT KARENA FITUR BELUM BERHASIL
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     imageOnCurentIndex.onClicked = OnAction.isFalse;
-                      //     cropImage(imageOnCurentIndex);
-                      //   },
-                      //   child: const Stack(
-                      //     alignment: Alignment.center,
-                      //     children: [
-                      //       Icon(
-                      //         Icons.crop_rounded,
-                      //         color: Colors.blueAccent,
-                      //         size: 25,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: GestureDetector(
                           onHorizontalDragUpdate: (details) {
-                            imageOnCurentIndex.rotateValue -= details.delta.dx;
-                            imageOnCurentIndex.rotateValue %= 360;
+                            objectOnCurrentIndex.rotateValue -=
+                                details.delta.dx;
+                            objectOnCurrentIndex.rotateValue %= 360;
                             setState(() {});
                           },
                           onVerticalDragUpdate: (details) {
-                            imageOnCurentIndex.rotateValue -= details.delta.dy;
-                            imageOnCurentIndex.rotateValue %= 360;
+                            objectOnCurrentIndex.rotateValue -=
+                                details.delta.dy;
+                            objectOnCurrentIndex.rotateValue %= 360;
                             setState(() {});
                           },
                           child: const Icon(
@@ -992,20 +990,20 @@ abstract class ImageTextModel extends State<MyArtboard> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          if (imageOnCurentIndex.boxRound ==
+                          if (objectOnCurrentIndex.boxRound ==
                               OnAction.isRounded) {
-                            imageOnCurentIndex.boxRoundValue = 15.0;
-                            imageOnCurentIndex.boxRound = OnAction.isFalse;
+                            objectOnCurrentIndex.boxRoundValue = 15.0;
+                            objectOnCurrentIndex.boxRound = OnAction.isFalse;
                           } else {
-                            imageOnCurentIndex.boxRoundValue = 15.0;
-                            imageOnCurentIndex.boxRound = OnAction.isRounded;
+                            objectOnCurrentIndex.boxRoundValue = 15.0;
+                            objectOnCurrentIndex.boxRound = OnAction.isRounded;
                           }
                           setState(() {});
                         },
                         onHorizontalDragUpdate: (details) {
-                          imageOnCurentIndex.boxRoundValue = max(
+                          objectOnCurrentIndex.boxRoundValue = max(
                               10,
-                              imageOnCurentIndex.boxRoundValue +
+                              objectOnCurrentIndex.boxRoundValue +
                                   details.delta.dx);
                           setState(() {});
                         },
@@ -1021,6 +1019,12 @@ abstract class ImageTextModel extends State<MyArtboard> {
                 : const SizedBox(),
           ),
         ]);
+      }
+      if (globalListObject[i].offset != null &&
+          globalListObject[i].paint != null) {
+        data.add(CustomPaint(
+          painter: DrawingLine(globalListObject),
+        ));
       }
       // texts
       if (globalListObject[i].text.isNotEmpty) {

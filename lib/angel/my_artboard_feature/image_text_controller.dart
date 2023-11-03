@@ -262,6 +262,7 @@ abstract class ImageTextController extends ImageTextModel {
               isButtonBrushClicked = ActionCallback.none;
             }
             setState(() {});
+            print(globalListObject);
           },
           icon: Icon(
             Icons.brush,
