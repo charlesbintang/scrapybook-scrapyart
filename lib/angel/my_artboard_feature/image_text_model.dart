@@ -188,7 +188,8 @@ abstract class ImageTextModel extends State<MyArtboard> {
     var reset = PopupMenuItem(
       child: const Text("Reset"),
       onTap: () {
-        if (globalListObject[indexImage].image != null) {
+        if (globalListObject[indexImage].image != null ||
+            globalListObject[indexImage].assetImage.isNotEmpty) {
           globalListObject[indexImage].croppedFile = null;
           globalListObject[indexImage].rotateValue = 0.0;
           globalListObject[indexImage].imageWidth = 200.0;
@@ -412,12 +413,10 @@ abstract class ImageTextModel extends State<MyArtboard> {
           DefaultButton(
               onPressed: () => Navigator.of(context).pop(),
               color: Colors.white,
-              textcolor: Colors.black,
               child: const Text('Back')),
           DefaultButton(
               onPressed: () => addNewsText(context),
-              color: const Color.fromARGB(255, 122, 74, 37),
-              textcolor: Colors.white,
+              color: Colors.white,
               child: const Text('Add Text'))
         ],
       ),
@@ -446,7 +445,6 @@ abstract class ImageTextModel extends State<MyArtboard> {
           DefaultButton(
               onPressed: () => Navigator.of(context).pop(),
               color: Colors.white,
-              textcolor: Colors.black,
               child: const Text('Back')),
           DefaultButton(
               onPressed: () {
@@ -456,7 +454,6 @@ abstract class ImageTextModel extends State<MyArtboard> {
                 Navigator.of(context).pop();
               },
               color: const Color.fromARGB(255, 122, 74, 37),
-              textcolor: Colors.white,
               child: const Text('Save'))
         ],
       ),
