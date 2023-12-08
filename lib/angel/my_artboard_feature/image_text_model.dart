@@ -39,16 +39,19 @@ extension on List {
 }
 
 abstract class ImageTextModel extends State<MyArtboard> {
+  String menu = "image";
+  List<String> assetFiles = [];
+  List<DrawingPoint> drawingPoint = [];
+  List<StackObject> globalListObject = [];
   File? selectedImage;
+  CroppedFile? croppedFile;
   ScreenshotController screenshotController = ScreenshotController();
   TextEditingController newTextController = TextEditingController();
   TextEditingController textEditingController = TextEditingController();
   TextEditingController textColorController = TextEditingController(
       text:
           'FF000000'); // The initial value can be provided directly to the controller.
-  CroppedFile? croppedFile;
   Offset tapPosition = Offset.zero;
-  List<StackObject> globalListObject = [];
   int currentIndex = 0;
   double widthContainerRender = 0;
   double heightContainerRender = 0;
@@ -58,11 +61,9 @@ abstract class ImageTextModel extends State<MyArtboard> {
   ActionCallback isButtonBrushClicked = ActionCallback.none;
   ActionCallback isTextAdded = ActionCallback.none;
   ActionCallback isImageAdded = ActionCallback.none;
-  String menu = "image";
-  List<String> assetFiles = [];
-  List<DrawingPoint> drawingPoint = [];
 
   @override
+  // function yang langsung dijalankan setelah masuk ke dalam halaman MyArtboard
   void initState() {
     super.initState();
     getAssetFiles();
@@ -77,7 +78,6 @@ abstract class ImageTextModel extends State<MyArtboard> {
         .toList();
 
     assetFiles = List<String>.from(assetPaths);
-
     setState(() {});
   }
 
@@ -490,11 +490,11 @@ abstract class ImageTextModel extends State<MyArtboard> {
   void changeColor(Color color) =>
       setState(() => globalListObject[currentIndex].color = color);
 
-  bool isObjectAdded() {
-    if (globalListObject.isNotEmpty) {
-      return false;
-    } else {
+  bool isObjectEmpty() {
+    if (globalListObject.isEmpty) {
       return true;
+    } else {
+      return false;
     }
   }
 

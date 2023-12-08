@@ -51,7 +51,7 @@ class _MyArtboardState extends ImageTextController {
                             ..strokeCap = StrokeCap.round,
                         ));
                       });
-                      print("start");
+                      // print("start");
                     },
                     onPanUpdate: (details) {
                       setState(() {
@@ -64,14 +64,14 @@ class _MyArtboardState extends ImageTextController {
                             ..strokeCap = StrokeCap.round,
                         ));
                       });
-                      print("update");
+                      // print("update");
                     },
                     onPanEnd: (DragEndDetails details) {
                       setState(() {
                         globalListObject
                             .add(StackObject(offset: null, paint: null));
                       });
-                      print("end");
+                      // print("end");
                     },
                     child: Container(
                       color: Colors.white,

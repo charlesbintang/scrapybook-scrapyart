@@ -16,65 +16,38 @@ abstract class ImageTextController extends ImageTextModel {
         return rowImageMenu();
       case "brush":
         return rowBrushMenu();
+      case "stiker":
+        return rowStikerMenu();
       default:
         print("tidak ada list view yang ditampilkan");
     }
   }
 
-  SizedBox rowImageMenu() {
-    List<Widget> data = [];
-    data.addAll([
-      IconButton(
-        onPressed: () => pickImageFromGallery(),
-        icon: const Icon(
-          Icons.add_photo_alternate_outlined,
-          color: Colors.black,
-        ),
-      ),
-      AbsorbPointer(
-        absorbing: isImageAdded == ActionCallback.imageAdded ? false : true,
-        child: IconButton(
-          onPressed: deleteAllImages,
-          icon: Icon(
-            Icons.delete,
-            color: isImageAdded == ActionCallback.imageAdded
-                ? Colors.black
-                : Colors.black45,
+  Row rowImageMenu() {
+    return Row(
+      children: [
+        const Expanded(child: SizedBox()),
+        IconButton(
+          onPressed: () => pickImageFromGallery(),
+          icon: const Icon(
+            Icons.add_photo_alternate_outlined,
+            color: Colors.black,
           ),
         ),
-      ),
-    ]);
-    if (assetFiles.isNotEmpty) {
-      for (var i = 0; i < assetFiles.length; i++) {
-        data.add(
-          IconButton(
-            onPressed: () {
-              // print("asset ke $i");
-              globalListObject.add(
-                StackObject(
-                  /// pickImageFromGallery harus menyertakan image didalamnya
-                  assetImage: assetFiles[i],
-                ),
-              );
-              isImageAdded = ActionCallback.imageAdded;
-              setState(() {});
-            },
-            icon: Image.asset(
-              assetFiles[i],
-              width: 25,
-              fit: BoxFit.fitWidth,
+        AbsorbPointer(
+          absorbing: isImageAdded == ActionCallback.imageAdded ? false : true,
+          child: IconButton(
+            onPressed: deleteAllImages,
+            icon: Icon(
+              Icons.delete,
+              color: isImageAdded == ActionCallback.imageAdded
+                  ? Colors.black
+                  : Colors.black45,
             ),
           ),
-        );
-      }
-    }
-    return SizedBox(
-      height: double.infinity,
-      width: double.infinity,
-      child: Wrap(
-        alignment: WrapAlignment.spaceEvenly,
-        children: data,
-      ),
+        ),
+        const Expanded(child: SizedBox()),
+      ],
     );
   }
 
@@ -248,6 +221,43 @@ abstract class ImageTextController extends ImageTextModel {
     );
   }
 
+  SizedBox rowStikerMenu() {
+    List<Widget> data = [];
+    // pindahkan semua stiker ke tombol stiker
+    if (assetFiles.isNotEmpty) {
+      for (var i = 0; i < assetFiles.length; i++) {
+        data.add(
+          IconButton(
+            onPressed: () {
+              // print("asset ke $i");
+              globalListObject.add(
+                StackObject(
+                  /// pickImageFromGallery harus menyertakan image didalamnya
+                  assetImage: assetFiles[i],
+                ),
+              );
+              isImageAdded = ActionCallback.imageAdded;
+              setState(() {});
+            },
+            icon: Image.asset(
+              assetFiles[i],
+              width: 25,
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+        );
+      }
+    }
+    return SizedBox(
+      height: double.infinity,
+      width: double.infinity,
+      child: Wrap(
+        alignment: WrapAlignment.spaceEvenly,
+        children: data,
+      ),
+    );
+  }
+
   Row rowBrushMenu() {
     return Row(
       children: [
@@ -283,12 +293,12 @@ abstract class ImageTextController extends ImageTextModel {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         AbsorbPointer(
-          absorbing: isObjectAdded(),
+          absorbing: isObjectEmpty(),
           child: IconButton(
             iconSize: 25,
             icon: Icon(
               Icons.save_alt,
-              color: isObjectAdded() == false ? Colors.white : Colors.white30,
+              color: isObjectEmpty() == false ? Colors.green : Colors.white30,
             ),
             onPressed: () {
               for (var i = 0; i < globalListObject.length; i++) {
@@ -319,47 +329,83 @@ abstract class ImageTextController extends ImageTextModel {
             onPressed: () {},
           ),
         ),
-        IconButton(
-          iconSize: 25,
-          icon: const Icon(
-            Icons.photo,
+        Container(
+          // color: Colors.amber,
+          decoration: menu == "image"
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: const Color.fromARGB(255, 72, 30, 51),
+                )
+              : null,
+          child: IconButton(
+            iconSize: 25,
+            icon: const Icon(
+              Icons.photo,
+            ),
+            onPressed: () {
+              setState(() {
+                menu = "image";
+              });
+            },
           ),
-          onPressed: () {
-            setState(() {
-              menu = "image";
-            });
-          },
         ),
-        IconButton(
-          iconSize: 30,
-          icon: const Icon(
-            Icons.text_fields_rounded,
+        Container(
+          decoration: menu == "text"
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: const Color.fromARGB(255, 72, 30, 51),
+                )
+              : null,
+          child: IconButton(
+            iconSize: 30,
+            icon: const Icon(
+              Icons.text_fields_rounded,
+            ),
+            onPressed: () {
+              setState(() {
+                menu = "text";
+              });
+            },
           ),
-          onPressed: () {
-            setState(() {
-              menu = "text";
-            });
-          },
         ),
-        IconButton(
-          iconSize: 25,
-          icon: const Icon(
-            Icons.brush_rounded,
+        Container(
+          decoration: menu == "brush"
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: const Color.fromARGB(255, 72, 30, 51),
+                )
+              : null,
+          child: IconButton(
+            iconSize: 25,
+            icon: const Icon(
+              Icons.brush_rounded,
+            ),
+            onPressed: () {
+              setState(() {
+                menu = "brush";
+              });
+            },
           ),
-          onPressed: () {
-            setState(() {
-              menu = "brush";
-            });
-          },
         ),
-        AbsorbPointer(
+        // Stiker
+        Container(
+          decoration: menu == "stiker"
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: const Color.fromARGB(255, 72, 30, 51),
+                )
+              : null,
           child: IconButton(
             iconSize: 25,
             icon: const Icon(
               Icons.face_retouching_natural_rounded,
-              color: Colors.white30,
+              color: Colors.white,
             ),
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                menu = "stiker";
+              });
+            },
           ),
         ),
         AbsorbPointer(
