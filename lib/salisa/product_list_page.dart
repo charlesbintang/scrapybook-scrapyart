@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scrapyart_home/salisa/model/product.dart';
 
 class ProductListPage extends StatefulWidget {
-  const ProductListPage({Key? key});
+  const ProductListPage({super.key});
 
   @override
   State<ProductListPage> createState() => _ProductListPageState();

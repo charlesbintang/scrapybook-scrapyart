@@ -74,7 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
               aspectRatio: 2.0,
               viewportFraction: 1,
               onPageChanged: (index, carouselReason) {
-                print(index);
                 setState(() {
                   _current = index;
                 });

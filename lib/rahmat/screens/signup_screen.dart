@@ -8,16 +8,16 @@ class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  SignUpScreenState createState() => SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _confirmpasswordTextController =
       TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _userNameTextController = TextEditingController();
-  final TextEditingController _NameTextController = TextEditingController();
+  final TextEditingController _nameTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 20,
                 ),
                 reusableTextField(
-                    "Name", Icons.person_outline, false, _NameTextController),
+                    "Name", Icons.person_outline, false, _nameTextController),
                 const SizedBox(height: 10),
 
                 // name
@@ -162,26 +162,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             email: _emailTextController.text,
                             password: _passwordTextController.text)
                         .then((value) {
-                      print("Created New Account");
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const SignInScreen()));
-                    }).onError((error, stackTrace) {
-                      print("Error ${error.toString()}");
-                    });
+                    }).onError((error, stackTrace) {});
                   } else {
                     // Kata sandi dan konfirmasi kata sandi tidak cocok
                     showDialog(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Text("Kesalahan"),
-                          content: Text(
+                          title: const Text("Kesalahan"),
+                          content: const Text(
                               "Kata sandi dan konfirmasi kata sandi tidak cocok."),
                           actions: [
                             TextButton(
-                              child: Text("Tutup"),
+                              child: const Text("Tutup"),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },

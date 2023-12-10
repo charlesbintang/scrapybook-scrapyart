@@ -10,10 +10,10 @@ class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
 
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  SignInScreenState createState() => SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class SignInScreenState extends State<SignInScreen> {
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
 
@@ -59,9 +59,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const HomeScreen()));
-                  }).onError((error, stackTrace) {
-                    print("Error ${error.toString()}");
-                  });
+                  }).onError((error, stackTrace) {});
                 }),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -94,17 +92,18 @@ class _SignInScreenState extends State<SignInScreen> {
               PermissionStatus cameraStatus = await Permission.camera.request();
 
               if (cameraStatus == PermissionStatus.granted) {
+                // ignore: use_build_context_synchronously
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text("This permission is granted.")));
               }
               if (cameraStatus == PermissionStatus.denied) {
+                // ignore: use_build_context_synchronously
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text("This permission is recommened.")));
               }
               if (cameraStatus == PermissionStatus.permanentlyDenied) {
                 openAppSettings();
               }
-              print("Logo taped");
             },
             child: iconWidget("lib/assets/google_logo.png")),
         const SizedBox(
