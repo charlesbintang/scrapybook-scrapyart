@@ -23,7 +23,8 @@ class StackObject {
   FontStyle fontStyle;
   double fontSize;
   TextDecoration decoration;
-  String assetImage;
+  String sticker;
+  String wallpaper;
   Offset? offset;
   Paint? paint;
 
@@ -45,7 +46,8 @@ class StackObject {
     this.fontStyle = FontStyle.normal,
     this.fontSize = 20,
     this.decoration = TextDecoration.none,
-    this.assetImage = "",
+    this.sticker = "",
+    this.wallpaper = "",
     this.offset,
     this.paint,
   });

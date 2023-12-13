@@ -169,6 +169,67 @@ abstract class ImageTextController extends ImageTextModel {
     }
   }
 
+  SizedBox rowWallpaperMenu() {
+    List<Widget> data = [];
+    data.addAll([
+      AbsorbPointer(
+        absorbing:
+            isWallpaperAdded == ActionCallback.wallpaperAdded ? false : true,
+        child: IconButton(
+          onPressed: deleteWallpaper,
+          icon: Icon(
+            Icons.delete,
+            color: isWallpaperAdded == ActionCallback.wallpaperAdded
+                ? Colors.black
+                : Colors.black45,
+          ),
+        ),
+      ),
+      IconButton(
+          onPressed: () {},
+          icon: Icon(
+            Icons.rectangle_rounded,
+            color: canvasColor,
+            shadows: const [
+              Shadow(color: Colors.black, blurRadius: 5.0, offset: Offset.zero)
+            ],
+          ))
+    ]);
+    // pindahkan semua stiker ke tombol stiker
+    if (wallpaperFiles.isNotEmpty) {
+      for (var i = 0; i < wallpaperFiles.length; i++) {
+        data.add(
+          IconButton(
+            onPressed: () {
+              // print("asset ke $i");
+              globalListObject.add(
+                StackObject(
+                  /// pickImageFromGallery harus menyertakan image didalamnya
+                  wallpaper: wallpaperFiles[i],
+                ),
+              );
+              isWallpaperAdded = ActionCallback.wallpaperAdded;
+              setState(() {});
+            },
+            icon: Image.asset(
+              wallpaperFiles[i],
+              width: 25,
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+        );
+      }
+    }
+    return SizedBox(
+      height: double.infinity,
+      width: double.infinity,
+      child: Wrap(
+        alignment: WrapAlignment.spaceEvenly,
+        children: data,
+      ),
+    );
+  }
+
   Row rowImageMenu() {
     return Row(
       children: [
@@ -287,6 +348,10 @@ abstract class ImageTextController extends ImageTextModel {
                       ? globalListObject[currentIndex].color
                       : Colors.black45
                   : Colors.black45,
+              shadows: const [
+                Shadow(
+                    color: Colors.black, blurRadius: 5.0, offset: Offset.zero)
+              ],
             ),
           ),
         ),
@@ -367,100 +432,33 @@ abstract class ImageTextController extends ImageTextModel {
     );
   }
 
-  SizedBox rowStikerMenu() {
-    List<Widget> data = [];
-    // pindahkan semua stiker ke tombol stiker
-    if (assetFiles.isNotEmpty) {
-      for (var i = 0; i < assetFiles.length; i++) {
-        data.add(
-          IconButton(
-            onPressed: () {
-              // print("asset ke $i");
-              globalListObject.add(
-                StackObject(
-                  /// pickImageFromGallery harus menyertakan image didalamnya
-                  assetImage: assetFiles[i],
-                ),
-              );
-              isImageAdded = ActionCallback.imageAdded;
-              setState(() {});
-            },
-            icon: Image.asset(
-              assetFiles[i],
-              width: 25,
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-        );
-      }
-    }
-    return SizedBox(
-      height: double.infinity,
-      width: double.infinity,
-      child: Wrap(
-        alignment: WrapAlignment.spaceEvenly,
-        children: data,
-      ),
-    );
-  }
-
-  SizedBox rowWallpaperMenu() {
-    List<Widget> data = [];
-    // pindahkan semua stiker ke tombol stiker
-    if (wallpaperFiles.isNotEmpty) {
-      for (var i = 0; i < wallpaperFiles.length; i++) {
-        data.add(
-          IconButton(
-            onPressed: () {
-              // print("asset ke $i");
-              globalListObject.add(
-                StackObject(
-                  /// pickImageFromGallery harus menyertakan image didalamnya
-                  assetImage: wallpaperFiles[i],
-                ),
-              );
-              isImageAdded = ActionCallback.imageAdded;
-              setState(() {});
-            },
-            icon: Image.asset(
-              wallpaperFiles[i],
-              width: 25,
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-        );
-      }
-    }
-    return SizedBox(
-      height: double.infinity,
-      width: double.infinity,
-      child: Wrap(
-        alignment: WrapAlignment.spaceEvenly,
-        children: data,
-      ),
-    );
-  }
-
   Row rowBrushMenu() {
     return Row(
       children: [
         const Expanded(
           child: SizedBox(),
         ),
-        IconButton(
-          onPressed: () {
-            if (isButtonBrushClicked == ActionCallback.none) {
-              isButtonBrushClicked = ActionCallback.isButtonClicked;
-            } else {
-              isButtonBrushClicked = ActionCallback.none;
-            }
-            setState(() {});
-          },
-          icon: Icon(
-            Icons.brush,
-            color: isButtonBrushClicked == ActionCallback.isButtonClicked
-                ? Colors.black
-                : Colors.black45,
+        Container(
+          decoration: isButtonBrushClicked == ActionCallback.isButtonClicked
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(23.0),
+                  color: const Color(0xFF684500))
+              : null,
+          child: IconButton(
+            onPressed: () {
+              if (isButtonBrushClicked == ActionCallback.none) {
+                isButtonBrushClicked = ActionCallback.isButtonClicked;
+              } else {
+                isButtonBrushClicked = ActionCallback.none;
+              }
+              setState(() {});
+            },
+            icon: Icon(
+              Icons.brush,
+              color: isButtonBrushClicked == ActionCallback.isButtonClicked
+                  ? Colors.white
+                  : Colors.black,
+            ),
           ),
         ),
         AbsorbPointer(
@@ -537,13 +535,69 @@ abstract class ImageTextController extends ImageTextModel {
                 },
               );
             },
-            icon: Icon(Icons.rectangle_rounded, color: brushColor),
+            icon: Icon(
+              Icons.rectangle_rounded,
+              color: brushColor,
+              shadows: const [
+                Shadow(
+                    color: Colors.black, blurRadius: 5.0, offset: Offset.zero)
+              ],
+            ),
           ),
         ),
         const Expanded(
           child: SizedBox(),
         ),
       ],
+    );
+  }
+
+  SizedBox rowStikerMenu() {
+    List<Widget> data = [];
+    // pindahkan semua stiker ke tombol stiker
+    data.add(AbsorbPointer(
+      absorbing: isStickerAdded == ActionCallback.stickerAdded ? false : true,
+      child: IconButton(
+        onPressed: () {},
+        icon: Icon(
+          Icons.delete,
+          color: isStickerAdded == ActionCallback.stickerAdded
+              ? Colors.black
+              : Colors.black45,
+        ),
+      ),
+    ));
+    if (assetFiles.isNotEmpty) {
+      for (var i = 0; i < assetFiles.length; i++) {
+        data.add(
+          IconButton(
+            onPressed: () {
+              // print("asset ke $i");
+              globalListObject.add(
+                StackObject(
+                  /// pickImageFromGallery harus menyertakan image didalamnya
+                  sticker: assetFiles[i],
+                ),
+              );
+              isStickerAdded = ActionCallback.stickerAdded;
+              setState(() {});
+            },
+            icon: Image.asset(
+              assetFiles[i],
+              width: 25,
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+        );
+      }
+    }
+    return SizedBox(
+      height: double.infinity,
+      width: double.infinity,
+      child: Wrap(
+        alignment: WrapAlignment.spaceEvenly,
+        children: data,
+      ),
     );
   }
 }

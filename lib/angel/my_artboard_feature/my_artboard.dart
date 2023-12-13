@@ -44,7 +44,7 @@ class _MyArtboardState extends ImageTextController {
                     onPanUpdate: (details) => brushOnPanUpdate(details),
                     onPanEnd: (details) => brushOnPanEnd(details),
                     child: Container(
-                      color: Colors.white,
+                      color: canvasColor,
                       height: MediaQuery.of(context).size.height * 57 / 100,
                       width: MediaQuery.of(context).size.width * 90 / 100,
                       margin: EdgeInsets.only(
@@ -73,7 +73,7 @@ class _MyArtboardState extends ImageTextController {
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 15 / 100,
-                        child: switchMenuItems(menu), //switchListView(menu),
+                        child: switchMenuItems(menu),
                       )
                     ],
                   ),

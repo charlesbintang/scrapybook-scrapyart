@@ -21,6 +21,8 @@ enum ActionCallback {
   none,
   imageAdded,
   textAdded,
+  wallpaperAdded,
+  stickerAdded,
   isButtonClicked,
   endOfBrush,
 }
@@ -47,6 +49,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
   File? selectedImage;
   CroppedFile? croppedFile;
   Color brushColor = Colors.black;
+  Color canvasColor = Colors.white;
   ScreenshotController screenshotController = ScreenshotController();
   TextEditingController newTextController = TextEditingController();
   TextEditingController textEditingController = TextEditingController();
@@ -63,6 +66,8 @@ abstract class ImageTextModel extends State<MyArtboard> {
   ActionCallback isButtonBrushClicked = ActionCallback.none;
   ActionCallback isTextAdded = ActionCallback.none;
   ActionCallback isImageAdded = ActionCallback.none;
+  ActionCallback isWallpaperAdded = ActionCallback.none;
+  ActionCallback isStickerAdded = ActionCallback.none;
 
   @override
   // function yang langsung dijalankan setelah masuk ke dalam halaman MyArtboard
@@ -182,6 +187,8 @@ abstract class ImageTextModel extends State<MyArtboard> {
           isTextAdded = ActionCallback.none;
           isImageAdded = ActionCallback.none;
           isButtonClicked = ActionCallback.none;
+          isWallpaperAdded = ActionCallback.none;
+          isStickerAdded = ActionCallback.none;
         }
         if (globalListObject[indexImage].text.isNotEmpty) {
           isButtonClicked = ActionCallback.none;
@@ -191,7 +198,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
           });
         }
         if (globalListObject[indexImage].image != null ||
-            globalListObject[indexImage].assetImage.isNotEmpty) {
+            globalListObject[indexImage].sticker.isNotEmpty) {
           isButtonClicked = ActionCallback.none;
           Future.delayed(Durations.short1, () {
             globalListObject.removeAt(indexImage);
@@ -204,7 +211,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
       child: const Text("Reset"),
       onTap: () {
         if (globalListObject[indexImage].image != null ||
-            globalListObject[indexImage].assetImage.isNotEmpty) {
+            globalListObject[indexImage].sticker.isNotEmpty) {
           globalListObject[indexImage].croppedFile = null;
           globalListObject[indexImage].rotateValue = 0.0;
           globalListObject[indexImage].imageWidth = 200.0;
@@ -282,11 +289,11 @@ abstract class ImageTextModel extends State<MyArtboard> {
 
   Future<void> cropImage(StackObject imageOnCurrentIndex) async {
     if (imageOnCurrentIndex.image != null ||
-        imageOnCurrentIndex.assetImage.isNotEmpty) {
+        imageOnCurrentIndex.sticker.isNotEmpty) {
       final croppedFile = await ImageCropper().cropImage(
         sourcePath: imageOnCurrentIndex.image != null
             ? imageOnCurrentIndex.image!.path
-            : imageOnCurrentIndex.assetImage,
+            : imageOnCurrentIndex.sticker,
         compressFormat: ImageCompressFormat.jpg,
         compressQuality: 100,
         uiSettings: [
@@ -482,7 +489,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
     globalListObject.removeWhere((element) =>
         element.image == null &&
         element.text == "" &&
-        element.assetImage == "" &&
+        element.sticker == "" &&
         element.paint == null);
     isImageAdded = ActionCallback.none;
     setState(() {});
@@ -491,6 +498,12 @@ abstract class ImageTextModel extends State<MyArtboard> {
   deleteAllTexts() {
     globalListObject.removeWhere((element) => element.text.isNotEmpty);
     isTextAdded = ActionCallback.none;
+    setState(() {});
+  }
+
+  deleteWallpaper() {
+    globalListObject.removeWhere((element) => element.wallpaper.isNotEmpty);
+    isWallpaperAdded = ActionCallback.none;
     setState(() {});
   }
 
@@ -821,8 +834,8 @@ abstract class ImageTextModel extends State<MyArtboard> {
           ),
         ]);
       }
-      // asset images
-      if (globalListObject[i].assetImage.isNotEmpty) {
+      // sticker images
+      if (globalListObject[i].sticker.isNotEmpty) {
         var objectOnCurrentIndex = globalListObject[i];
         data.addAll([
           Positioned(
@@ -861,8 +874,8 @@ abstract class ImageTextModel extends State<MyArtboard> {
                               : null,
                           image: objectOnCurrentIndex.croppedFile == null
                               ? DecorationImage(
-                                  image: AssetImage(
-                                      objectOnCurrentIndex.assetImage),
+                                  image:
+                                      AssetImage(objectOnCurrentIndex.sticker),
                                   fit: BoxFit.fill)
                               : DecorationImage(
                                   image: FileImage(
