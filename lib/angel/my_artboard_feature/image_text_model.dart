@@ -41,10 +41,12 @@ extension on List {
 abstract class ImageTextModel extends State<MyArtboard> {
   String menu = "image";
   List<String> assetFiles = [];
+  List<String> wallpaperFiles = [];
   List<DrawingPoint> drawingPoint = [];
   List<StackObject> globalListObject = [];
   File? selectedImage;
   CroppedFile? croppedFile;
+  Color brushColor = Colors.black;
   ScreenshotController screenshotController = ScreenshotController();
   TextEditingController newTextController = TextEditingController();
   TextEditingController textEditingController = TextEditingController();
@@ -66,6 +68,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
   // function yang langsung dijalankan setelah masuk ke dalam halaman MyArtboard
   void initState() {
     super.initState();
+    getWallpaperFiles();
     getAssetFiles();
   }
 
@@ -78,6 +81,18 @@ abstract class ImageTextModel extends State<MyArtboard> {
         .toList();
 
     assetFiles = List<String>.from(assetPaths);
+    setState(() {});
+  }
+
+  Future<void> getWallpaperFiles() async {
+    final manifestContent = await rootBundle.loadString('AssetManifest.json');
+    final Map<String, dynamic> manifestMap = json.decode(manifestContent);
+
+    final wallpaperPaths = manifestMap.keys
+        .where((String key) => key.startsWith('lib/angel/artboard_wallpaper/'))
+        .toList();
+
+    wallpaperFiles = List<String>.from(wallpaperPaths);
     setState(() {});
   }
 
@@ -464,8 +479,11 @@ abstract class ImageTextModel extends State<MyArtboard> {
     for (var i = 0; i < globalListObject.length; i++) {
       globalListObject[i].image = null;
     }
-    globalListObject
-        .removeWhere((element) => element.image == null && element.text == "");
+    globalListObject.removeWhere((element) =>
+        element.image == null &&
+        element.text == "" &&
+        element.assetImage == "" &&
+        element.paint == null);
     isImageAdded = ActionCallback.none;
     setState(() {});
   }
@@ -487,12 +505,52 @@ abstract class ImageTextModel extends State<MyArtboard> {
   void changeColor(Color color) =>
       setState(() => globalListObject[currentIndex].color = color);
 
+  void changeBrushColor(Color color) => setState(() => brushColor = color);
+
   bool isObjectEmpty() {
     if (globalListObject.isEmpty) {
       return true;
     } else {
       return false;
     }
+  }
+
+  brushOnPanStart(details) {
+    isButtonBrushClicked == ActionCallback.isButtonClicked
+        ? setState(() {
+            globalListObject.add(StackObject(
+              offset: details.localPosition,
+              paint: Paint()
+                ..color = brushColor
+                ..isAntiAlias = true
+                ..strokeWidth = 10.0
+                ..strokeCap = StrokeCap.round,
+            ));
+          })
+        : null;
+  }
+
+  brushOnPanUpdate(details) {
+    isButtonBrushClicked == ActionCallback.isButtonClicked
+        ? setState(() {
+            globalListObject.add(StackObject(
+              offset: details.localPosition,
+              paint: Paint()
+                ..color = brushColor
+                ..isAntiAlias = true
+                ..strokeWidth = 10.0
+                ..strokeCap = StrokeCap.round,
+            ));
+          })
+        : null;
+  }
+
+  brushOnPanEnd(details) {
+    isButtonBrushClicked == ActionCallback.isButtonClicked
+        ? setState(() {
+            globalListObject.add(StackObject(offset: null, paint: null));
+          })
+        : null;
   }
 
   List<Widget> dataStack() {
@@ -1017,6 +1075,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
           ),
         ]);
       }
+      // Brush
       if (globalListObject[i].offset != null &&
           globalListObject[i].paint != null) {
         data.add(CustomPaint(

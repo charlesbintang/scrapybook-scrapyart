@@ -40,39 +40,9 @@ class _MyArtboardState extends ImageTextController {
                       }
                       setState(() {});
                     },
-                    onPanStart: (details) {
-                      setState(() {
-                        globalListObject.add(StackObject(
-                          offset: details.localPosition,
-                          paint: Paint()
-                            ..color = Colors.black
-                            ..isAntiAlias = true
-                            ..strokeWidth = 10.0
-                            ..strokeCap = StrokeCap.round,
-                        ));
-                      });
-                      // print("start");
-                    },
-                    onPanUpdate: (details) {
-                      setState(() {
-                        globalListObject.add(StackObject(
-                          offset: details.localPosition,
-                          paint: Paint()
-                            ..color = Colors.black
-                            ..isAntiAlias = true
-                            ..strokeWidth = 10.0
-                            ..strokeCap = StrokeCap.round,
-                        ));
-                      });
-                      // print("update");
-                    },
-                    onPanEnd: (DragEndDetails details) {
-                      setState(() {
-                        globalListObject
-                            .add(StackObject(offset: null, paint: null));
-                      });
-                      // print("end");
-                    },
+                    onPanStart: (details) => brushOnPanStart(details),
+                    onPanUpdate: (details) => brushOnPanUpdate(details),
+                    onPanEnd: (details) => brushOnPanEnd(details),
                     child: Container(
                       color: Colors.white,
                       height: MediaQuery.of(context).size.height * 57 / 100,

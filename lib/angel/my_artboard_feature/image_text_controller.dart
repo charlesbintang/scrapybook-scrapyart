@@ -8,12 +8,158 @@ import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 abstract class ImageTextController extends ImageTextModel {
+  Row menusButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        AbsorbPointer(
+          absorbing: isObjectEmpty(),
+          child: IconButton(
+            iconSize: 25,
+            icon: Icon(
+              Icons.save_alt,
+              color: isObjectEmpty() == false ? Colors.green : Colors.white30,
+            ),
+            onPressed: () {
+              for (var i = 0; i < globalListObject.length; i++) {
+                globalListObject[i].onClicked = OnAction.isFalse;
+                setState(() {});
+              }
+              saveToGallery(context);
+            },
+          ),
+        ),
+        Container(
+          decoration: menu == "wallpaper"
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: const Color.fromARGB(255, 72, 30, 51),
+                )
+              : null,
+          child: IconButton(
+            iconSize: 25,
+            icon: const Icon(
+              Icons.format_paint_outlined,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              setState(() {
+                menu = "wallpaper";
+              });
+            },
+          ),
+        ),
+        Container(
+          // color: Colors.amber,
+          decoration: menu == "image"
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: const Color.fromARGB(255, 72, 30, 51),
+                )
+              : null,
+          child: IconButton(
+            iconSize: 25,
+            icon: const Icon(
+              Icons.photo,
+            ),
+            onPressed: () {
+              setState(() {
+                menu = "image";
+              });
+            },
+          ),
+        ),
+        Container(
+          decoration: menu == "text"
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: const Color.fromARGB(255, 72, 30, 51),
+                )
+              : null,
+          child: IconButton(
+            iconSize: 30,
+            icon: const Icon(
+              Icons.text_fields_rounded,
+            ),
+            onPressed: () {
+              setState(() {
+                menu = "text";
+              });
+            },
+          ),
+        ),
+        Container(
+          decoration: menu == "brush"
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: const Color.fromARGB(255, 72, 30, 51),
+                )
+              : null,
+          child: IconButton(
+            iconSize: 25,
+            icon: const Icon(
+              Icons.brush_rounded,
+            ),
+            onPressed: () {
+              setState(() {
+                menu = "brush";
+              });
+            },
+          ),
+        ),
+        // Stiker
+        Container(
+          decoration: menu == "stiker"
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: const Color.fromARGB(255, 72, 30, 51),
+                )
+              : null,
+          child: IconButton(
+            iconSize: 25,
+            icon: const Icon(
+              Icons.face_retouching_natural_rounded,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              setState(() {
+                menu = "stiker";
+              });
+            },
+          ),
+        ),
+        AbsorbPointer(
+          child: IconButton(
+            iconSize: 25,
+            icon: const Icon(
+              Icons.undo,
+              color: Colors.white30,
+            ),
+            onPressed: () {},
+          ),
+        ),
+        AbsorbPointer(
+          child: IconButton(
+            iconSize: 25,
+            icon: const Icon(
+              Icons.redo,
+              color: Colors.white30,
+            ),
+            onPressed: () {},
+          ),
+        ),
+      ],
+    );
+  }
+
   switchMenuItems(String menu) {
     switch (menu) {
-      case "text":
-        return rowTextMenu();
+      case "wallpaper":
+        return rowWallpaperMenu();
       case "image":
         return rowImageMenu();
+      case "text":
+        return rowTextMenu();
       case "brush":
         return rowBrushMenu();
       case "stiker":
@@ -258,6 +404,43 @@ abstract class ImageTextController extends ImageTextModel {
     );
   }
 
+  SizedBox rowWallpaperMenu() {
+    List<Widget> data = [];
+    // pindahkan semua stiker ke tombol stiker
+    if (wallpaperFiles.isNotEmpty) {
+      for (var i = 0; i < wallpaperFiles.length; i++) {
+        data.add(
+          IconButton(
+            onPressed: () {
+              // print("asset ke $i");
+              globalListObject.add(
+                StackObject(
+                  /// pickImageFromGallery harus menyertakan image didalamnya
+                  assetImage: wallpaperFiles[i],
+                ),
+              );
+              isImageAdded = ActionCallback.imageAdded;
+              setState(() {});
+            },
+            icon: Image.asset(
+              wallpaperFiles[i],
+              width: 25,
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+        );
+      }
+    }
+    return SizedBox(
+      height: double.infinity,
+      width: double.infinity,
+      child: Wrap(
+        alignment: WrapAlignment.spaceEvenly,
+        children: data,
+      ),
+    );
+  }
+
   Row rowBrushMenu() {
     return Row(
       children: [
@@ -272,7 +455,6 @@ abstract class ImageTextController extends ImageTextModel {
               isButtonBrushClicked = ActionCallback.none;
             }
             setState(() {});
-            print(globalListObject);
           },
           icon: Icon(
             Icons.brush,
@@ -281,142 +463,85 @@ abstract class ImageTextController extends ImageTextModel {
                 : Colors.black45,
           ),
         ),
+        AbsorbPointer(
+          absorbing: isButtonBrushClicked == ActionCallback.isButtonClicked
+              ? false
+              : true,
+          child: IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    scrollable: true,
+                    titlePadding: const EdgeInsets.all(0),
+                    contentPadding: const EdgeInsets.all(0),
+                    content: Column(
+                      children: [
+                        ColorPicker(
+                          pickerColor: brushColor,
+                          onColorChanged: changeBrushColor,
+                          colorPickerWidth: 300,
+                          pickerAreaHeightPercent: 0.7,
+                          displayThumbColor: true,
+                          paletteType: PaletteType.hsl,
+                          labelTypes: const [],
+                          pickerAreaBorderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(2),
+                            topRight: Radius.circular(2),
+                          ),
+                          hexInputController: textColorController, // <- here
+                          portraitOnly: true,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          /* It can be any text field, for example:
+
+                            * TextField
+                            * TextFormField
+                            * CupertinoTextField
+                            * EditableText
+                            * any text field from 3-rd party package
+                            * your own text field
+
+                            so basically anything that supports/uses
+                            a TextEditingController for an editable text.
+                            */
+                          child: CupertinoTextField(
+                            controller: textColorController,
+                            // Everything below is purely optional.
+                            prefix: const Padding(
+                                padding: EdgeInsets.only(left: 8),
+                                child: Icon(Icons.tag)),
+                            suffix: IconButton(
+                              icon: const Icon(Icons.content_paste_rounded),
+                              onPressed: () =>
+                                  copyToClipboard(textColorController.text),
+                            ),
+                            autofocus: true,
+                            maxLength: 9,
+                            onEditingComplete: () =>
+                                Navigator.of(context).pop(),
+                            inputFormatters: [
+                              // Any custom input formatter can be passed
+                              // here or use any Form validator you want.
+                              UpperCaseTextFormatter(),
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(kValidHexPattern)),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+            icon: Icon(Icons.rectangle_rounded, color: brushColor),
+          ),
+        ),
         const Expanded(
           child: SizedBox(),
-        ),
-      ],
-    );
-  }
-
-  Row menusButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        AbsorbPointer(
-          absorbing: isObjectEmpty(),
-          child: IconButton(
-            iconSize: 25,
-            icon: Icon(
-              Icons.save_alt,
-              color: isObjectEmpty() == false ? Colors.green : Colors.white30,
-            ),
-            onPressed: () {
-              for (var i = 0; i < globalListObject.length; i++) {
-                globalListObject[i].onClicked = OnAction.isFalse;
-                setState(() {});
-              }
-              saveToGallery(context);
-            },
-          ),
-        ),
-        AbsorbPointer(
-          child: IconButton(
-            iconSize: 25,
-            icon: const Icon(
-              Icons.format_paint_outlined,
-              color: Colors.white30,
-            ),
-            onPressed: () {},
-          ),
-        ),
-        AbsorbPointer(
-          child: IconButton(
-            iconSize: 25,
-            icon: const Icon(
-              Icons.square_outlined,
-              color: Colors.white30,
-            ),
-            onPressed: () {},
-          ),
-        ),
-        Container(
-          // color: Colors.amber,
-          decoration: menu == "image"
-              ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: const Color.fromARGB(255, 72, 30, 51),
-                )
-              : null,
-          child: IconButton(
-            iconSize: 25,
-            icon: const Icon(
-              Icons.photo,
-            ),
-            onPressed: () {
-              setState(() {
-                menu = "image";
-              });
-            },
-          ),
-        ),
-        Container(
-          decoration: menu == "text"
-              ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: const Color.fromARGB(255, 72, 30, 51),
-                )
-              : null,
-          child: IconButton(
-            iconSize: 30,
-            icon: const Icon(
-              Icons.text_fields_rounded,
-            ),
-            onPressed: () {
-              setState(() {
-                menu = "text";
-              });
-            },
-          ),
-        ),
-        Container(
-          decoration: menu == "brush"
-              ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: const Color.fromARGB(255, 72, 30, 51),
-                )
-              : null,
-          child: IconButton(
-            iconSize: 25,
-            icon: const Icon(
-              Icons.brush_rounded,
-            ),
-            onPressed: () {
-              setState(() {
-                menu = "brush";
-              });
-            },
-          ),
-        ),
-        // Stiker
-        Container(
-          decoration: menu == "stiker"
-              ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: const Color.fromARGB(255, 72, 30, 51),
-                )
-              : null,
-          child: IconButton(
-            iconSize: 25,
-            icon: const Icon(
-              Icons.face_retouching_natural_rounded,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              setState(() {
-                menu = "stiker";
-              });
-            },
-          ),
-        ),
-        AbsorbPointer(
-          child: IconButton(
-            iconSize: 25,
-            icon: const Icon(
-              Icons.layers,
-              color: Colors.white30,
-            ),
-            onPressed: () {},
-          ),
         ),
       ],
     );
