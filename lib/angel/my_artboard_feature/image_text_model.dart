@@ -363,7 +363,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
   decreaseFontSize() {
     setState(() {
       globalListObject[currentIndex].fontSize =
-          globalListObject[currentIndex].fontSize -= 2;
+          max(0.0, globalListObject[currentIndex].fontSize -= 2);
     });
   }
 
