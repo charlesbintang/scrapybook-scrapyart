@@ -42,6 +42,7 @@ extension on List {
 
 abstract class ImageTextModel extends State<MyArtboard> {
   String menu = "image";
+  String selectedWallpaper = "";
   List<String> assetFiles = [];
   List<String> wallpaperFiles = [];
   List<DrawingPoint> drawingPoint = [];
@@ -189,6 +190,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
           isButtonClicked = ActionCallback.none;
           isWallpaperAdded = ActionCallback.none;
           isStickerAdded = ActionCallback.none;
+          isButtonClicked = ActionCallback.none;
         }
         if (globalListObject[indexImage].text.isNotEmpty) {
           isButtonClicked = ActionCallback.none;
@@ -502,7 +504,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
   }
 
   deleteWallpaper() {
-    globalListObject.removeWhere((element) => element.wallpaper.isNotEmpty);
+    selectedWallpaper = "";
     isWallpaperAdded = ActionCallback.none;
     setState(() {});
   }
@@ -519,6 +521,8 @@ abstract class ImageTextModel extends State<MyArtboard> {
       setState(() => globalListObject[currentIndex].color = color);
 
   void changeBrushColor(Color color) => setState(() => brushColor = color);
+
+  void changeCanvasColor(Color color) => setState(() => canvasColor = color);
 
   bool isObjectEmpty() {
     if (globalListObject.isEmpty) {

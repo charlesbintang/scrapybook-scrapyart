@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
 import 'package:scrapyart_home/angel/my_artboard_feature/image_text_controller.dart';
+import 'package:scrapyart_home/angel/my_artboard_feature/image_text_model.dart';
 import 'package:scrapyart_home/angel/my_artboard_feature/stack_object_model.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -44,7 +45,18 @@ class _MyArtboardState extends ImageTextController {
                     onPanUpdate: (details) => brushOnPanUpdate(details),
                     onPanEnd: (details) => brushOnPanEnd(details),
                     child: Container(
-                      color: canvasColor,
+                      color: isWallpaperAdded == ActionCallback.wallpaperAdded
+                          ? null
+                          : canvasColor,
+                      decoration:
+                          isWallpaperAdded == ActionCallback.wallpaperAdded
+                              ? BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(selectedWallpaper),
+                                    fit: BoxFit.fill,
+                                  ),
+                                )
+                              : null,
                       height: MediaQuery.of(context).size.height * 57 / 100,
                       width: MediaQuery.of(context).size.width * 90 / 100,
                       margin: EdgeInsets.only(

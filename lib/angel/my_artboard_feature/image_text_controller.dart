@@ -169,7 +169,7 @@ abstract class ImageTextController extends ImageTextModel {
     }
   }
 
-  SizedBox rowWallpaperMenu() {
+  Row rowWallpaperMenu() {
     List<Widget> data = [];
     data.addAll([
       AbsorbPointer(
@@ -186,7 +186,74 @@ abstract class ImageTextController extends ImageTextModel {
         ),
       ),
       IconButton(
-          onPressed: () {},
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  scrollable: true,
+                  titlePadding: const EdgeInsets.all(0),
+                  contentPadding: const EdgeInsets.all(0),
+                  content: Column(
+                    children: [
+                      ColorPicker(
+                        pickerColor: canvasColor,
+                        onColorChanged: changeCanvasColor,
+                        colorPickerWidth: 300,
+                        pickerAreaHeightPercent: 0.7,
+                        displayThumbColor: true,
+                        paletteType: PaletteType.hsl,
+                        labelTypes: const [],
+                        pickerAreaBorderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(2),
+                          topRight: Radius.circular(2),
+                        ),
+                        hexInputController: textColorController, // <- here
+                        portraitOnly: true,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        /* It can be any text field, for example:
+
+                            * TextField
+                            * TextFormField
+                            * CupertinoTextField
+                            * EditableText
+                            * any text field from 3-rd party package
+                            * your own text field
+
+                            so basically anything that supports/uses
+                            a TextEditingController for an editable text.
+                            */
+                        child: CupertinoTextField(
+                          controller: textColorController,
+                          // Everything below is purely optional.
+                          prefix: const Padding(
+                              padding: EdgeInsets.only(left: 8),
+                              child: Icon(Icons.tag)),
+                          suffix: IconButton(
+                            icon: const Icon(Icons.content_paste_rounded),
+                            onPressed: () =>
+                                copyToClipboard(textColorController.text),
+                          ),
+                          autofocus: true,
+                          maxLength: 9,
+                          onEditingComplete: () => Navigator.of(context).pop(),
+                          inputFormatters: [
+                            // Any custom input formatter can be passed
+                            // here or use any Form validator you want.
+                            UpperCaseTextFormatter(),
+                            FilteringTextInputFormatter.allow(
+                                RegExp(kValidHexPattern)),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            );
+          },
           icon: Icon(
             Icons.rectangle_rounded,
             color: canvasColor,
@@ -195,19 +262,13 @@ abstract class ImageTextController extends ImageTextModel {
             ],
           ))
     ]);
-    // pindahkan semua stiker ke tombol stiker
+    // pindahkan semua wallpaper ke tombol wallpaper
     if (wallpaperFiles.isNotEmpty) {
       for (var i = 0; i < wallpaperFiles.length; i++) {
         data.add(
           IconButton(
             onPressed: () {
-              // print("asset ke $i");
-              globalListObject.add(
-                StackObject(
-                  /// pickImageFromGallery harus menyertakan image didalamnya
-                  wallpaper: wallpaperFiles[i],
-                ),
-              );
+              selectedWallpaper = wallpaperFiles[i];
               isWallpaperAdded = ActionCallback.wallpaperAdded;
               setState(() {});
             },
@@ -220,13 +281,8 @@ abstract class ImageTextController extends ImageTextModel {
         );
       }
     }
-    return SizedBox(
-      height: double.infinity,
-      width: double.infinity,
-      child: Wrap(
-        alignment: WrapAlignment.spaceEvenly,
-        children: data,
-      ),
+    return Row(
+      children: data,
     );
   }
 
@@ -348,9 +404,14 @@ abstract class ImageTextController extends ImageTextModel {
                       ? globalListObject[currentIndex].color
                       : Colors.black45
                   : Colors.black45,
-              shadows: const [
+              shadows: [
                 Shadow(
-                    color: Colors.black, blurRadius: 5.0, offset: Offset.zero)
+                  color: isButtonClicked == ActionCallback.isButtonClicked
+                      ? Colors.black
+                      : Colors.white,
+                  blurRadius: 5.0,
+                  offset: Offset.zero,
+                )
               ],
             ),
           ),
@@ -538,9 +599,14 @@ abstract class ImageTextController extends ImageTextModel {
             icon: Icon(
               Icons.rectangle_rounded,
               color: brushColor,
-              shadows: const [
+              shadows: [
                 Shadow(
-                    color: Colors.black, blurRadius: 5.0, offset: Offset.zero)
+                  color: isButtonBrushClicked == ActionCallback.isButtonClicked
+                      ? Colors.black
+                      : Colors.white,
+                  blurRadius: 5.0,
+                  offset: Offset.zero,
+                )
               ],
             ),
           ),
