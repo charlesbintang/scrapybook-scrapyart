@@ -23,6 +23,7 @@ enum ActionCallback {
   textAdded,
   wallpaperAdded,
   stickerAdded,
+  paintAdded,
   isButtonClicked,
   endOfBrush,
 }
@@ -69,6 +70,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
   ActionCallback isImageAdded = ActionCallback.none;
   ActionCallback isWallpaperAdded = ActionCallback.none;
   ActionCallback isStickerAdded = ActionCallback.none;
+  ActionCallback isPaintAdded = ActionCallback.none;
 
   @override
   // function yang langsung dijalankan setelah masuk ke dalam halaman MyArtboard
@@ -509,6 +511,12 @@ abstract class ImageTextModel extends State<MyArtboard> {
     setState(() {});
   }
 
+  deleteAllPaint() {
+    globalListObject.removeWhere((element) => element.paint != null);
+    isPaintAdded = ActionCallback.none;
+    setState(() {});
+  }
+
   void copyToClipboard(String input) {
     String textToCopy = input.replaceFirst('#', '').toUpperCase();
     if (textToCopy.startsWith('FF') && textToCopy.length == 8) {
@@ -568,6 +576,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
             globalListObject.add(StackObject(offset: null, paint: null));
           })
         : null;
+    isPaintAdded = ActionCallback.paintAdded;
   }
 
   List<Widget> dataStack() {

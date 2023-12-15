@@ -258,7 +258,11 @@ abstract class ImageTextController extends ImageTextModel {
             Icons.rectangle_rounded,
             color: canvasColor,
             shadows: const [
-              Shadow(color: Colors.black, blurRadius: 5.0, offset: Offset.zero)
+              Shadow(
+                color: Colors.black,
+                blurRadius: 5.0,
+                offset: Offset.zero,
+              )
             ],
           ))
     ]);
@@ -622,16 +626,30 @@ abstract class ImageTextController extends ImageTextModel {
             },
             icon: Icon(
               Icons.rectangle_rounded,
-              color: brushColor,
+              color: isButtonBrushClicked == ActionCallback.isButtonClicked
+                  ? brushColor
+                  : brushColor.withOpacity(0.6),
               shadows: [
                 Shadow(
                   color: isButtonBrushClicked == ActionCallback.isButtonClicked
                       ? Colors.black
-                      : Colors.white,
+                      : Colors.transparent,
                   blurRadius: 5.0,
                   offset: Offset.zero,
                 )
               ],
+            ),
+          ),
+        ),
+        AbsorbPointer(
+          absorbing: isPaintAdded == ActionCallback.paintAdded ? false : true,
+          child: IconButton(
+            onPressed: deleteAllPaint,
+            icon: Icon(
+              Icons.delete,
+              color: isPaintAdded == ActionCallback.paintAdded
+                  ? Colors.black
+                  : Colors.black45,
             ),
           ),
         ),
