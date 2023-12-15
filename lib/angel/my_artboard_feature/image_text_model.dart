@@ -119,7 +119,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
     setState(() {});
   }
 
-  setCurrentIndex(BuildContext context, index) {
+  void setCurrentIndex(BuildContext context, index) {
     setState(() {
       isButtonClicked = ActionCallback.isButtonClicked;
       currentIndex = index;
@@ -486,32 +486,32 @@ abstract class ImageTextModel extends State<MyArtboard> {
     );
   }
 
-  deleteAllImages() {
+  void deleteAllImages() {
     globalListObject.removeWhere((element) => element.image != null);
     isImageAdded = ActionCallback.none;
     setState(() {});
   }
 
-  deleteAllTexts() {
+  void deleteAllTexts() {
     globalListObject.removeWhere((element) => element.text.isNotEmpty);
     isTextAdded = ActionCallback.none;
     isButtonClicked = ActionCallback.none;
     setState(() {});
   }
 
-  deleteWallpaper() {
+  void deleteWallpaper() {
     selectedWallpaper = "";
     isWallpaperAdded = ActionCallback.none;
     setState(() {});
   }
 
-  deleteAllSticker() {
+  void deleteAllSticker() {
     globalListObject.removeWhere((element) => element.sticker.isNotEmpty);
     isStickerAdded = ActionCallback.none;
     setState(() {});
   }
 
-  deleteAllPaint() {
+  void deleteAllPaint() {
     globalListObject.removeWhere(
         (element) => element.paint != null && element.offset != null);
     globalListObject.removeWhere(
