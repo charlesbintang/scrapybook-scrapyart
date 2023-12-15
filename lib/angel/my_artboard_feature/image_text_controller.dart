@@ -399,14 +399,14 @@ abstract class ImageTextController extends ImageTextModel {
             },
             icon: Icon(
               Icons.rectangle_rounded,
-              color: isTextAdded == ActionCallback.textAdded
-                  ? isButtonClicked == ActionCallback.isButtonClicked
-                      ? globalListObject[currentIndex].color
-                      : Colors.black45
+              color: isTextAdded == ActionCallback.textAdded &&
+                      isButtonClicked == ActionCallback.isButtonClicked
+                  ? globalListObject[currentIndex].color
                   : Colors.black45,
               shadows: [
                 Shadow(
-                  color: isButtonClicked == ActionCallback.isButtonClicked
+                  color: isTextAdded == ActionCallback.textAdded &&
+                          isButtonClicked == ActionCallback.isButtonClicked
                       ? Colors.black
                       : Colors.white,
                   blurRadius: 5.0,
@@ -417,72 +417,96 @@ abstract class ImageTextController extends ImageTextModel {
           ),
         ),
         AbsorbPointer(
-          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          absorbing: isTextAdded == ActionCallback.textAdded &&
+                  isButtonClicked == ActionCallback.isButtonClicked
+              ? false
+              : true,
           child: IconButton(
             onPressed: increaseFontSize,
             icon: Icon(
               Icons.text_increase_rounded,
-              color: isTextAdded == ActionCallback.textAdded
+              color: isTextAdded == ActionCallback.textAdded &&
+                      isButtonClicked == ActionCallback.isButtonClicked
                   ? Colors.black
                   : Colors.black45,
             ),
           ),
         ),
         AbsorbPointer(
-          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          absorbing: isTextAdded == ActionCallback.textAdded &&
+                  isButtonClicked == ActionCallback.isButtonClicked
+              ? false
+              : true,
           child: IconButton(
             onPressed: decreaseFontSize,
             icon: Icon(
               Icons.text_decrease_rounded,
-              color: isTextAdded == ActionCallback.textAdded
+              color: isTextAdded == ActionCallback.textAdded &&
+                      isButtonClicked == ActionCallback.isButtonClicked
                   ? Colors.black
                   : Colors.black45,
             ),
           ),
         ),
         AbsorbPointer(
-          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          absorbing: isTextAdded == ActionCallback.textAdded &&
+                  isButtonClicked == ActionCallback.isButtonClicked
+              ? false
+              : true,
           child: IconButton(
             onPressed: boldText,
             icon: Icon(
               Icons.format_bold_rounded,
-              color: isTextAdded == ActionCallback.textAdded
+              color: isTextAdded == ActionCallback.textAdded &&
+                      isButtonClicked == ActionCallback.isButtonClicked
                   ? Colors.black
                   : Colors.black45,
             ),
           ),
         ),
         AbsorbPointer(
-          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          absorbing: isTextAdded == ActionCallback.textAdded &&
+                  isButtonClicked == ActionCallback.isButtonClicked
+              ? false
+              : true,
           child: IconButton(
             onPressed: italicText,
             icon: Icon(
               Icons.format_italic_rounded,
-              color: isTextAdded == ActionCallback.textAdded
+              color: isTextAdded == ActionCallback.textAdded &&
+                      isButtonClicked == ActionCallback.isButtonClicked
                   ? Colors.black
                   : Colors.black45,
             ),
           ),
         ),
         AbsorbPointer(
-          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          absorbing: isTextAdded == ActionCallback.textAdded &&
+                  isButtonClicked == ActionCallback.isButtonClicked
+              ? false
+              : true,
           child: IconButton(
             onPressed: underlineText,
             icon: Icon(
               Icons.format_underline_rounded,
-              color: isTextAdded == ActionCallback.textAdded
+              color: isTextAdded == ActionCallback.textAdded &&
+                      isButtonClicked == ActionCallback.isButtonClicked
                   ? Colors.black
                   : Colors.black45,
             ),
           ),
         ),
         AbsorbPointer(
-          absorbing: isTextAdded == ActionCallback.textAdded ? false : true,
+          absorbing: isTextAdded == ActionCallback.textAdded &&
+                  isButtonClicked == ActionCallback.isButtonClicked
+              ? false
+              : true,
           child: IconButton(
             onPressed: deleteAllTexts,
             icon: Icon(
               Icons.delete,
-              color: isTextAdded == ActionCallback.textAdded
+              color: isTextAdded == ActionCallback.textAdded &&
+                      isButtonClicked == ActionCallback.isButtonClicked
                   ? Colors.black
                   : Colors.black45,
             ),
@@ -624,7 +648,7 @@ abstract class ImageTextController extends ImageTextModel {
     data.add(AbsorbPointer(
       absorbing: isStickerAdded == ActionCallback.stickerAdded ? false : true,
       child: IconButton(
-        onPressed: () {},
+        onPressed: deleteAllSticker,
         icon: Icon(
           Icons.delete,
           color: isStickerAdded == ActionCallback.stickerAdded

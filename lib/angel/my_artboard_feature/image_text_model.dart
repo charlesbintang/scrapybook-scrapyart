@@ -485,14 +485,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
   }
 
   deleteAllImages() {
-    for (var i = 0; i < globalListObject.length; i++) {
-      globalListObject[i].image = null;
-    }
-    globalListObject.removeWhere((element) =>
-        element.image == null &&
-        element.text == "" &&
-        element.sticker == "" &&
-        element.paint == null);
+    globalListObject.removeWhere((element) => element.image != null);
     isImageAdded = ActionCallback.none;
     setState(() {});
   }
@@ -500,12 +493,19 @@ abstract class ImageTextModel extends State<MyArtboard> {
   deleteAllTexts() {
     globalListObject.removeWhere((element) => element.text.isNotEmpty);
     isTextAdded = ActionCallback.none;
+    isButtonClicked = ActionCallback.none;
     setState(() {});
   }
 
   deleteWallpaper() {
     selectedWallpaper = "";
     isWallpaperAdded = ActionCallback.none;
+    setState(() {});
+  }
+
+  deleteAllSticker() {
+    globalListObject.removeWhere((element) => element.sticker.isNotEmpty);
+    isStickerAdded = ActionCallback.none;
     setState(() {});
   }
 
