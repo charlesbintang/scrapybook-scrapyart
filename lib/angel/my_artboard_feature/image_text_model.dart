@@ -512,7 +512,10 @@ abstract class ImageTextModel extends State<MyArtboard> {
   }
 
   deleteAllPaint() {
-    globalListObject.removeWhere((element) => element.paint != null);
+    globalListObject.removeWhere(
+        (element) => element.paint != null && element.offset != null);
+    globalListObject.removeWhere(
+        (element) => element.paint == null && element.offset == null);
     isPaintAdded = ActionCallback.none;
     setState(() {});
   }
@@ -574,9 +577,9 @@ abstract class ImageTextModel extends State<MyArtboard> {
     isButtonBrushClicked == ActionCallback.isButtonClicked
         ? setState(() {
             globalListObject.add(StackObject(offset: null, paint: null));
+            isPaintAdded = ActionCallback.paintAdded;
           })
         : null;
-    isPaintAdded = ActionCallback.paintAdded;
   }
 
   List<Widget> dataStack() {
