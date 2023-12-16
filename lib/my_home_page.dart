@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scrapyart_home/angel/my_artboard_feature/my_artboard.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -12,6 +13,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _current = 0;
   final CarouselController _controller = CarouselController();
+  final webGform = Uri.parse(
+      'https://docs.google.com/forms/d/e/1FAIpQLSegm8cSPt1vqP_XOnmgir6Q6tKIMua3kgeQVrM0_UE0T8nukg/viewform?usp=sf_link');
 
   final List<String> imgList = [
     'lib/assets/iklan1.png',
@@ -165,17 +168,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           const SizedBox(
                               height: 3), // Space between icon and text
                           const Text("Ngescrap"),
-                          // const Padding(
-                          //   padding: EdgeInsets.only(
-                          //     left: 90,
-                          //     right: 10,
-                          //     top: 0.1,
-                          //   ), // Adjust text position
-                          //   child: Text(
-                          //     'Ngescrap',
-                          //     style: TextStyle(fontSize: 10),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
@@ -194,24 +186,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         const SizedBox(
                             height: 3), // Space between icon and text
                         const Text("Ngetemplate"),
-                        // const Padding(
-                        //   padding: EdgeInsets.only(
-                        //     left: 50,
-                        //     right: 10,
-                        //     top: 0.4,
-                        //   ), // Adjust text position
-                        //   child: Text(
-                        //     'Ngetemplate',
-                        //     style: TextStyle(fontSize: 10),
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      // open ngeorder
-                    },
+                    // open ngeorder ke gform pemesanan
+                    onTap: () => setState(() {
+                      launchUrl(
+                        webGform,
+                        mode: LaunchMode.externalApplication,
+                      );
+                    }),
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 11),
                       child: Column(
@@ -224,17 +209,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           const SizedBox(
                               height: 3), // Space between icon and text
                           const Text("Ngeorder"),
-                          // const Padding(
-                          //   padding: EdgeInsets.only(
-                          //     left: 90,
-                          //     right: 10,
-                          //     top: 0.1,
-                          //   ), // Adjust text position
-                          //   child: Text(
-                          //     'Ngeorder',
-                          //     style: TextStyle(fontSize: 10),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
@@ -255,17 +229,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           const SizedBox(
                               height: 3), // Space between icon and text
                           const Text("Gudangku"),
-                          // const Padding(
-                          //   padding: EdgeInsets.only(
-                          //     left: 90,
-                          //     right: 10,
-                          //     top: 0.1,
-                          //   ), // Adjust text position
-                          //   child: Text(
-                          //     'Gudangku',
-                          //     style: TextStyle(fontSize: 10),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),

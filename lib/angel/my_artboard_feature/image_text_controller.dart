@@ -128,25 +128,21 @@ abstract class ImageTextController extends ImageTextModel {
             },
           ),
         ),
-        AbsorbPointer(
-          child: IconButton(
-            iconSize: 25,
-            icon: const Icon(
-              Icons.undo,
-              color: Colors.white30,
-            ),
-            onPressed: () {},
+        IconButton(
+          iconSize: 25,
+          icon: const Icon(
+            Icons.undo,
+            color: Colors.white,
           ),
+          onPressed: () {},
         ),
-        AbsorbPointer(
-          child: IconButton(
-            iconSize: 25,
-            icon: const Icon(
-              Icons.redo,
-              color: Colors.white30,
-            ),
-            onPressed: () {},
+        IconButton(
+          iconSize: 25,
+          icon: const Icon(
+            Icons.redo,
+            color: Colors.white,
           ),
+          onPressed: () {},
         ),
       ],
     );
