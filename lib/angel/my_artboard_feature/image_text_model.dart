@@ -52,18 +52,19 @@ abstract class ImageTextModel extends State<MyArtboard> {
   CroppedFile? croppedFile;
   Color brushColor = Colors.black;
   Color canvasColor = Colors.white;
+  double brushStrokeWidth = 10.0;
+  int currentIndex = 0;
+  double widthContainerRender = 0;
+  double heightContainerRender = 0;
+  double canvasWidth = 0.0;
+  double canvasHeight = 0.0;
+  Offset tapPosition = Offset.zero;
   ScreenshotController screenshotController = ScreenshotController();
   TextEditingController newTextController = TextEditingController();
   TextEditingController textEditingController = TextEditingController();
   TextEditingController textColorController = TextEditingController(
       text:
           'FF000000'); // The initial value can be provided directly to the controller.
-  Offset tapPosition = Offset.zero;
-  int currentIndex = 0;
-  double widthContainerRender = 0;
-  double heightContainerRender = 0;
-  double canvasWidth = 0.0;
-  double canvasHeight = 0.0;
   ActionCallback isButtonClicked = ActionCallback.none;
   ActionCallback isButtonBrushClicked = ActionCallback.none;
   ActionCallback isTextAdded = ActionCallback.none;
@@ -535,6 +536,34 @@ abstract class ImageTextModel extends State<MyArtboard> {
 
   void changeCanvasColor(Color color) => setState(() => canvasColor = color);
 
+  void increaseBrushStrokeWidth(BuildContext context) {
+    setState(() {
+      brushStrokeWidth += 1;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          "Stroke Width : $brushStrokeWidth",
+          style: const TextStyle(fontSize: 16),
+        ),
+      ),
+    );
+  }
+
+  void decreaseBrushStrokeWidth(BuildContext context) {
+    setState(() {
+      brushStrokeWidth = max(0.5, brushStrokeWidth -= 1);
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          "Stroke Width : $brushStrokeWidth",
+          style: const TextStyle(fontSize: 16),
+        ),
+      ),
+    );
+  }
+
   bool isObjectEmpty() {
     if (globalListObject.isEmpty) {
       return true;
@@ -551,7 +580,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
               paint: Paint()
                 ..color = brushColor
                 ..isAntiAlias = true
-                ..strokeWidth = 10.0
+                ..strokeWidth = brushStrokeWidth
                 ..strokeCap = StrokeCap.round,
             ));
           })
@@ -566,7 +595,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
               paint: Paint()
                 ..color = brushColor
                 ..isAntiAlias = true
-                ..strokeWidth = 10.0
+                ..strokeWidth = brushStrokeWidth
                 ..strokeCap = StrokeCap.round,
             ));
           })

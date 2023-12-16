@@ -523,6 +523,8 @@ abstract class ImageTextController extends ImageTextModel {
         const Expanded(
           child: SizedBox(),
         ),
+
+        /// brush on/off
         Container(
           decoration: isButtonBrushClicked == ActionCallback.isButtonClicked
               ? BoxDecoration(
@@ -546,6 +548,8 @@ abstract class ImageTextController extends ImageTextModel {
             ),
           ),
         ),
+
+        /// select color
         AbsorbPointer(
           absorbing: isButtonBrushClicked == ActionCallback.isButtonClicked
               ? false
@@ -637,6 +641,40 @@ abstract class ImageTextController extends ImageTextModel {
             ),
           ),
         ),
+
+        /// increase brush stroke width
+        AbsorbPointer(
+          absorbing: isButtonBrushClicked == ActionCallback.isButtonClicked
+              ? false
+              : true,
+          child: IconButton(
+            onPressed: () => increaseBrushStrokeWidth(context),
+            icon: Icon(
+              Icons.plus_one,
+              color: isButtonBrushClicked == ActionCallback.isButtonClicked
+                  ? Colors.black
+                  : Colors.black45,
+            ),
+          ),
+        ),
+
+        /// decrease brush stroke width
+        AbsorbPointer(
+          absorbing: isButtonBrushClicked == ActionCallback.isButtonClicked
+              ? false
+              : true,
+          child: IconButton(
+            onPressed: () => decreaseBrushStrokeWidth(context),
+            icon: Icon(
+              Icons.exposure_neg_1,
+              color: isButtonBrushClicked == ActionCallback.isButtonClicked
+                  ? Colors.black
+                  : Colors.black45,
+            ),
+          ),
+        ),
+
+        /// delete all paint
         AbsorbPointer(
           absorbing: isPaintAdded == ActionCallback.paintAdded ? false : true,
           child: IconButton(
