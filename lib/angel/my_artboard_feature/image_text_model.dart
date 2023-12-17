@@ -25,6 +25,8 @@ enum ActionCallback {
   stickerAdded,
   paintAdded,
   isButtonClicked,
+  isBrushButtonClicked,
+  isUndoButtonClicked,
   endOfBrush,
 }
 
@@ -48,17 +50,21 @@ abstract class ImageTextModel extends State<MyArtboard> {
   List<String> wallpaperFiles = [];
   List<DrawingPoint> drawingPoint = [];
   List<StackObject> globalListObject = [];
+  List<StackObject> historyGlobalListObject = [];
   File? selectedImage;
   CroppedFile? croppedFile;
   Color brushColor = Colors.black;
   Color canvasColor = Colors.white;
-  double brushStrokeWidth = 10.0;
   int currentIndex = 0;
+  int globalListObjectIndex = 0;
+  double brushStrokeWidth = 10.0;
   double widthContainerRender = 0;
   double heightContainerRender = 0;
   double canvasWidth = 0.0;
   double canvasHeight = 0.0;
   Offset tapPosition = Offset.zero;
+  bool isGlobalListObjectEmpty = true;
+  bool isHistoryGlobalListObjectEmpty = true;
   ScreenshotController screenshotController = ScreenshotController();
   TextEditingController newTextController = TextEditingController();
   TextEditingController textEditingController = TextEditingController();
@@ -66,7 +72,6 @@ abstract class ImageTextModel extends State<MyArtboard> {
       text:
           'FF000000'); // The initial value can be provided directly to the controller.
   ActionCallback isButtonClicked = ActionCallback.none;
-  ActionCallback isButtonBrushClicked = ActionCallback.none;
   ActionCallback isTextAdded = ActionCallback.none;
   ActionCallback isImageAdded = ActionCallback.none;
   ActionCallback isWallpaperAdded = ActionCallback.none;
@@ -288,6 +293,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
           image: selectedImage,
         ),
       );
+      historyGlobalListObject = List.of(globalListObject);
       isImageAdded = ActionCallback.imageAdded;
     });
   }
@@ -409,6 +415,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
             text: newTextController.text,
           ),
         );
+        historyGlobalListObject = List.of(globalListObject);
         newTextController.text = "";
         isTextAdded = ActionCallback.textAdded;
       });
@@ -566,14 +573,17 @@ abstract class ImageTextModel extends State<MyArtboard> {
 
   bool isObjectEmpty() {
     if (globalListObject.isEmpty) {
+      isGlobalListObjectEmpty = true;
       return true;
     } else {
+      isGlobalListObjectEmpty = false;
+      globalListObjectIndex = globalListObject.length;
       return false;
     }
   }
 
   brushOnPanStart(details) {
-    isButtonBrushClicked == ActionCallback.isButtonClicked
+    isButtonClicked == ActionCallback.isBrushButtonClicked
         ? setState(() {
             globalListObject.add(StackObject(
               offset: details.localPosition,
@@ -585,10 +595,11 @@ abstract class ImageTextModel extends State<MyArtboard> {
             ));
           })
         : null;
+    historyGlobalListObject = List.of(globalListObject);
   }
 
   brushOnPanUpdate(details) {
-    isButtonBrushClicked == ActionCallback.isButtonClicked
+    isButtonClicked == ActionCallback.isBrushButtonClicked
         ? setState(() {
             globalListObject.add(StackObject(
               offset: details.localPosition,
@@ -603,12 +614,43 @@ abstract class ImageTextModel extends State<MyArtboard> {
   }
 
   brushOnPanEnd(details) {
-    isButtonBrushClicked == ActionCallback.isButtonClicked
+    isButtonClicked == ActionCallback.isBrushButtonClicked
         ? setState(() {
             globalListObject.add(StackObject(offset: null, paint: null));
             isPaintAdded = ActionCallback.paintAdded;
           })
         : null;
+    historyGlobalListObject = List.of(globalListObject);
+  }
+
+  undoObject() {
+    //isButtonClicked = ActionCallback.isUndoButtonClicked;
+    // if (isGlobalListObjectEmpty) {
+    //   print("gagal");
+    // }
+    // if (isHistoryGlobalListObjectEmpty) {
+    //   historyGlobalListObject = List.of(globalListObject);
+    //   isHistoryGlobalListObjectEmpty = false;
+    //   print("sekali");
+    // }
+    if (isGlobalListObjectEmpty == false) {
+      setState(() {
+        globalListObject.removeLast();
+        globalListObjectIndex -= 1;
+      });
+      print(globalListObjectIndex);
+      print(historyGlobalListObject.length);
+    }
+  }
+
+  redoObject() {
+    if (globalListObject.length < historyGlobalListObject.length) {
+      setState(() {
+        globalListObject
+            .add(historyGlobalListObject.elementAt(globalListObjectIndex + 1));
+      });
+    }
+    print("berhasil");
   }
 
   List<Widget> dataStack() {

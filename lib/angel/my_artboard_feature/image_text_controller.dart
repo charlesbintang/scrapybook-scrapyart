@@ -18,7 +18,7 @@ abstract class ImageTextController extends ImageTextModel {
             iconSize: 25,
             icon: Icon(
               Icons.save_alt,
-              color: isObjectEmpty() == false ? Colors.green : Colors.white30,
+              color: isGlobalListObjectEmpty ? Colors.white30 : Colors.green,
             ),
             onPressed: () {
               for (var i = 0; i < globalListObject.length; i++) {
@@ -128,21 +128,27 @@ abstract class ImageTextController extends ImageTextModel {
             },
           ),
         ),
-        IconButton(
-          iconSize: 25,
-          icon: const Icon(
-            Icons.undo,
-            color: Colors.white,
+        AbsorbPointer(
+          absorbing: isGlobalListObjectEmpty,
+          child: IconButton(
+            iconSize: 25,
+            icon: Icon(
+              Icons.undo,
+              color: isGlobalListObjectEmpty ? Colors.white30 : Colors.white,
+            ),
+            onPressed: undoObject,
           ),
-          onPressed: () {},
         ),
-        IconButton(
-          iconSize: 25,
-          icon: const Icon(
-            Icons.redo,
-            color: Colors.white,
+        AbsorbPointer(
+          absorbing: isGlobalListObjectEmpty,
+          child: IconButton(
+            iconSize: 25,
+            icon: Icon(
+              Icons.redo,
+              color: isGlobalListObjectEmpty ? Colors.white30 : Colors.white,
+            ),
+            onPressed: redoObject,
           ),
-          onPressed: () {},
         ),
       ],
     );
@@ -526,23 +532,23 @@ abstract class ImageTextController extends ImageTextModel {
 
         /// brush on/off
         Container(
-          decoration: isButtonBrushClicked == ActionCallback.isButtonClicked
+          decoration: isButtonClicked == ActionCallback.isBrushButtonClicked
               ? BoxDecoration(
                   borderRadius: BorderRadius.circular(23.0),
                   color: const Color(0xFF684500))
               : null,
           child: IconButton(
             onPressed: () {
-              if (isButtonBrushClicked == ActionCallback.none) {
-                isButtonBrushClicked = ActionCallback.isButtonClicked;
+              if (isButtonClicked == ActionCallback.none) {
+                isButtonClicked = ActionCallback.isBrushButtonClicked;
               } else {
-                isButtonBrushClicked = ActionCallback.none;
+                isButtonClicked = ActionCallback.none;
               }
               setState(() {});
             },
             icon: Icon(
               Icons.brush,
-              color: isButtonBrushClicked == ActionCallback.isButtonClicked
+              color: isButtonClicked == ActionCallback.isBrushButtonClicked
                   ? Colors.white
                   : Colors.black,
             ),
@@ -551,7 +557,7 @@ abstract class ImageTextController extends ImageTextModel {
 
         /// select color
         AbsorbPointer(
-          absorbing: isButtonBrushClicked == ActionCallback.isButtonClicked
+          absorbing: isButtonClicked == ActionCallback.isBrushButtonClicked
               ? false
               : true,
           child: IconButton(
@@ -626,12 +632,12 @@ abstract class ImageTextController extends ImageTextModel {
             },
             icon: Icon(
               Icons.rectangle_rounded,
-              color: isButtonBrushClicked == ActionCallback.isButtonClicked
+              color: isButtonClicked == ActionCallback.isBrushButtonClicked
                   ? brushColor
                   : brushColor.withOpacity(0.6),
               shadows: [
                 Shadow(
-                  color: isButtonBrushClicked == ActionCallback.isButtonClicked
+                  color: isButtonClicked == ActionCallback.isBrushButtonClicked
                       ? Colors.black
                       : Colors.transparent,
                   blurRadius: 5.0,
@@ -644,14 +650,14 @@ abstract class ImageTextController extends ImageTextModel {
 
         /// increase brush stroke width
         AbsorbPointer(
-          absorbing: isButtonBrushClicked == ActionCallback.isButtonClicked
+          absorbing: isButtonClicked == ActionCallback.isBrushButtonClicked
               ? false
               : true,
           child: IconButton(
             onPressed: () => increaseBrushStrokeWidth(context),
             icon: Icon(
               Icons.plus_one,
-              color: isButtonBrushClicked == ActionCallback.isButtonClicked
+              color: isButtonClicked == ActionCallback.isBrushButtonClicked
                   ? Colors.black
                   : Colors.black45,
             ),
@@ -660,14 +666,14 @@ abstract class ImageTextController extends ImageTextModel {
 
         /// decrease brush stroke width
         AbsorbPointer(
-          absorbing: isButtonBrushClicked == ActionCallback.isButtonClicked
+          absorbing: isButtonClicked == ActionCallback.isBrushButtonClicked
               ? false
               : true,
           child: IconButton(
             onPressed: () => decreaseBrushStrokeWidth(context),
             icon: Icon(
               Icons.exposure_neg_1,
-              color: isButtonBrushClicked == ActionCallback.isButtonClicked
+              color: isButtonClicked == ActionCallback.isBrushButtonClicked
                   ? Colors.black
                   : Colors.black45,
             ),
@@ -721,6 +727,7 @@ abstract class ImageTextController extends ImageTextModel {
                   sticker: assetFiles[i],
                 ),
               );
+              historyGlobalListObject = List.of(globalListObject);
               isStickerAdded = ActionCallback.stickerAdded;
               setState(() {});
             },
