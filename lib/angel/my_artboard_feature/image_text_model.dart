@@ -294,6 +294,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
         ),
       );
       historyGlobalListObject = List.of(globalListObject);
+      isHistoryGlobalListObjectEmpty = false;
       isImageAdded = ActionCallback.imageAdded;
     });
   }
@@ -415,10 +416,11 @@ abstract class ImageTextModel extends State<MyArtboard> {
             text: newTextController.text,
           ),
         );
-        historyGlobalListObject = List.of(globalListObject);
         newTextController.text = "";
         isTextAdded = ActionCallback.textAdded;
       });
+      historyGlobalListObject = List.of(globalListObject);
+      isHistoryGlobalListObjectEmpty = false;
       Navigator.of(context).pop();
     } else {
       Navigator.of(context).pop();
@@ -492,6 +494,34 @@ abstract class ImageTextModel extends State<MyArtboard> {
         ],
       ),
     );
+  }
+
+  allAsset(List<Widget> data) {
+    for (var i = 0; i < assetFiles.length; i++) {
+      data.add(
+        IconButton(
+          onPressed: () {
+            // print("asset ke $i");
+            setState(() {
+              globalListObject.add(
+                StackObject(
+                  /// pickImageFromGallery harus menyertakan image didalamnya
+                  sticker: assetFiles[i],
+                ),
+              );
+            });
+            historyGlobalListObject = List.of(globalListObject);
+            isHistoryGlobalListObjectEmpty = false;
+            isStickerAdded = ActionCallback.stickerAdded;
+          },
+          icon: Image.asset(
+            assetFiles[i],
+            width: 25,
+            fit: BoxFit.fitWidth,
+          ),
+        ),
+      );
+    }
   }
 
   void deleteAllImages() {
@@ -596,6 +626,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
           })
         : null;
     historyGlobalListObject = List.of(globalListObject);
+    isHistoryGlobalListObjectEmpty = false;
   }
 
   brushOnPanUpdate(details) {
@@ -621,25 +652,15 @@ abstract class ImageTextModel extends State<MyArtboard> {
           })
         : null;
     historyGlobalListObject = List.of(globalListObject);
+    isHistoryGlobalListObjectEmpty = false;
   }
 
   undoObject() {
-    //isButtonClicked = ActionCallback.isUndoButtonClicked;
-    // if (isGlobalListObjectEmpty) {
-    //   print("gagal");
-    // }
-    // if (isHistoryGlobalListObjectEmpty) {
-    //   historyGlobalListObject = List.of(globalListObject);
-    //   isHistoryGlobalListObjectEmpty = false;
-    //   print("sekali");
-    // }
     if (isGlobalListObjectEmpty == false) {
       setState(() {
         globalListObject.removeLast();
         globalListObjectIndex -= 1;
       });
-      print(globalListObjectIndex);
-      print(historyGlobalListObject.length);
     }
   }
 
@@ -647,10 +668,9 @@ abstract class ImageTextModel extends State<MyArtboard> {
     if (globalListObject.length < historyGlobalListObject.length) {
       setState(() {
         globalListObject
-            .add(historyGlobalListObject.elementAt(globalListObjectIndex + 1));
+            .add(historyGlobalListObject.elementAt(globalListObjectIndex));
       });
     }
-    print("berhasil");
   }
 
   List<Widget> dataStack() {

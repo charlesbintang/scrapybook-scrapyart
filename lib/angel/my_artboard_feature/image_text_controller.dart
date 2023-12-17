@@ -129,23 +129,27 @@ abstract class ImageTextController extends ImageTextModel {
           ),
         ),
         AbsorbPointer(
-          absorbing: isGlobalListObjectEmpty,
+          absorbing: isHistoryGlobalListObjectEmpty,
           child: IconButton(
             iconSize: 25,
             icon: Icon(
               Icons.undo,
-              color: isGlobalListObjectEmpty ? Colors.white30 : Colors.white,
+              color: isHistoryGlobalListObjectEmpty
+                  ? Colors.white30
+                  : Colors.white,
             ),
             onPressed: undoObject,
           ),
         ),
         AbsorbPointer(
-          absorbing: isGlobalListObjectEmpty,
+          absorbing: isHistoryGlobalListObjectEmpty,
           child: IconButton(
             iconSize: 25,
             icon: Icon(
               Icons.redo,
-              color: isGlobalListObjectEmpty ? Colors.white30 : Colors.white,
+              color: isHistoryGlobalListObjectEmpty
+                  ? Colors.white30
+                  : Colors.white,
             ),
             onPressed: redoObject,
           ),
@@ -716,29 +720,7 @@ abstract class ImageTextController extends ImageTextModel {
       ),
     ));
     if (assetFiles.isNotEmpty) {
-      for (var i = 0; i < assetFiles.length; i++) {
-        data.add(
-          IconButton(
-            onPressed: () {
-              // print("asset ke $i");
-              globalListObject.add(
-                StackObject(
-                  /// pickImageFromGallery harus menyertakan image didalamnya
-                  sticker: assetFiles[i],
-                ),
-              );
-              historyGlobalListObject = List.of(globalListObject);
-              isStickerAdded = ActionCallback.stickerAdded;
-              setState(() {});
-            },
-            icon: Image.asset(
-              assetFiles[i],
-              width: 25,
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-        );
-      }
+      allAsset(data);
     }
     return SizedBox(
       height: double.infinity,
