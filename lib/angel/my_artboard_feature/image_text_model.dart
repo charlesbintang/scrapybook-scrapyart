@@ -65,6 +65,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
   Offset tapPosition = Offset.zero;
   bool isGlobalListObjectEmpty = true;
   bool isHistoryGlobalListObjectEmpty = true;
+  bool isEndOfHistoryGlobalListObject = true;
   ScreenshotController screenshotController = ScreenshotController();
   TextEditingController newTextController = TextEditingController();
   TextEditingController textEditingController = TextEditingController();
@@ -659,8 +660,9 @@ abstract class ImageTextModel extends State<MyArtboard> {
     if (isGlobalListObjectEmpty == false) {
       setState(() {
         globalListObject.removeLast();
-        globalListObjectIndex -= 1;
       });
+      globalListObjectIndex -= 1;
+      isEndOfHistoryGlobalListObject = false;
     }
   }
 
@@ -670,6 +672,9 @@ abstract class ImageTextModel extends State<MyArtboard> {
         globalListObject
             .add(historyGlobalListObject.elementAt(globalListObjectIndex));
       });
+    }
+    if (globalListObject.length == historyGlobalListObject.length) {
+      isEndOfHistoryGlobalListObject = true;
     }
   }
 

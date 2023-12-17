@@ -129,25 +129,23 @@ abstract class ImageTextController extends ImageTextModel {
           ),
         ),
         AbsorbPointer(
-          absorbing: isHistoryGlobalListObjectEmpty,
+          absorbing: isGlobalListObjectEmpty,
           child: IconButton(
             iconSize: 25,
             icon: Icon(
               Icons.undo,
-              color: isHistoryGlobalListObjectEmpty
-                  ? Colors.white30
-                  : Colors.white,
+              color: isGlobalListObjectEmpty ? Colors.white30 : Colors.white,
             ),
             onPressed: undoObject,
           ),
         ),
         AbsorbPointer(
-          absorbing: isHistoryGlobalListObjectEmpty,
+          absorbing: isEndOfHistoryGlobalListObject,
           child: IconButton(
             iconSize: 25,
             icon: Icon(
               Icons.redo,
-              color: isHistoryGlobalListObjectEmpty
+              color: isEndOfHistoryGlobalListObject
                   ? Colors.white30
                   : Colors.white,
             ),
