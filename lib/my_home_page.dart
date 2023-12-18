@@ -10,6 +10,9 @@ import 'package:scrapyart_home/angel/my_artboard_feature/my_artboard.dart';
 import 'package:scrapyart_home/rahmat/screens/gudangku.dart';
 
 
+import 'package:scrapyart_home/salisa/product_list_page.dart';
+
+
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -366,6 +369,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     onTap: () {
 
                       // open ngetemplate
+
+
+                      Navigator.of(context).push(
+
+                        MaterialPageRoute(
+
+                          builder: (context) => const NgeTemplate(),
+
+                        ),
+
+                      );
 
                     },
 

@@ -88,6 +88,7 @@ flutter:
     - lib/assets/
     - lib/angel/artboard_assets/
     - lib/angel/artboard_wallpaper/
+    - lib/salisa/ngetemplate/
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
