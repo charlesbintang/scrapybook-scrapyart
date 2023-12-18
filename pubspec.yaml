@@ -49,6 +49,12 @@ dependencies:
   image_cropper: ^4.0.1
   flutter_colorpicker: ^1.0.3
   url_launcher: ^6.2.2
+  firebase_storage: ^11.2.8
+  file_picker: ^5.5.0
+  transparent_image: ^2.0.1
+  cloud_firestore: ^4.10.0
+  focused_menu: ^1.0.5
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +71,11 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "lib/assets/logofix.png"
+
 flutter:
 
   # The following line ensures that the Material Icons font is

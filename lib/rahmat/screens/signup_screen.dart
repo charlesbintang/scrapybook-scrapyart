@@ -1,23 +1,26 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:scrapyart_home/rahmat/reusable_widget/reusable_widget.dart';
 import 'package:scrapyart_home/rahmat/screens/signin_screen.dart';
 import 'package:scrapyart_home/rahmat/utils/colors.dart';
-import 'package:scrapyart_home/rahmat/reusable_widget/reusable_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  SignUpScreenState createState() => SignUpScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _confirmpasswordTextController =
       TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _userNameTextController = TextEditingController();
-  final TextEditingController _nameTextController = TextEditingController();
+  final TextEditingController _NameTextController = TextEditingController();
+  final TextEditingController _ProfileTextController = TextEditingController();
+  final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +66,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                   height: 20,
                 ),
                 reusableTextField(
-                    "Name", Icons.person_outline, false, _nameTextController),
+                    "Name", Icons.person_outline, false, _NameTextController),
                 const SizedBox(height: 10),
 
                 // name
@@ -154,31 +157,72 @@ class SignUpScreenState extends State<SignUpScreen> {
                     _confirmpasswordTextController),
                 const SizedBox(height: 10),
 
-                firebaseUIButton(context, "Sign Up", () {
-                  if (_passwordTextController.text ==
-                      _confirmpasswordTextController.text) {
-                    FirebaseAuth.instance
-                        .createUserWithEmailAndPassword(
-                            email: _emailTextController.text,
-                            password: _passwordTextController.text)
-                        .then((value) {
+                firebaseUIButton(context, "Sign Up", () async {
+                  if (_userNameTextController.text.isNotEmpty &&
+                      _emailTextController.text.isNotEmpty &&
+                      _passwordTextController.text.isNotEmpty &&
+                      _confirmpasswordTextController.text.isNotEmpty) {
+                    if (_passwordTextController.text ==
+                        _confirmpasswordTextController.text) {
+                      // Melanjutkan pendaftaran
+                      UserCredential userCredential = await FirebaseAuth
+                          .instance
+                          .createUserWithEmailAndPassword(
+                        email: _emailTextController.text,
+                        password: _passwordTextController.text,
+                      );
+
+                      await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(userCredential.user!.email)
+                          .set({
+                        //'username': userNameTextController.text,
+                        'username': _emailTextController.text.split('@')[0],
+                        'email': _emailTextController.text,
+                        'password': _passwordTextController.text,
+                        'uid': auth.currentUser!.uid,
+                        'createdAt': DateTime.now(),
+                        'profile': _ProfileTextController.text,
+                      });
+
+                      print("Created New Account");
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignInScreen()));
-                    }).onError((error, stackTrace) {});
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignInScreen()),
+                      );
+                    } else {
+                      // Kata sandi dan konfirmasi kata sandi tidak cocok
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text("Error"),
+                            content: Text(
+                                "Password and Confirm Password do not match."),
+                            actions: [
+                              TextButton(
+                                child: Text("Close"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   } else {
-                    // Kata sandi dan konfirmasi kata sandi tidak cocok
+                    // Menampilkan pesan kesalahan jika ada bidang yang kosong
                     showDialog(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: const Text("Kesalahan"),
-                          content: const Text(
-                              "Kata sandi dan konfirmasi kata sandi tidak cocok."),
+                          title: Text("Error"),
+                          content: Text("Please fill in all fields."),
                           actions: [
                             TextButton(
-                              child: const Text("Tutup"),
+                              child: Text("Close"),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },

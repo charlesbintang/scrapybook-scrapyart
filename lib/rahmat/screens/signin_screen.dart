@@ -1,6 +1,7 @@
+import 'package:scrapyart_home/rahmat/screens/forgot_passwordpage.dart';
+import 'package:scrapyart_home/rahmat/screens/upload.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scrapyart_home/rahmat/reusable_widget/reusable_widget.dart';
-import 'package:scrapyart_home/rahmat/screens/home_screen.dart';
 import 'package:scrapyart_home/rahmat/screens/signup_screen.dart';
 import 'package:scrapyart_home/rahmat/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +11,10 @@ class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
 
   @override
-  SignInScreenState createState() => SignInScreenState();
+  _SignInScreenState createState() => _SignInScreenState();
 }
 
-class SignInScreenState extends State<SignInScreen> {
+class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
 
@@ -34,9 +35,9 @@ class SignInScreenState extends State<SignInScreen> {
                 20, MediaQuery.of(context).size.height * 0.2, 20, 0),
             child: Column(
               children: <Widget>[
-                logoWidget("lib/assets/logo.png"),
+                logoWidget("assets/images/logos.png"),
                 const SizedBox(
-                  height: 30,
+                  height: 35,
                 ),
                 reusableTextField("Enter UserName", Icons.person_outline, false,
                     _emailTextController),
@@ -58,8 +59,11 @@ class SignInScreenState extends State<SignInScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const HomeScreen()));
-                  }).onError((error, stackTrace) {});
+                            builder: (context) => const UploadScreen()));
+                    print("berhasil login");
+                  }).onError((error, stackTrace) {
+                    print("Error ${error.toString()}");
+                  });
                 }),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -92,20 +96,19 @@ class SignInScreenState extends State<SignInScreen> {
               PermissionStatus cameraStatus = await Permission.camera.request();
 
               if (cameraStatus == PermissionStatus.granted) {
-                // ignore: use_build_context_synchronously
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text("This permission is granted.")));
               }
               if (cameraStatus == PermissionStatus.denied) {
-                // ignore: use_build_context_synchronously
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text("This permission is recommened.")));
               }
               if (cameraStatus == PermissionStatus.permanentlyDenied) {
                 openAppSettings();
               }
+              print("Logo taped");
             },
-            child: iconWidget("lib/assets/google_logo.png")),
+            child: iconWidget("assets/images/google_logo.png")),
         const SizedBox(
           height: 5,
         ),
@@ -139,7 +142,16 @@ class SignInScreenState extends State<SignInScreen> {
       height: 35,
       alignment: Alignment.bottomRight,
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return ForgotPasswordPage();
+              },
+            ),
+          );
+        },
         child: const Text(
           "Forgot Password?",
           style: TextStyle(color: Colors.white70),

@@ -6,10 +6,10 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  HomeScreenState createState() => HomeScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,6 +18,7 @@ class HomeScreenState extends State<HomeScreen> {
           child: const Text("Logout"),
           onPressed: () {
             FirebaseAuth.instance.signOut().then((value) {
+              print("Signed Out");
               Navigator.push(
                   context,
                   MaterialPageRoute(

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "859100727065",
+    "project_id": "scrapyart-79035",
+    "storage_bucket": "scrapyart-79035.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859100727065:android:65b1df3e752c52a521a788",
+        "android_client_info": {
+          "package_name": "com.example.scrapyart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6OhHOhi6GnRFB1rVS0wNZ2Llm6iTgHw0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
