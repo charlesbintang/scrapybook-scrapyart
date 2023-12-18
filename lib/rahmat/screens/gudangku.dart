@@ -45,7 +45,7 @@ class _GudangkuScreenState extends State<GudangkuScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile"),
+        title: const Text("Gudangku"),
         backgroundColor: const Color.fromARGB(255, 187, 166, 147),
       ),
       body: StreamBuilder<DocumentSnapshot>(
@@ -135,17 +135,17 @@ class _GudangkuScreenState extends State<GudangkuScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text(
-                    "gudangku",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.normal,
-                      color: Color.fromARGB(255, 173, 171, 171),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  // const Text(
+                  //   "gudangku",
+                  //   style: TextStyle(
+                  //     fontSize: 15,
+                  //     fontWeight: FontWeight.normal,
+                  //     color: Color.fromARGB(255, 173, 171, 171),
+                  //   ),
+                  // ),
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
                   Expanded(
                     child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
@@ -205,9 +205,7 @@ class _GudangkuScreenState extends State<GudangkuScreen> {
                                               ),
                                             ),
                                           ],
-                                          child: Container(
-                                            child: Image.network(thumbnailUrl),
-                                          ),
+                                          child: Image.network(thumbnailUrl),
                                         );
                                       },
                                     );
@@ -237,20 +235,20 @@ class _GudangkuScreenState extends State<GudangkuScreen> {
           }
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle_outlined),
-          label: 'Profile',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          label: 'Scrapy Art',
-        ),
-      ]),
+      // bottomNavigationBar: BottomNavigationBar(items: const [
+      //   BottomNavigationBarItem(
+      //     icon: Icon(Icons.home),
+      //     label: 'Home',
+      //   ),
+      //   BottomNavigationBarItem(
+      //     icon: Icon(Icons.account_circle_outlined),
+      //     label: 'Profile',
+      //   ),
+      //   BottomNavigationBarItem(
+      //     icon: Icon(Icons.settings),
+      //     label: 'Scrapy Art',
+      //   ),
+      // ]),
     );
   }
 
