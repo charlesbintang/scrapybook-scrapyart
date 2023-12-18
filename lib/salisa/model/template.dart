@@ -6,11 +6,16 @@ class Template {
   final String image;
 
 
+  final int placeholder;
+
+
   Template({
 
     required this.category,
 
     required this.image,
+
+    required this.placeholder,
 
   });
 
@@ -19,13 +24,37 @@ class Template {
 
 List<Template> templateList = [
 
-  Template(category: 'animals', image: 'lib/salisa/ngetemplate/1_animals.png'),
+  Template(
 
-  Template(category: 'vintage', image: 'lib/salisa/ngetemplate/2_vintage.png'),
+      category: 'animals',
 
-  Template(category: 'vintage', image: 'lib/salisa/ngetemplate/3_vintage.png'),
+      image: 'lib/salisa/ngetemplate_assets/1_animals.png',
 
-  Template(category: 'modren', image: 'lib/salisa/ngetemplate/2_modren.png'),
+      placeholder: 2),
+
+  Template(
+
+      category: 'vintage',
+
+      image: 'lib/salisa/ngetemplate_assets/2_vintage.png',
+
+      placeholder: 5),
+
+  Template(
+
+      category: 'vintage',
+
+      image: 'lib/salisa/ngetemplate_assets/3_vintage.png',
+
+      placeholder: 2),
+
+  Template(
+
+      category: 'modren',
+
+      image: 'lib/salisa/ngetemplate_assets/2_modren.png',
+
+      placeholder: 4),
 
 ];
 
