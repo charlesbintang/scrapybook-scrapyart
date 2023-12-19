@@ -257,7 +257,7 @@ class _GudangkuScreenState extends State<GudangkuScreen> {
           backgroundColor: Colors.grey[900],
           title: Text(
             "Edit $field",
-            style: const TextStyle(color: Colors.white),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           content: TextFormField(
             autofocus: true,

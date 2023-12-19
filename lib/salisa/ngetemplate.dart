@@ -29,8 +29,10 @@ class NgeTemplateState extends State<NgeTemplate> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('NgeTemplate'),
+          title: Text('NgeTemplate',
+              style: Theme.of(context).textTheme.titleLarge),
           centerTitle: true,
+          backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Column(
           children: [
