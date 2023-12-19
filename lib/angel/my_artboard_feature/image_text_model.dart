@@ -564,8 +564,8 @@ abstract class ImageTextModel extends State<MyArtboard> {
     globalListObject.removeWhere((element) =>
         element.paint == null &&
         element.offset == null &&
-        element.sticker.isEmpty &&
         element.text.isEmpty &&
+        element.sticker.isEmpty &&
         element.image == null);
     isPaintAdded = ActionCallback.none;
     setState(() {});
