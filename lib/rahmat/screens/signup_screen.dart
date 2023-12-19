@@ -32,6 +32,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         title: const Text("Create An Account",
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center),
+        leading: const BackButton(
+          style: ButtonStyle(
+              iconColor: MaterialStatePropertyAll(Color(0xFF684500))),
+        ),
       ),
       body: Container(
           width: MediaQuery.of(context).size.width,

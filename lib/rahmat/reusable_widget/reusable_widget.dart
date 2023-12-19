@@ -5,7 +5,7 @@ Image logoWidget(String imageName) {
     imageName,
     fit: BoxFit.fitWidth,
     width: 400,
-    height: 400,
+    height: 320,
   );
 }
 

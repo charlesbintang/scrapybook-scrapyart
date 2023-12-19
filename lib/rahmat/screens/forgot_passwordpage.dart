@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({Key? key});
+  const ForgotPasswordPage({super.key});
 
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
@@ -36,11 +36,26 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(
-                  10, MediaQuery.of(context).size.height * 0.1, 20, 0),
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: Column(
                 children: <Widget>[
-                  logoWidget("assets/images/logo.png"),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      BackButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: const ButtonStyle(
+                          iconColor: MaterialStatePropertyAll(
+                            Color(0xFF684500),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  logoWidget("lib/assets/logofix.png"),
                   const SizedBox(
                     height: 30,
                   ),

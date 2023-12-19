@@ -46,8 +46,8 @@ class _GudangkuScreenState extends State<GudangkuScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Gudangku"),
-        backgroundColor: const Color.fromARGB(255, 187, 166, 147),
+        title: const Text("Gudangku", style: TextStyle(color: Colors.white)),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
