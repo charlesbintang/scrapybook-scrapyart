@@ -80,11 +80,8 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
   ActionCallback isPaintAdded = ActionCallback.none;
 
   @override
-  // function yang langsung dijalankan setelah masuk ke dalam halaman MyArtboard
   void initState() {
     super.initState();
-    // getWallpaperFiles();
-    getAssetFiles();
     globalListObject.add(
       StackObject(
         template: TemplateBoard(
@@ -94,8 +91,8 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
         ).assetImage,
       ),
     );
-    print("initState");
-    // selectedWallpaper = TemplateBoard(assetImage: widget.assetImage).assetImage;
+    getAssetFiles();
+    initStateDone();
   }
 
   Future<void> getAssetFiles() async {
@@ -110,18 +107,6 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
     setState(() {});
   }
 
-  // Future<void> getWallpaperFiles() async {
-  //   final manifestContent = await rootBundle.loadString('AssetManifest.json');
-  //   final Map<String, dynamic> manifestMap = json.decode(manifestContent);
-
-  //   final wallpaperPaths = manifestMap.keys
-  //       .where((String key) => key.startsWith('lib/angel/artboard_wallpaper/'))
-  //       .toList();
-
-  //   wallpaperFiles = List<String>.from(wallpaperPaths);
-  //   setState(() {});
-  // }
-
   void getTapPosition(TapDownDetails tapPostion) {
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
     setState(() {
@@ -134,6 +119,21 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
         GlobalObjectKey(i).currentContext!.findRenderObject() as RenderBox;
     widthContainerRender = box.size.width;
     heightContainerRender = box.size.height;
+    setState(() {});
+  }
+
+  Future<void> initStateDone() async {
+    await Future.delayed(
+      const Duration(milliseconds: 100),
+      () => getSizeOfTheCanvas("utama"),
+    );
+  }
+
+  void getSizeOfTheCanvas(String string) {
+    final RenderBox box =
+        GlobalObjectKey(string).currentContext!.findRenderObject() as RenderBox;
+    canvasWidth = box.size.width;
+    canvasHeight = box.size.height;
     setState(() {});
   }
 
@@ -662,6 +662,205 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
     List<Widget> data = [];
     for (var i = 0; i < globalListObject.length; i++) {
       ///
+      /// Template image
+      ///
+      if (globalListObject[i].template.isNotEmpty) {
+        var objectOnCurrentIndex = globalListObject[i];
+        data.addAll([
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Container(
+              // key: GlobalObjectKey(i),
+              width: canvasWidth,
+              height: canvasHeight,
+              // transformAlignment: Alignment.center,
+              // transform: Matrix4.rotationZ(
+              //     objectOnCurrentIndex.rotateValue / 180 * pi),
+              decoration: BoxDecoration(
+                borderRadius: objectOnCurrentIndex.boxRound ==
+                        OnAction.isRounded
+                    ? BorderRadius.circular(objectOnCurrentIndex.boxRoundValue)
+                    : null,
+                image: objectOnCurrentIndex.croppedFile == null
+                    ? DecorationImage(
+                        image: AssetImage(objectOnCurrentIndex.template),
+                        fit: BoxFit.fill)
+                    : DecorationImage(
+                        image: FileImage(
+                          File(objectOnCurrentIndex.croppedFile!.path),
+                        ),
+                      ),
+              ),
+            ),
+            // child: Stack(
+            //   children: [
+            //     Positioned(
+            //       left: 0,
+            //       top: 0,
+            //       child: Container(
+            //         width: objectOnCurrentIndex.imageWidth - 20,
+            //         height: objectOnCurrentIndex.imageHeight - 20,
+            //         decoration: BoxDecoration(
+            //           borderRadius:
+            //               objectOnCurrentIndex.boxRound == OnAction.isRounded
+            //                   ? BorderRadius.circular(
+            //                       objectOnCurrentIndex.boxRoundValue)
+            //                   : null,
+            //           image: objectOnCurrentIndex.croppedFile == null
+            //               ? DecorationImage(
+            //                   image:
+            //                       AssetImage(objectOnCurrentIndex.template),
+            //                   fit: BoxFit.fill)
+            //               : DecorationImage(
+            //                   image: FileImage(
+            //                     File(objectOnCurrentIndex.croppedFile!.path),
+            //                   ),
+            //                 ),
+            //           border:
+            //               objectOnCurrentIndex.onClicked == OnAction.isClicked
+            //                   ? Border.all(color: Colors.blueAccent, width: 2)
+            //                   : null,
+            //         ),
+            //         child: GestureDetector(
+            //           onTapDown: (position) {
+            //             getTapPosition(position);
+            //             getSizeOfTheBox(i);
+            //           },
+            //           onTap: () {
+            //             if (objectOnCurrentIndex.onClicked ==
+            //                 OnAction.isFalse) {
+            //               setState(() {
+            //                 for (var i = 0;
+            //                     i < globalListObject.length;
+            //                     i++) {
+            //                   var objectOnCurrentIndex = globalListObject[i];
+            //                   objectOnCurrentIndex.onClicked =
+            //                       OnAction.isFalse;
+            //                 }
+            //                 objectOnCurrentIndex.onClicked =
+            //                     OnAction.isClicked;
+            //               });
+            //             } else if (objectOnCurrentIndex.onClicked ==
+            //                 OnAction.isClicked) {
+            //               objectOnCurrentIndex.onClicked = OnAction.isFalse;
+            //             }
+            //           },
+            //           onLongPress: () {
+            //             moveImage(i).then((value) {
+            //               setState(() {});
+            //             });
+            //           },
+            //         ),
+            //       ),
+            //     ),
+
+            //     ///
+            //     /// tombol resize image
+            //     ///
+            //     Positioned(
+            //       top: 0,
+            //       left: 0,
+            //       child: SizedBox(
+            //         width: objectOnCurrentIndex.imageWidth - 20,
+            //         height: objectOnCurrentIndex.imageHeight - 20,
+            //         child: Column(
+            //           children: [
+            //             const Expanded(child: SizedBox()),
+            //             Row(
+            //               mainAxisAlignment: MainAxisAlignment.start,
+            //               children: [
+            //                 const Expanded(child: SizedBox()),
+            //                 objectOnCurrentIndex.onClicked ==
+            //                         OnAction.isClicked
+            //                     ? GestureDetector(
+            //                         onPanUpdate: (details) {
+            //                           getSizeOfTheBox(i);
+
+            //                           objectOnCurrentIndex.imageHeight = max(
+            //                               70,
+            //                               objectOnCurrentIndex.imageHeight +
+            //                                   details.delta.dy);
+            //                           objectOnCurrentIndex.imageWidth = max(
+            //                               90,
+            //                               objectOnCurrentIndex.imageWidth +
+            //                                   details.delta.dx);
+            //                           setState(() {});
+            //                         },
+            //                         child: const Stack(
+            //                           alignment: Alignment.center,
+            //                           children: [
+            //                             Icon(
+            //                               Icons.circle,
+            //                               color: Colors.white,
+            //                               size: 25,
+            //                             ),
+            //                             Icon(
+            //                               Icons.circle,
+            //                               color: Colors.blueAccent,
+            //                               size: 15,
+            //                             ),
+            //                           ],
+            //                         ),
+            //                       )
+            //                     : const SizedBox(),
+            //               ],
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+
+            //     ///
+            //     /// tombol scaling image
+            //     ///
+            //     Positioned(
+            //       right: 0,
+            //       bottom: 0,
+            //       child: objectOnCurrentIndex.onClicked == OnAction.isClicked
+            //           ? GestureDetector(
+            //               onHorizontalDragUpdate: (details) {
+            //                 objectOnCurrentIndex.imageWidth = max(
+            //                     90,
+            //                     objectOnCurrentIndex.imageWidth +
+            //                         details.delta.dx);
+            //                 objectOnCurrentIndex.imageHeight = max(
+            //                     70,
+            //                     objectOnCurrentIndex.imageHeight +
+            //                         details.delta.dx);
+            //                 getSizeOfTheBox(i);
+            //                 setState(() {});
+            //               },
+            //               onVerticalDragUpdate: (details) {
+            //                 objectOnCurrentIndex.imageWidth = max(
+            //                     90,
+            //                     objectOnCurrentIndex.imageWidth +
+            //                         details.delta.dy);
+            //                 objectOnCurrentIndex.imageHeight = max(
+            //                     70,
+            //                     objectOnCurrentIndex.imageHeight +
+            //                         details.delta.dy);
+            //                 getSizeOfTheBox(i);
+            //                 setState(() {});
+            //               },
+            //               child: Transform.rotate(
+            //                 angle: 45 / 180 * pi,
+            //                 child: const Icon(
+            //                   Icons.arrow_forward_ios,
+            //                   color: Colors.blueAccent,
+            //                   size: 30,
+            //                 ),
+            //               ),
+            //             )
+            //           : const SizedBox(),
+            //     ),
+            //   ],
+            // ),
+          ),
+        ]);
+      }
+
+      ///
       /// images
       ///
       if (globalListObject[i].image != null) {
@@ -982,272 +1181,6 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                               ? DecorationImage(
                                   image:
                                       AssetImage(objectOnCurrentIndex.sticker),
-                                  fit: BoxFit.fill)
-                              : DecorationImage(
-                                  image: FileImage(
-                                    File(
-                                        objectOnCurrentIndex.croppedFile!.path),
-                                  ),
-                                ),
-                          border: objectOnCurrentIndex.onClicked ==
-                                  OnAction.isClicked
-                              ? Border.all(color: Colors.blueAccent, width: 2)
-                              : null,
-                        ),
-                        child: GestureDetector(
-                          onTapDown: (position) {
-                            getTapPosition(position);
-                            getSizeOfTheBox(i);
-                          },
-                          onTap: () {
-                            if (objectOnCurrentIndex.onClicked ==
-                                OnAction.isFalse) {
-                              setState(() {
-                                for (var i = 0;
-                                    i < globalListObject.length;
-                                    i++) {
-                                  var objectOnCurrentIndex =
-                                      globalListObject[i];
-                                  objectOnCurrentIndex.onClicked =
-                                      OnAction.isFalse;
-                                }
-                                objectOnCurrentIndex.onClicked =
-                                    OnAction.isClicked;
-                              });
-                            } else if (objectOnCurrentIndex.onClicked ==
-                                OnAction.isClicked) {
-                              objectOnCurrentIndex.onClicked = OnAction.isFalse;
-                            }
-                          },
-                          onLongPress: () {
-                            moveImage(i).then((value) {
-                              setState(() {});
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-
-                    ///
-                    /// tombol resize image
-                    ///
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      child: SizedBox(
-                        width: objectOnCurrentIndex.imageWidth - 20,
-                        height: objectOnCurrentIndex.imageHeight - 20,
-                        child: Column(
-                          children: [
-                            const Expanded(child: SizedBox()),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Expanded(child: SizedBox()),
-                                objectOnCurrentIndex.onClicked ==
-                                        OnAction.isClicked
-                                    ? GestureDetector(
-                                        onPanUpdate: (details) {
-                                          getSizeOfTheBox(i);
-
-                                          objectOnCurrentIndex.imageHeight =
-                                              max(
-                                                  70,
-                                                  objectOnCurrentIndex
-                                                          .imageHeight +
-                                                      details.delta.dy);
-                                          objectOnCurrentIndex.imageWidth = max(
-                                              90,
-                                              objectOnCurrentIndex.imageWidth +
-                                                  details.delta.dx);
-                                          setState(() {});
-                                        },
-                                        child: const Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.circle,
-                                              color: Colors.white,
-                                              size: 25,
-                                            ),
-                                            Icon(
-                                              Icons.circle,
-                                              color: Colors.blueAccent,
-                                              size: 15,
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : const SizedBox(),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    ///
-                    /// tombol scaling image
-                    ///
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child:
-                          objectOnCurrentIndex.onClicked == OnAction.isClicked
-                              ? GestureDetector(
-                                  onHorizontalDragUpdate: (details) {
-                                    objectOnCurrentIndex.imageWidth = max(
-                                        90,
-                                        objectOnCurrentIndex.imageWidth +
-                                            details.delta.dx);
-                                    objectOnCurrentIndex.imageHeight = max(
-                                        70,
-                                        objectOnCurrentIndex.imageHeight +
-                                            details.delta.dx);
-                                    getSizeOfTheBox(i);
-                                    setState(() {});
-                                  },
-                                  onVerticalDragUpdate: (details) {
-                                    objectOnCurrentIndex.imageWidth = max(
-                                        90,
-                                        objectOnCurrentIndex.imageWidth +
-                                            details.delta.dy);
-                                    objectOnCurrentIndex.imageHeight = max(
-                                        70,
-                                        objectOnCurrentIndex.imageHeight +
-                                            details.delta.dy);
-                                    getSizeOfTheBox(i);
-                                    setState(() {});
-                                  },
-                                  child: Transform.rotate(
-                                    angle: 45 / 180 * pi,
-                                    child: const Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Colors.blueAccent,
-                                      size: 30,
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          ///
-          /// tombol untuk crop, rotate, dan border image
-          ///
-          Positioned(
-            top: objectOnCurrentIndex.top,
-            left: objectOnCurrentIndex.left,
-            width: widthContainerRender + 1,
-            height: heightContainerRender * 235 / 100,
-            child: objectOnCurrentIndex.onClicked == OnAction.isClicked
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Expanded(child: SizedBox()),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                        child: GestureDetector(
-                          onHorizontalDragUpdate: (details) {
-                            objectOnCurrentIndex.rotateValue -=
-                                details.delta.dx;
-                            objectOnCurrentIndex.rotateValue %= 360;
-                            setState(() {});
-                          },
-                          onVerticalDragUpdate: (details) {
-                            objectOnCurrentIndex.rotateValue -=
-                                details.delta.dy;
-                            objectOnCurrentIndex.rotateValue %= 360;
-                            setState(() {});
-                          },
-                          child: const Icon(
-                            Icons.autorenew,
-                            color: Colors.blueAccent,
-                            size: 30,
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          if (objectOnCurrentIndex.boxRound ==
-                              OnAction.isRounded) {
-                            objectOnCurrentIndex.boxRoundValue = 15.0;
-                            objectOnCurrentIndex.boxRound = OnAction.isFalse;
-                          } else {
-                            objectOnCurrentIndex.boxRoundValue = 15.0;
-                            objectOnCurrentIndex.boxRound = OnAction.isRounded;
-                          }
-                          setState(() {});
-                        },
-                        onHorizontalDragUpdate: (details) {
-                          objectOnCurrentIndex.boxRoundValue = max(
-                              10,
-                              objectOnCurrentIndex.boxRoundValue +
-                                  details.delta.dx);
-                          setState(() {});
-                        },
-                        child: const Icon(
-                          Icons.border_all_rounded,
-                          color: Colors.blueAccent,
-                          size: 25,
-                        ),
-                      ),
-                      const Expanded(child: SizedBox()),
-                    ],
-                  )
-                : const SizedBox(),
-          ),
-        ]);
-      }
-
-      ///
-      /// Template image
-      ///
-      if (globalListObject[i].template.isNotEmpty) {
-        var objectOnCurrentIndex = globalListObject[i];
-        data.addAll([
-          Positioned(
-            top: objectOnCurrentIndex.top,
-            left: objectOnCurrentIndex.left,
-            child: GestureDetector(
-              onPanUpdate: objectOnCurrentIndex.onClicked == OnAction.isFalse
-                  ? (details) {
-                      objectOnCurrentIndex.top =
-                          objectOnCurrentIndex.top + details.delta.dy;
-                      objectOnCurrentIndex.left =
-                          objectOnCurrentIndex.left + details.delta.dx;
-                      setState(() {});
-                    }
-                  : null,
-              child: Container(
-                key: GlobalObjectKey(i),
-                width: objectOnCurrentIndex.imageWidth,
-                height: objectOnCurrentIndex.imageHeight,
-                transformAlignment: Alignment.center,
-                transform: Matrix4.rotationZ(
-                    objectOnCurrentIndex.rotateValue / 180 * pi),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: 0,
-                      top: 0,
-                      child: Container(
-                        width: objectOnCurrentIndex.imageWidth - 20,
-                        height: objectOnCurrentIndex.imageHeight - 20,
-                        decoration: BoxDecoration(
-                          borderRadius: objectOnCurrentIndex.boxRound ==
-                                  OnAction.isRounded
-                              ? BorderRadius.circular(
-                                  objectOnCurrentIndex.boxRoundValue)
-                              : null,
-                          image: objectOnCurrentIndex.croppedFile == null
-                              ? DecorationImage(
-                                  image:
-                                      AssetImage(objectOnCurrentIndex.template),
                                   fit: BoxFit.fill)
                               : DecorationImage(
                                   image: FileImage(
