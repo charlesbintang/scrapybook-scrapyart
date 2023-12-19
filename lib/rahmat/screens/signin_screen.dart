@@ -66,19 +66,6 @@ class _SignInScreenState extends State<SignInScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    BackButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: const ButtonStyle(
-                        iconColor: MaterialStatePropertyAll(
-                          Color(0xFF684500),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 logoWidget("lib/assets/logofix.png"),
                 const SizedBox(
                   height: 35,

@@ -243,7 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onTap: () => setState(() {
                       launchUrl(
                         webGform,
-                        mode: LaunchMode.externalApplication,
+                        mode: LaunchMode.inAppWebView,
                       );
                     }),
 
