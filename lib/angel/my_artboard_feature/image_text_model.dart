@@ -66,6 +66,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
   bool isGlobalListObjectEmpty = true;
   bool isHistoryGlobalListObjectEmpty = true;
   bool isEndOfHistoryGlobalListObject = true;
+  bool onlyOnce = true;
   ScreenshotController screenshotController = ScreenshotController();
   TextEditingController newTextController = TextEditingController();
   TextEditingController textEditingController = TextEditingController();
@@ -497,6 +498,13 @@ abstract class ImageTextModel extends State<MyArtboard> {
     );
   }
 
+  Future<void> buildText(BuildContext context, index) async {
+    await Future.delayed(
+      const Duration(milliseconds: 100),
+      () => setCurrentIndex(context, index),
+    );
+  }
+
   allAsset(List<Widget> data) {
     for (var i = 0; i < assetFiles.length; i++) {
       data.add(
@@ -553,8 +561,12 @@ abstract class ImageTextModel extends State<MyArtboard> {
   void deleteAllPaint() {
     globalListObject.removeWhere(
         (element) => element.paint != null && element.offset != null);
-    globalListObject.removeWhere(
-        (element) => element.paint == null && element.offset == null);
+    globalListObject.removeWhere((element) =>
+        element.paint == null &&
+        element.offset == null &&
+        element.sticker.isEmpty &&
+        element.text.isEmpty &&
+        element.image == null);
     isPaintAdded = ActionCallback.none;
     setState(() {});
   }
@@ -1209,6 +1221,7 @@ abstract class ImageTextModel extends State<MyArtboard> {
       }
       // texts
       if (globalListObject[i].text.isNotEmpty) {
+        // Future.delayed(Duration(milliseconds: 100)(){});
         data.add(
           Positioned(
             left: globalListObject[i].left,
@@ -1243,6 +1256,12 @@ abstract class ImageTextModel extends State<MyArtboard> {
             ),
           ),
         );
+        if (onlyOnce) {
+          buildText(context, i);
+          setState(() {
+            onlyOnce = false;
+          });
+        }
       }
     }
     return data;
