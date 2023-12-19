@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,22 +6,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scrapyart_home/rahmat/screens/utils.dart';
 import 'package:image_picker/image_picker.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(
-    const MaterialApp(
-      home: GudangkuScreen(),
-    ),
-  );
-}
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GudangkuScreen extends StatefulWidget {
   const GudangkuScreen({Key? key}) : super(key: key);
 
   @override
-  _GudangkuScreenState createState() => _GudangkuScreenState();
+  State<GudangkuScreen> createState() => _GudangkuScreenState();
 }
 
 class _GudangkuScreenState extends State<GudangkuScreen> {
@@ -40,6 +30,17 @@ class _GudangkuScreenState extends State<GudangkuScreen> {
   final firestoreService = FirestoreService();
 
   final userCollection = FirebaseFirestore.instance.collection("users");
+
+  void logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLoggedIn', false);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,17 +136,6 @@ class _GudangkuScreenState extends State<GudangkuScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  // const Text(
-                  //   "gudangku",
-                  //   style: TextStyle(
-                  //     fontSize: 15,
-                  //     fontWeight: FontWeight.normal,
-                  //     color: Color.fromARGB(255, 173, 171, 171),
-                  //   ),
-                  // ),
-                  // const SizedBox(
-                  //   height: 20,
-                  // ),
                   Expanded(
                     child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
@@ -227,6 +217,19 @@ class _GudangkuScreenState extends State<GudangkuScreen> {
                       },
                     ),
                   ),
+                  Center(
+                    child: ElevatedButton.icon(
+                      label: Text("Log Out",
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor)),
+                      onPressed: () {
+                        logout();
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.logout,
+                          color: Theme.of(context).primaryColor),
+                    ),
+                  )
                 ],
               ),
             );
@@ -235,18 +238,11 @@ class _GudangkuScreenState extends State<GudangkuScreen> {
           }
         },
       ),
-      // bottomNavigationBar: BottomNavigationBar(items: const [
+      // bottomNavigationBar: BottomNavigationBar(items: [
       //   BottomNavigationBarItem(
-      //     icon: Icon(Icons.home),
-      //     label: 'Home',
-      //   ),
-      //   BottomNavigationBarItem(
-      //     icon: Icon(Icons.account_circle_outlined),
-      //     label: 'Profile',
-      //   ),
-      //   BottomNavigationBarItem(
-      //     icon: Icon(Icons.settings),
-      //     label: 'Scrapy Art',
+      //     icon: IconButton(
+      //         onPressed: () => logout(), icon: const Icon(Icons.logout)),
+      //     label: 'log out',
       //   ),
       // ]),
     );

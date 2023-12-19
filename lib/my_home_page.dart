@@ -1,13 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
-
 import 'package:carousel_slider/carousel_slider.dart';
-
 import 'package:scrapyart_home/angel/my_artboard_feature/my_artboard.dart';
-
 import 'package:scrapyart_home/rahmat/screens/gudangku.dart';
-
+import 'package:scrapyart_home/rahmat/screens/signin_screen.dart';
 import 'package:scrapyart_home/salisa/ngetemplate.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -17,9 +16,9 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+// rahmad7870
 class _MyHomePageState extends State<MyHomePage> {
   int _current = 0;
-
   final CarouselController _controller = CarouselController();
 
   final webGform = Uri.parse(
@@ -33,6 +32,34 @@ class _MyHomePageState extends State<MyHomePage> {
     'lib/assets/iklan5.png',
     'lib/assets/iklan6.png'
   ];
+  bool isLoggedIn = false;
+
+  void checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool loggedIn = prefs.getBool('isLoggedIn') ?? false;
+    isLoggedIn = loggedIn;
+
+    if (loggedIn) {
+      gudangku();
+    } else {
+      signin();
+    }
+  }
+
+  gudangku() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const GudangkuScreen()),
+    );
+  }
+
+  signin() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const SignInScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +67,12 @@ class _MyHomePageState extends State<MyHomePage> {
       title: 'Aplikasi Scrapy Art',
       home: Scaffold(
         appBar: AppBar(
-          // backgroundColor: const Color(0xFF684500),
-
           backgroundColor: Theme.of(context).primaryColor,
-
           elevation: 0,
-
           title: Text(
             'HOME',
             style: Theme.of(context).textTheme.titleLarge,
           ),
-
           leading: IconButton(
             style: Theme.of(context).iconButtonTheme.style,
             onPressed: () {
@@ -58,7 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             icon: const Icon(Icons.menu),
           ),
-
           actions: [
             Container(
               padding: const EdgeInsets.all(10.0),
@@ -153,8 +174,6 @@ class _MyHomePageState extends State<MyHomePage> {
             }).toList(),
           ),
 
-          // const SizedBox(height: 5),
-
           const Expanded(child: SizedBox()),
 
           Center(
@@ -167,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      // open ngescrap
+                      /// open ngescrap
 
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -195,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // open ngetemplate
+                      /// open ngetemplate
 
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -219,7 +238,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   GestureDetector(
-                    // open ngeorder ke gform pemesanan
+                    /// open ngeorder ke gform pemesanan
 
                     onTap: () => setState(() {
                       launchUrl(
@@ -247,15 +266,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      // open gudangku
-
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const GudangkuScreen(),
-                        ),
-                      );
-                    },
+                    onTap: () => checkLoginStatus(),
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 9),
                       child: Column(

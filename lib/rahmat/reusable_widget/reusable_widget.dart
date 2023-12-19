@@ -4,9 +4,8 @@ Image logoWidget(String imageName) {
   return Image.asset(
     imageName,
     fit: BoxFit.fitWidth,
-    width: 200,
-    height: 200,
-  
+    width: 400,
+    height: 400,
   );
 }
 
@@ -16,7 +15,6 @@ Image iconWidget(String imageName) {
     fit: BoxFit.fitWidth,
     width: 40,
     height: 40,
-  
   );
 }
 
@@ -55,7 +53,6 @@ Container firebaseUIButton(BuildContext context, String title, Function onTap) {
     height: 50,
     margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-    
     child: ElevatedButton(
       onPressed: () {
         onTap();
@@ -72,9 +69,10 @@ Container firebaseUIButton(BuildContext context, String title, Function onTap) {
       child: Text(
         title,
         style: const TextStyle(
-            color: Color.fromARGB(221, 255, 255, 255), fontWeight: FontWeight.bold, fontSize: 16),
+            color: Color.fromARGB(221, 255, 255, 255),
+            fontWeight: FontWeight.bold,
+            fontSize: 16),
       ),
     ),
   );
 }
-

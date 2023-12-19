@@ -1,22 +1,51 @@
+// ignore_for_file: avoid_print
 import 'package:scrapyart_home/rahmat/screens/forgot_passwordpage.dart';
-import 'package:scrapyart_home/rahmat/screens/upload.dart';
+import 'package:scrapyart_home/rahmat/screens/gudangku.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scrapyart_home/rahmat/reusable_widget/reusable_widget.dart';
 import 'package:scrapyart_home/rahmat/screens/signup_screen.dart';
 import 'package:scrapyart_home/rahmat/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({Key? key}) : super(key: key);
+  const SignInScreen({super.key});
 
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
 class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
+
+  void checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool loggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (loggedIn) {
+      navigateToGudangku();
+    }
+  }
+
+  void navigateToGudangku() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const GudangkuScreen()),
+    );
+  }
+
+  void saveLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLoggedIn', true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +60,10 @@ class _SignInScreenState extends State<SignInScreen> {
         ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(
-                20, MediaQuery.of(context).size.height * 0.2, 20, 0),
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
             child: Column(
               children: <Widget>[
-                logoWidget("assets/images/logos.png"),
+                logoWidget("lib/assets/logofix.png"),
                 const SizedBox(
                   height: 35,
                 ),
@@ -56,10 +84,11 @@ class _SignInScreenState extends State<SignInScreen> {
                           email: _emailTextController.text,
                           password: _passwordTextController.text)
                       .then((value) {
-                    Navigator.push(
+                    saveLoginStatus();
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const UploadScreen()));
+                            builder: (context) => const GudangkuScreen()));
                     print("berhasil login");
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
@@ -78,7 +107,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 signUpOption(),
                 const SizedBox(height: 30),
-                logos(),
+                //logos(),
               ],
             ),
           ),
@@ -92,23 +121,24 @@ class _SignInScreenState extends State<SignInScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         GestureDetector(
-            onTap: () async {
-              PermissionStatus cameraStatus = await Permission.camera.request();
+          onTap: () async {
+            PermissionStatus cameraStatus = await Permission.camera.request();
 
-              if (cameraStatus == PermissionStatus.granted) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text("This permission is granted.")));
-              }
-              if (cameraStatus == PermissionStatus.denied) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text("This permission is recommened.")));
-              }
-              if (cameraStatus == PermissionStatus.permanentlyDenied) {
-                openAppSettings();
-              }
-              print("Logo taped");
-            },
-            child: iconWidget("assets/images/google_logo.png")),
+            if (cameraStatus == PermissionStatus.granted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("This permission is granted.")));
+            }
+            if (cameraStatus == PermissionStatus.denied) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("This permission is recommened.")));
+            }
+            if (cameraStatus == PermissionStatus.permanentlyDenied) {
+              openAppSettings();
+            }
+            print("Logo taped");
+          },
+          child: iconWidget("assets/images/google_logo.png"),
+        ),
         const SizedBox(
           height: 5,
         ),
@@ -147,7 +177,7 @@ class _SignInScreenState extends State<SignInScreen> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return ForgotPasswordPage();
+                return const ForgotPasswordPage();
               },
             ),
           );
