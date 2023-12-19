@@ -96,6 +96,7 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
     print(globalListObject);
     historyGlobalListObject = List.of(globalListObject);
     placeholderTotal = widget.placeholder;
+    print(placeholderTotal);
     getAssetFiles();
     initStateDone();
   }
@@ -717,30 +718,35 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
             top: globalListObject[placeholderTotal].top,
             left: globalListObject[placeholderTotal].left,
             child: GestureDetector(
-              onPanUpdate: objectOnCurrentIndex.onClicked == OnAction.isFalse
+              onPanUpdate: globalListObject[placeholderTotal].onClicked ==
+                      OnAction.isFalse
                   ? (details) {
-                      objectOnCurrentIndex.top =
-                          objectOnCurrentIndex.top + details.delta.dy;
-                      objectOnCurrentIndex.left =
-                          objectOnCurrentIndex.left + details.delta.dx;
+                      globalListObject[placeholderTotal].top =
+                          globalListObject[placeholderTotal].top +
+                              details.delta.dy;
+                      globalListObject[placeholderTotal].left =
+                          globalListObject[placeholderTotal].left +
+                              details.delta.dx;
                       setState(() {});
                     }
                   : null,
               child: Container(
                 key: GlobalObjectKey(i),
-                width: objectOnCurrentIndex.imageWidth,
-                height: objectOnCurrentIndex.imageHeight,
+                width: globalListObject[placeholderTotal].imageWidth,
+                height: globalListObject[placeholderTotal].imageHeight,
                 transformAlignment: Alignment.center,
                 transform: Matrix4.rotationZ(
-                    objectOnCurrentIndex.rotateValue / 180 * pi),
+                    globalListObject[placeholderTotal].rotateValue / 180 * pi),
                 child: Stack(
                   children: [
                     Positioned(
                       left: 0,
                       top: 0,
                       child: Container(
-                        width: objectOnCurrentIndex.imageWidth - 20,
-                        height: objectOnCurrentIndex.imageHeight - 20,
+                        width:
+                            globalListObject[placeholderTotal].imageWidth - 20,
+                        height:
+                            globalListObject[placeholderTotal].imageHeight - 20,
                         decoration: BoxDecoration(
                           borderRadius: objectOnCurrentIndex.boxRound ==
                                   OnAction.isRounded
@@ -764,7 +770,7 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                             getSizeOfTheBox(i);
                           },
                           onTap: () {
-                            if (objectOnCurrentIndex.onClicked ==
+                            if (globalListObject[placeholderTotal].onClicked ==
                                 OnAction.isFalse) {
                               setState(() {
                                 for (var i = 0;
@@ -775,19 +781,21 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                                   objectOnCurrentIndex.onClicked =
                                       OnAction.isFalse;
                                 }
-                                objectOnCurrentIndex.onClicked =
+                                globalListObject[placeholderTotal].onClicked =
                                     OnAction.isClicked;
                               });
-                            } else if (objectOnCurrentIndex.onClicked ==
+                            } else if (globalListObject[placeholderTotal]
+                                    .onClicked ==
                                 OnAction.isClicked) {
-                              objectOnCurrentIndex.onClicked = OnAction.isFalse;
+                              globalListObject[placeholderTotal].onClicked =
+                                  OnAction.isFalse;
                             }
                           },
-                          onLongPress: () {
-                            moveImage(i).then((value) {
-                              setState(() {});
-                            });
-                          },
+                          // onLongPress: () {
+                          //   moveImage(i).then((value) {
+                          //     setState(() {});
+                          //   });
+                          // },
                         ),
                       ),
                     ),
@@ -799,8 +807,10 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                       top: 0,
                       left: 0,
                       child: SizedBox(
-                        width: objectOnCurrentIndex.imageWidth - 20,
-                        height: objectOnCurrentIndex.imageHeight - 20,
+                        width:
+                            globalListObject[placeholderTotal].imageWidth - 20,
+                        height:
+                            globalListObject[placeholderTotal].imageHeight - 20,
                         child: Column(
                           children: [
                             const Expanded(child: SizedBox()),
@@ -808,22 +818,28 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 const Expanded(child: SizedBox()),
-                                objectOnCurrentIndex.onClicked ==
+                                globalListObject[placeholderTotal].onClicked ==
                                         OnAction.isClicked
                                     ? GestureDetector(
                                         onPanUpdate: (details) {
                                           getSizeOfTheBox(i);
 
-                                          objectOnCurrentIndex.imageHeight =
+                                          globalListObject[placeholderTotal]
+                                                  .imageHeight =
                                               max(
                                                   70,
-                                                  objectOnCurrentIndex
+                                                  globalListObject[
+                                                              placeholderTotal]
                                                           .imageHeight +
                                                       details.delta.dy);
-                                          objectOnCurrentIndex.imageWidth = max(
-                                              90,
-                                              objectOnCurrentIndex.imageWidth +
-                                                  details.delta.dx);
+                                          globalListObject[placeholderTotal]
+                                                  .imageWidth =
+                                              max(
+                                                  90,
+                                                  globalListObject[
+                                                              placeholderTotal]
+                                                          .imageWidth +
+                                                      details.delta.dx);
                                           setState(() {});
                                         },
                                         child: const Stack(
@@ -856,43 +872,51 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                     Positioned(
                       right: 0,
                       bottom: 0,
-                      child:
-                          objectOnCurrentIndex.onClicked == OnAction.isClicked
-                              ? GestureDetector(
-                                  onHorizontalDragUpdate: (details) {
-                                    objectOnCurrentIndex.imageWidth = max(
+                      child: globalListObject[placeholderTotal].onClicked ==
+                              OnAction.isClicked
+                          ? GestureDetector(
+                              onHorizontalDragUpdate: (details) {
+                                globalListObject[placeholderTotal].imageWidth =
+                                    max(
                                         90,
-                                        objectOnCurrentIndex.imageWidth +
+                                        globalListObject[placeholderTotal]
+                                                .imageWidth +
                                             details.delta.dx);
-                                    objectOnCurrentIndex.imageHeight = max(
+                                globalListObject[placeholderTotal].imageHeight =
+                                    max(
                                         70,
-                                        objectOnCurrentIndex.imageHeight +
+                                        globalListObject[placeholderTotal]
+                                                .imageHeight +
                                             details.delta.dx);
-                                    getSizeOfTheBox(i);
-                                    setState(() {});
-                                  },
-                                  onVerticalDragUpdate: (details) {
-                                    objectOnCurrentIndex.imageWidth = max(
+                                getSizeOfTheBox(i);
+                                setState(() {});
+                              },
+                              onVerticalDragUpdate: (details) {
+                                globalListObject[placeholderTotal].imageWidth =
+                                    max(
                                         90,
-                                        objectOnCurrentIndex.imageWidth +
+                                        globalListObject[placeholderTotal]
+                                                .imageWidth +
                                             details.delta.dy);
-                                    objectOnCurrentIndex.imageHeight = max(
+                                globalListObject[placeholderTotal].imageHeight =
+                                    max(
                                         70,
-                                        objectOnCurrentIndex.imageHeight +
+                                        globalListObject[placeholderTotal]
+                                                .imageHeight +
                                             details.delta.dy);
-                                    getSizeOfTheBox(i);
-                                    setState(() {});
-                                  },
-                                  child: Transform.rotate(
-                                    angle: 45 / 180 * pi,
-                                    child: const Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Colors.blueAccent,
-                                      size: 30,
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox(),
+                                getSizeOfTheBox(i);
+                                setState(() {});
+                              },
+                              child: Transform.rotate(
+                                angle: 45 / 180 * pi,
+                                child: const Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.blueAccent,
+                                  size: 30,
+                                ),
+                              ),
+                            )
+                          : const SizedBox(),
                     ),
                   ],
                 ),
@@ -904,44 +928,48 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
           /// tombol untuk crop, rotate, dan border image
           ///
           Positioned(
-            top: objectOnCurrentIndex.top,
-            left: objectOnCurrentIndex.left,
+            top: globalListObject[placeholderTotal].top,
+            left: globalListObject[placeholderTotal].left,
             width: widthContainerRender + 1,
             height: heightContainerRender * 235 / 100,
-            child: objectOnCurrentIndex.onClicked == OnAction.isClicked
+            child: globalListObject[placeholderTotal].onClicked ==
+                    OnAction.isClicked
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Expanded(child: SizedBox()),
-                      GestureDetector(
-                        onTap: () {
-                          objectOnCurrentIndex.onClicked = OnAction.isFalse;
-                          cropImage(objectOnCurrentIndex);
-                        },
-                        child: const Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.crop_rounded,
-                              color: Colors.blueAccent,
-                              size: 25,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     globalListObject[placeholderTotal].onClicked =
+                      //         OnAction.isFalse;
+                      //     cropImage(globalListObject[placeholderTotal]);
+                      //   },
+                      //   child: const Stack(
+                      //     alignment: Alignment.center,
+                      //     children: [
+                      //       Icon(
+                      //         Icons.crop_rounded,
+                      //         color: Colors.blueAccent,
+                      //         size: 25,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: GestureDetector(
                           onHorizontalDragUpdate: (details) {
-                            objectOnCurrentIndex.rotateValue -=
+                            globalListObject[placeholderTotal].rotateValue -=
                                 details.delta.dx;
-                            objectOnCurrentIndex.rotateValue %= 360;
+                            globalListObject[placeholderTotal].rotateValue %=
+                                360;
                             setState(() {});
                           },
                           onVerticalDragUpdate: (details) {
-                            objectOnCurrentIndex.rotateValue -=
+                            globalListObject[placeholderTotal].rotateValue -=
                                 details.delta.dy;
-                            objectOnCurrentIndex.rotateValue %= 360;
+                            globalListObject[placeholderTotal].rotateValue %=
+                                360;
                             setState(() {});
                           },
                           child: const Icon(
@@ -951,31 +979,37 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          if (objectOnCurrentIndex.boxRound ==
-                              OnAction.isRounded) {
-                            objectOnCurrentIndex.boxRoundValue = 15.0;
-                            objectOnCurrentIndex.boxRound = OnAction.isFalse;
-                          } else {
-                            objectOnCurrentIndex.boxRoundValue = 15.0;
-                            objectOnCurrentIndex.boxRound = OnAction.isRounded;
-                          }
-                          setState(() {});
-                        },
-                        onHorizontalDragUpdate: (details) {
-                          objectOnCurrentIndex.boxRoundValue = max(
-                              10,
-                              objectOnCurrentIndex.boxRoundValue +
-                                  details.delta.dx);
-                          setState(() {});
-                        },
-                        child: const Icon(
-                          Icons.border_all_rounded,
-                          color: Colors.blueAccent,
-                          size: 25,
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     if (globalListObject[placeholderTotal].boxRound ==
+                      //         OnAction.isRounded) {
+                      //       globalListObject[placeholderTotal].boxRoundValue =
+                      //           15.0;
+                      //       globalListObject[placeholderTotal].boxRound =
+                      //           OnAction.isFalse;
+                      //     } else {
+                      //       globalListObject[placeholderTotal].boxRoundValue =
+                      //           15.0;
+                      //       globalListObject[placeholderTotal].boxRound =
+                      //           OnAction.isRounded;
+                      //     }
+                      //     setState(() {});
+                      //   },
+                      //   onHorizontalDragUpdate: (details) {
+                      //     globalListObject[placeholderTotal].boxRoundValue =
+                      //         max(
+                      //             10,
+                      //             globalListObject[placeholderTotal]
+                      //                     .boxRoundValue +
+                      //                 details.delta.dx);
+                      //     setState(() {});
+                      //   },
+                      //   child: const Icon(
+                      //     Icons.border_all_rounded,
+                      //     color: Colors.blueAccent,
+                      //     size: 25,
+                      //   ),
+                      // ),
                       const Expanded(child: SizedBox()),
                     ],
                   )
@@ -1008,19 +1042,21 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                   : null,
               child: Container(
                 key: GlobalObjectKey(i),
-                width: objectOnCurrentIndex.imageWidth,
-                height: objectOnCurrentIndex.imageHeight,
+                width: globalListObject[placeholderTotal].imageWidth,
+                height: globalListObject[placeholderTotal].imageHeight,
                 transformAlignment: Alignment.center,
                 transform: Matrix4.rotationZ(
-                    objectOnCurrentIndex.rotateValue / 180 * pi),
+                    globalListObject[placeholderTotal].rotateValue / 180 * pi),
                 child: Stack(
                   children: [
                     Positioned(
                       left: 0,
                       top: 0,
                       child: Container(
-                        width: objectOnCurrentIndex.imageWidth - 20,
-                        height: objectOnCurrentIndex.imageHeight - 20,
+                        width:
+                            globalListObject[placeholderTotal].imageWidth - 20,
+                        height:
+                            globalListObject[placeholderTotal].imageHeight - 20,
                         decoration: BoxDecoration(
                           borderRadius: objectOnCurrentIndex.boxRound ==
                                   OnAction.isRounded
@@ -1064,11 +1100,11 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                               objectOnCurrentIndex.onClicked = OnAction.isFalse;
                             }
                           },
-                          onLongPress: () {
-                            moveImage(i).then((value) {
-                              setState(() {});
-                            });
-                          },
+                          // onLongPress: () {
+                          //   moveImage(i).then((value) {
+                          //     setState(() {});
+                          //   });
+                          // },
                         ),
                       ),
                     ),
@@ -1080,8 +1116,10 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                       top: 0,
                       left: 0,
                       child: SizedBox(
-                        width: objectOnCurrentIndex.imageWidth - 20,
-                        height: objectOnCurrentIndex.imageHeight - 20,
+                        width:
+                            globalListObject[placeholderTotal].imageWidth - 20,
+                        height:
+                            globalListObject[placeholderTotal].imageHeight - 20,
                         child: Column(
                           children: [
                             const Expanded(child: SizedBox()),
@@ -1095,16 +1133,22 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                                         onPanUpdate: (details) {
                                           getSizeOfTheBox(i);
 
-                                          objectOnCurrentIndex.imageHeight =
+                                          globalListObject[placeholderTotal]
+                                                  .imageHeight =
                                               max(
                                                   70,
-                                                  objectOnCurrentIndex
+                                                  globalListObject[
+                                                              placeholderTotal]
                                                           .imageHeight +
                                                       details.delta.dy);
-                                          objectOnCurrentIndex.imageWidth = max(
-                                              90,
-                                              objectOnCurrentIndex.imageWidth +
-                                                  details.delta.dx);
+                                          globalListObject[placeholderTotal]
+                                                  .imageWidth =
+                                              max(
+                                                  90,
+                                                  globalListObject[
+                                                              placeholderTotal]
+                                                          .imageWidth +
+                                                      details.delta.dx);
                                           setState(() {});
                                         },
                                         child: const Stack(
@@ -1137,43 +1181,51 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                     Positioned(
                       right: 0,
                       bottom: 0,
-                      child:
-                          objectOnCurrentIndex.onClicked == OnAction.isClicked
-                              ? GestureDetector(
-                                  onHorizontalDragUpdate: (details) {
-                                    objectOnCurrentIndex.imageWidth = max(
+                      child: objectOnCurrentIndex.onClicked ==
+                              OnAction.isClicked
+                          ? GestureDetector(
+                              onHorizontalDragUpdate: (details) {
+                                globalListObject[placeholderTotal].imageWidth =
+                                    max(
                                         90,
-                                        objectOnCurrentIndex.imageWidth +
+                                        globalListObject[placeholderTotal]
+                                                .imageWidth +
                                             details.delta.dx);
-                                    objectOnCurrentIndex.imageHeight = max(
+                                globalListObject[placeholderTotal].imageHeight =
+                                    max(
                                         70,
-                                        objectOnCurrentIndex.imageHeight +
+                                        globalListObject[placeholderTotal]
+                                                .imageHeight +
                                             details.delta.dx);
-                                    getSizeOfTheBox(i);
-                                    setState(() {});
-                                  },
-                                  onVerticalDragUpdate: (details) {
-                                    objectOnCurrentIndex.imageWidth = max(
+                                getSizeOfTheBox(i);
+                                setState(() {});
+                              },
+                              onVerticalDragUpdate: (details) {
+                                globalListObject[placeholderTotal].imageWidth =
+                                    max(
                                         90,
-                                        objectOnCurrentIndex.imageWidth +
+                                        globalListObject[placeholderTotal]
+                                                .imageWidth +
                                             details.delta.dy);
-                                    objectOnCurrentIndex.imageHeight = max(
+                                globalListObject[placeholderTotal].imageHeight =
+                                    max(
                                         70,
-                                        objectOnCurrentIndex.imageHeight +
+                                        globalListObject[placeholderTotal]
+                                                .imageHeight +
                                             details.delta.dy);
-                                    getSizeOfTheBox(i);
-                                    setState(() {});
-                                  },
-                                  child: Transform.rotate(
-                                    angle: 45 / 180 * pi,
-                                    child: const Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Colors.blueAccent,
-                                      size: 30,
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox(),
+                                getSizeOfTheBox(i);
+                                setState(() {});
+                              },
+                              child: Transform.rotate(
+                                angle: 45 / 180 * pi,
+                                child: const Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.blueAccent,
+                                  size: 30,
+                                ),
+                              ),
+                            )
+                          : const SizedBox(),
                     ),
                   ],
                 ),
@@ -1185,8 +1237,8 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
           /// tombol untuk crop, rotate, dan border image
           ///
           Positioned(
-            top: objectOnCurrentIndex.top,
-            left: objectOnCurrentIndex.left,
+            top: globalListObject[placeholderTotal].top,
+            left: globalListObject[placeholderTotal].left,
             width: widthContainerRender + 1,
             height: heightContainerRender * 235 / 100,
             child: objectOnCurrentIndex.onClicked == OnAction.isClicked
@@ -1194,35 +1246,38 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Expanded(child: SizedBox()),
-                      GestureDetector(
-                        onTap: () {
-                          objectOnCurrentIndex.onClicked = OnAction.isFalse;
-                          cropImage(objectOnCurrentIndex);
-                        },
-                        child: const Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.crop_rounded,
-                              color: Colors.blueAccent,
-                              size: 25,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     globalListObject[placeholderTotal].onClicked =
+                      //         OnAction.isFalse;
+                      //     cropImage(ob);
+                      //   },
+                      //   child: const Stack(
+                      //     alignment: Alignment.center,
+                      //     children: [
+                      //       Icon(
+                      //         Icons.crop_rounded,
+                      //         color: Colors.blueAccent,
+                      //         size: 25,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: GestureDetector(
                           onHorizontalDragUpdate: (details) {
-                            objectOnCurrentIndex.rotateValue -=
+                            globalListObject[placeholderTotal].rotateValue -=
                                 details.delta.dx;
-                            objectOnCurrentIndex.rotateValue %= 360;
+                            globalListObject[placeholderTotal].rotateValue %=
+                                360;
                             setState(() {});
                           },
                           onVerticalDragUpdate: (details) {
-                            objectOnCurrentIndex.rotateValue -=
+                            globalListObject[placeholderTotal].rotateValue -=
                                 details.delta.dy;
-                            objectOnCurrentIndex.rotateValue %= 360;
+                            globalListObject[placeholderTotal].rotateValue %=
+                                360;
                             setState(() {});
                           },
                           child: const Icon(
@@ -1232,31 +1287,37 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          if (objectOnCurrentIndex.boxRound ==
-                              OnAction.isRounded) {
-                            objectOnCurrentIndex.boxRoundValue = 15.0;
-                            objectOnCurrentIndex.boxRound = OnAction.isFalse;
-                          } else {
-                            objectOnCurrentIndex.boxRoundValue = 15.0;
-                            objectOnCurrentIndex.boxRound = OnAction.isRounded;
-                          }
-                          setState(() {});
-                        },
-                        onHorizontalDragUpdate: (details) {
-                          objectOnCurrentIndex.boxRoundValue = max(
-                              10,
-                              objectOnCurrentIndex.boxRoundValue +
-                                  details.delta.dx);
-                          setState(() {});
-                        },
-                        child: const Icon(
-                          Icons.border_all_rounded,
-                          color: Colors.blueAccent,
-                          size: 25,
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     if (globalListObject[placeholderTotal].boxRound ==
+                      //         OnAction.isRounded) {
+                      //       globalListObject[placeholderTotal].boxRoundValue =
+                      //           15.0;
+                      //       globalListObject[placeholderTotal].boxRound =
+                      //           OnAction.isFalse;
+                      //     } else {
+                      //       globalListObject[placeholderTotal].boxRoundValue =
+                      //           15.0;
+                      //       globalListObject[placeholderTotal].boxRound =
+                      //           OnAction.isRounded;
+                      //     }
+                      //     setState(() {});
+                      //   },
+                      //   onHorizontalDragUpdate: (details) {
+                      //     globalListObject[placeholderTotal].boxRoundValue =
+                      //         max(
+                      //             10,
+                      //             globalListObject[placeholderTotal]
+                      //                     .boxRoundValue +
+                      //                 details.delta.dx);
+                      //     setState(() {});
+                      //   },
+                      //   child: const Icon(
+                      //     Icons.border_all_rounded,
+                      //     color: Colors.blueAccent,
+                      //     size: 25,
+                      //   ),
+                      // ),
                       const Expanded(child: SizedBox()),
                     ],
                   )

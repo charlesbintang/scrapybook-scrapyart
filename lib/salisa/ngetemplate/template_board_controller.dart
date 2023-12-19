@@ -165,6 +165,7 @@ abstract class TemplateBoardController extends TemplateBoardModel {
                 pickImageFromGallery();
               }
               placeholderTotal--;
+              print(placeholderTotal);
             }, //=> pickImageFromGallery(),
             icon: Icon(
               Icons.add_photo_alternate_outlined,
