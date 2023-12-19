@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 
 import 'package:scrapyart_home/salisa/model/template.dart';
@@ -21,6 +23,7 @@ class NgeTemplateState extends State<NgeTemplate> {
 
   @override
   Widget build(BuildContext context) {
+    /// ambil templateList dari template.dart
     final filterTemplates = templateList.where((product) {
       return selectedCategories.isEmpty ||
           selectedCategories.contains(product.category);
@@ -71,13 +74,19 @@ class NgeTemplateState extends State<NgeTemplate> {
                 itemCount: filterTemplates.length,
                 itemBuilder: (context, index) {
                   final product = filterTemplates[index];
-
                   return Card(
                     elevation: 8.0,
                     margin: const EdgeInsets.all(8.0),
                     child: GestureDetector(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const TemplateBoard())),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => TemplateBoard(
+                            assetImage: product.image,
+                            id: product.id,
+                            placeholder: product.placeholder,
+                          ),
+                        ));
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),

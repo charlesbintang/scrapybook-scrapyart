@@ -2,15 +2,22 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:scrapyart_home/angel/my_artboard_feature/image_text_model.dart';
-
 import 'package:scrapyart_home/angel/my_artboard_feature/stack_object_model.dart';
 import 'package:scrapyart_home/salisa/ngetemplate/template_board_controller.dart';
 
 import 'package:screenshot/screenshot.dart';
 
 class TemplateBoard extends StatefulWidget {
-  const TemplateBoard({super.key});
+  // ambil data dengan widget.assetImage
+  final int id;
+  final int placeholder;
+  final String assetImage;
+  const TemplateBoard({
+    Key? key,
+    required this.id,
+    required this.placeholder,
+    required this.assetImage,
+  }) : super(key: key);
 
   @override
   State<TemplateBoard> createState() => _TemplateBoardState();
@@ -51,18 +58,8 @@ class _TemplateBoardState extends TemplateBoardController {
                     onPanUpdate: (details) => brushOnPanUpdate(details),
                     onPanEnd: (details) => brushOnPanEnd(details),
                     child: Container(
-                      color: isWallpaperAdded == ActionCallback.wallpaperAdded
-                          ? null
-                          : canvasColor,
-                      decoration:
-                          isWallpaperAdded == ActionCallback.wallpaperAdded
-                              ? BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage(selectedWallpaper),
-                                    fit: BoxFit.fill,
-                                  ),
-                                )
-                              : null,
+                      key: const GlobalObjectKey("utama"),
+                      color: Colors.white,
                       height: MediaQuery.of(context).size.height * 57 / 100,
                       width: MediaQuery.of(context).size.width * 90 / 100,
                       margin: EdgeInsets.only(

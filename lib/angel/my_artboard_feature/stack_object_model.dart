@@ -25,6 +25,7 @@ class StackObject {
   TextDecoration decoration;
   String sticker;
   String wallpaper;
+  String template;
   Offset? offset;
   Paint? paint;
 
@@ -48,6 +49,7 @@ class StackObject {
     this.decoration = TextDecoration.none,
     this.sticker = "",
     this.wallpaper = "",
+    this.template = "",
     this.offset,
     this.paint,
   });
