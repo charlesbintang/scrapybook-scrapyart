@@ -5,7 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scrapyart_home/angel/my_artboard_feature/my_artboard.dart';
 import 'package:scrapyart_home/rahmat/screens/gudangku.dart';
 import 'package:scrapyart_home/rahmat/screens/signin_screen.dart';
-import 'package:scrapyart_home/salisa/ngetemplate.dart';
+import 'package:scrapyart_home/salisa/ngetemplate/ngetemplate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 

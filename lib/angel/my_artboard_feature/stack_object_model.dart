@@ -26,6 +26,7 @@ class StackObject {
   String sticker;
   String wallpaper;
   String template;
+  bool transparent;
   Offset? offset;
   Paint? paint;
 
@@ -50,6 +51,7 @@ class StackObject {
     this.sticker = "",
     this.wallpaper = "",
     this.template = "",
+    this.transparent = false,
     this.offset,
     this.paint,
   });

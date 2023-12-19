@@ -29,26 +29,6 @@ abstract class TemplateBoardController extends TemplateBoardModel {
             },
           ),
         ),
-        // Container(
-        //   decoration: menu == "wallpaper"
-        //       ? BoxDecoration(
-        //           borderRadius: BorderRadius.circular(15.0),
-        //           color: const Color.fromARGB(255, 72, 30, 51),
-        //         )
-        //       : null,
-        //   child: IconButton(
-        //     iconSize: 25,
-        //     icon: const Icon(
-        //       Icons.format_paint_outlined,
-        //       color: Colors.white,
-        //     ),
-        //     onPressed: () {
-        //       setState(() {
-        //         menu = "wallpaper";
-        //       });
-        //     },
-        //   ),
-        // ),
         Container(
           // color: Colors.amber,
           decoration: menu == "image"
@@ -173,136 +153,23 @@ abstract class TemplateBoardController extends TemplateBoardModel {
     }
   }
 
-  // Row rowWallpaperMenu() {
-  //   List<Widget> data = [];
-  //   data.addAll([
-  //     AbsorbPointer(
-  //       absorbing:
-  //           isWallpaperAdded == ActionCallback.wallpaperAdded ? false : true,
-  //       child: IconButton(
-  //         onPressed: deleteWallpaper,
-  //         icon: Icon(
-  //           Icons.delete,
-  //           color: isWallpaperAdded == ActionCallback.wallpaperAdded
-  //               ? Colors.black
-  //               : Colors.black45,
-  //         ),
-  //       ),
-  //     ),
-  //     IconButton(
-  //         onPressed: () {
-  //           showDialog(
-  //             context: context,
-  //             builder: (BuildContext context) {
-  //               return AlertDialog(
-  //                 scrollable: true,
-  //                 titlePadding: const EdgeInsets.all(0),
-  //                 contentPadding: const EdgeInsets.all(0),
-  //                 content: Column(
-  //                   children: [
-  //                     ColorPicker(
-  //                       pickerColor: canvasColor,
-  //                       onColorChanged: changeCanvasColor,
-  //                       colorPickerWidth: 300,
-  //                       pickerAreaHeightPercent: 0.7,
-  //                       displayThumbColor: true,
-  //                       paletteType: PaletteType.hsl,
-  //                       labelTypes: const [],
-  //                       pickerAreaBorderRadius: const BorderRadius.only(
-  //                         topLeft: Radius.circular(2),
-  //                         topRight: Radius.circular(2),
-  //                       ),
-  //                       hexInputController: textColorController, // <- here
-  //                       portraitOnly: true,
-  //                     ),
-  //                     Padding(
-  //                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-  //                       /* It can be any text field, for example:
-
-  //                           * TextField
-  //                           * TextFormField
-  //                           * CupertinoTextField
-  //                           * EditableText
-  //                           * any text field from 3-rd party package
-  //                           * your own text field
-
-  //                           so basically anything that supports/uses
-  //                           a TextEditingController for an editable text.
-  //                           */
-  //                       child: CupertinoTextField(
-  //                         controller: textColorController,
-  //                         // Everything below is purely optional.
-  //                         prefix: const Padding(
-  //                             padding: EdgeInsets.only(left: 8),
-  //                             child: Icon(Icons.tag)),
-  //                         suffix: IconButton(
-  //                           icon: const Icon(Icons.content_paste_rounded),
-  //                           onPressed: () =>
-  //                               copyToClipboard(textColorController.text),
-  //                         ),
-  //                         autofocus: true,
-  //                         maxLength: 9,
-  //                         onEditingComplete: () => Navigator.of(context).pop(),
-  //                         inputFormatters: [
-  //                           // Any custom input formatter can be passed
-  //                           // here or use any Form validator you want.
-  //                           UpperCaseTextFormatter(),
-  //                           FilteringTextInputFormatter.allow(
-  //                               RegExp(kValidHexPattern)),
-  //                         ],
-  //                       ),
-  //                     )
-  //                   ],
-  //                 ),
-  //               );
-  //             },
-  //           );
-  //         },
-  //         icon: Icon(
-  //           Icons.rectangle_rounded,
-  //           color: canvasColor,
-  //           shadows: const [
-  //             Shadow(
-  //               color: Colors.black,
-  //               blurRadius: 5.0,
-  //               offset: Offset.zero,
-  //             )
-  //           ],
-  //         ))
-  //   ]);
-  //   // pindahkan semua wallpaper ke tombol wallpaper
-  //   if (wallpaperFiles.isNotEmpty) {
-  //     for (var i = 0; i < wallpaperFiles.length; i++) {
-  //       data.add(
-  //         IconButton(
-  //           onPressed: () {
-  //             selectedWallpaper = wallpaperFiles[i];
-  //             isWallpaperAdded = ActionCallback.wallpaperAdded;
-  //             setState(() {});
-  //           },
-  //           icon: Image.asset(
-  //             wallpaperFiles[i],
-  //             width: 25,
-  //             fit: BoxFit.fitWidth,
-  //           ),
-  //         ),
-  //       );
-  //     }
-  //   }
-  //   return Row(
-  //     children: data,
-  //   );
-  // }
-
   Row rowImageMenu() {
     return Row(
       children: [
         const Expanded(child: SizedBox()),
-        IconButton(
-          onPressed: () => pickImageFromGallery(),
-          icon: const Icon(
-            Icons.add_photo_alternate_outlined,
-            color: Colors.black,
+        AbsorbPointer(
+          absorbing: placeholderTotal > 0 ? false : true,
+          child: IconButton(
+            onPressed: () {
+              if (placeholderTotal > 0) {
+                pickImageFromGallery();
+              }
+              placeholderTotal--;
+            }, //=> pickImageFromGallery(),
+            icon: Icon(
+              Icons.add_photo_alternate_outlined,
+              color: placeholderTotal > 0 ? Colors.black : Colors.black45,
+            ),
           ),
         ),
         AbsorbPointer(
