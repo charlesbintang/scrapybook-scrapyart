@@ -87,16 +87,15 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
       StackObject(
         template: TemplateBoard(
           id: widget.id,
-          placeholder: widget.id,
+          templateWidth: widget.templateWidth,
+          templateHeight: widget.templateHeight,
+          placeholder: widget.placeholder,
           assetImage: widget.assetImage,
         ).assetImage,
       ),
     );
-    print(globalListObject.length);
-    print(globalListObject);
     historyGlobalListObject = List.of(globalListObject);
     placeholderTotal = widget.placeholder;
-    print(placeholderTotal);
     getAssetFiles();
     initStateDone();
   }
@@ -274,20 +273,13 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
     if (returnedImage == null) return;
     setState(() {
       selectedImage = File(returnedImage.path);
-      globalListObject.insert(
-        0,
-        StackObject(
-          /// pickImageFromGallery harus menyertakan image didalamnya
-          image: selectedImage,
-        ),
-      );
       globalListObject.add(
         StackObject(
           /// pickImageFromGallery harus menyertakan image didalamnya
           image: selectedImage,
-          transparent: true,
         ),
       );
+      placeholderTotal--;
       historyGlobalListObject = List.of(globalListObject);
       isHistoryGlobalListObjectEmpty = false;
       isImageAdded = ActionCallback.imageAdded;
@@ -652,9 +644,8 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
 
   undoObject() {
     if (isGlobalListObjectEmpty == false) {
-      setState(() {
-        globalListObject.removeLast();
-      });
+      globalListObject.removeLast();
+      setState(() {});
       globalListObjectIndex -= 1;
       isEndOfHistoryGlobalListObject = false;
     }
@@ -662,10 +653,9 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
 
   redoObject() {
     if (globalListObject.length < historyGlobalListObject.length) {
-      setState(() {
-        globalListObject
-            .add(historyGlobalListObject.elementAt(globalListObjectIndex));
-      });
+      globalListObject
+          .add(historyGlobalListObject.elementAt(globalListObjectIndex));
+      setState(() {});
     }
     if (globalListObject.length == historyGlobalListObject.length) {
       isEndOfHistoryGlobalListObject = true;
@@ -678,6 +668,7 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
       ///
       /// Template image
       ///
+
       if (globalListObject[i].template.isNotEmpty) {
         var objectOnCurrentIndex = globalListObject[i];
         data.addAll([
@@ -688,20 +679,9 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
               width: canvasWidth,
               height: canvasHeight,
               decoration: BoxDecoration(
-                borderRadius: objectOnCurrentIndex.boxRound ==
-                        OnAction.isRounded
-                    ? BorderRadius.circular(objectOnCurrentIndex.boxRoundValue)
-                    : null,
-                image: objectOnCurrentIndex.croppedFile == null
-                    ? DecorationImage(
-                        image: AssetImage(objectOnCurrentIndex.template),
-                        fit: BoxFit.fill)
-                    : DecorationImage(
-                        image: FileImage(
-                          File(objectOnCurrentIndex.croppedFile!.path),
-                        ),
-                      ),
-              ),
+                  image: DecorationImage(
+                      image: AssetImage(objectOnCurrentIndex.template),
+                      fit: BoxFit.fill)),
             ),
           ),
         ]);
@@ -715,38 +695,33 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
         var objectOnCurrentIndex = globalListObject[i];
         data.addAll([
           Positioned(
-            top: globalListObject[placeholderTotal].top,
-            left: globalListObject[placeholderTotal].left,
+            top: objectOnCurrentIndex.top,
+            left: objectOnCurrentIndex.left,
             child: GestureDetector(
-              onPanUpdate: globalListObject[placeholderTotal].onClicked ==
-                      OnAction.isFalse
+              onPanUpdate: objectOnCurrentIndex.onClicked == OnAction.isFalse
                   ? (details) {
-                      globalListObject[placeholderTotal].top =
-                          globalListObject[placeholderTotal].top +
-                              details.delta.dy;
-                      globalListObject[placeholderTotal].left =
-                          globalListObject[placeholderTotal].left +
-                              details.delta.dx;
+                      objectOnCurrentIndex.top =
+                          objectOnCurrentIndex.top + details.delta.dy;
+                      objectOnCurrentIndex.left =
+                          objectOnCurrentIndex.left + details.delta.dx;
                       setState(() {});
                     }
                   : null,
               child: Container(
                 key: GlobalObjectKey(i),
-                width: globalListObject[placeholderTotal].imageWidth,
-                height: globalListObject[placeholderTotal].imageHeight,
+                width: objectOnCurrentIndex.imageWidth,
+                height: objectOnCurrentIndex.imageHeight,
                 transformAlignment: Alignment.center,
                 transform: Matrix4.rotationZ(
-                    globalListObject[placeholderTotal].rotateValue / 180 * pi),
+                    objectOnCurrentIndex.rotateValue / 180 * pi),
                 child: Stack(
                   children: [
                     Positioned(
                       left: 0,
                       top: 0,
                       child: Container(
-                        width:
-                            globalListObject[placeholderTotal].imageWidth - 20,
-                        height:
-                            globalListObject[placeholderTotal].imageHeight - 20,
+                        width: objectOnCurrentIndex.imageWidth - 20,
+                        height: objectOnCurrentIndex.imageHeight - 20,
                         decoration: BoxDecoration(
                           borderRadius: objectOnCurrentIndex.boxRound ==
                                   OnAction.isRounded
@@ -759,317 +734,6 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                                   : FileImage(File(
                                       objectOnCurrentIndex.croppedFile!.path)),
                               fit: BoxFit.fill),
-                          border: objectOnCurrentIndex.onClicked ==
-                                  OnAction.isClicked
-                              ? Border.all(color: Colors.blueAccent, width: 2)
-                              : null,
-                        ),
-                        child: GestureDetector(
-                          onTapDown: (position) {
-                            getTapPosition(position);
-                            getSizeOfTheBox(i);
-                          },
-                          onTap: () {
-                            if (globalListObject[placeholderTotal].onClicked ==
-                                OnAction.isFalse) {
-                              setState(() {
-                                for (var i = 0;
-                                    i < globalListObject.length;
-                                    i++) {
-                                  var objectOnCurrentIndex =
-                                      globalListObject[i];
-                                  objectOnCurrentIndex.onClicked =
-                                      OnAction.isFalse;
-                                }
-                                globalListObject[placeholderTotal].onClicked =
-                                    OnAction.isClicked;
-                              });
-                            } else if (globalListObject[placeholderTotal]
-                                    .onClicked ==
-                                OnAction.isClicked) {
-                              globalListObject[placeholderTotal].onClicked =
-                                  OnAction.isFalse;
-                            }
-                          },
-                          // onLongPress: () {
-                          //   moveImage(i).then((value) {
-                          //     setState(() {});
-                          //   });
-                          // },
-                        ),
-                      ),
-                    ),
-
-                    ///
-                    /// tombol resize image
-                    ///
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      child: SizedBox(
-                        width:
-                            globalListObject[placeholderTotal].imageWidth - 20,
-                        height:
-                            globalListObject[placeholderTotal].imageHeight - 20,
-                        child: Column(
-                          children: [
-                            const Expanded(child: SizedBox()),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Expanded(child: SizedBox()),
-                                globalListObject[placeholderTotal].onClicked ==
-                                        OnAction.isClicked
-                                    ? GestureDetector(
-                                        onPanUpdate: (details) {
-                                          getSizeOfTheBox(i);
-
-                                          globalListObject[placeholderTotal]
-                                                  .imageHeight =
-                                              max(
-                                                  70,
-                                                  globalListObject[
-                                                              placeholderTotal]
-                                                          .imageHeight +
-                                                      details.delta.dy);
-                                          globalListObject[placeholderTotal]
-                                                  .imageWidth =
-                                              max(
-                                                  90,
-                                                  globalListObject[
-                                                              placeholderTotal]
-                                                          .imageWidth +
-                                                      details.delta.dx);
-                                          setState(() {});
-                                        },
-                                        child: const Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.circle,
-                                              color: Colors.white,
-                                              size: 25,
-                                            ),
-                                            Icon(
-                                              Icons.circle,
-                                              color: Colors.blueAccent,
-                                              size: 15,
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : const SizedBox(),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    ///
-                    /// tombol scaling image
-                    ///
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: globalListObject[placeholderTotal].onClicked ==
-                              OnAction.isClicked
-                          ? GestureDetector(
-                              onHorizontalDragUpdate: (details) {
-                                globalListObject[placeholderTotal].imageWidth =
-                                    max(
-                                        90,
-                                        globalListObject[placeholderTotal]
-                                                .imageWidth +
-                                            details.delta.dx);
-                                globalListObject[placeholderTotal].imageHeight =
-                                    max(
-                                        70,
-                                        globalListObject[placeholderTotal]
-                                                .imageHeight +
-                                            details.delta.dx);
-                                getSizeOfTheBox(i);
-                                setState(() {});
-                              },
-                              onVerticalDragUpdate: (details) {
-                                globalListObject[placeholderTotal].imageWidth =
-                                    max(
-                                        90,
-                                        globalListObject[placeholderTotal]
-                                                .imageWidth +
-                                            details.delta.dy);
-                                globalListObject[placeholderTotal].imageHeight =
-                                    max(
-                                        70,
-                                        globalListObject[placeholderTotal]
-                                                .imageHeight +
-                                            details.delta.dy);
-                                getSizeOfTheBox(i);
-                                setState(() {});
-                              },
-                              child: Transform.rotate(
-                                angle: 45 / 180 * pi,
-                                child: const Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.blueAccent,
-                                  size: 30,
-                                ),
-                              ),
-                            )
-                          : const SizedBox(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          ///
-          /// tombol untuk crop, rotate, dan border image
-          ///
-          Positioned(
-            top: globalListObject[placeholderTotal].top,
-            left: globalListObject[placeholderTotal].left,
-            width: widthContainerRender + 1,
-            height: heightContainerRender * 235 / 100,
-            child: globalListObject[placeholderTotal].onClicked ==
-                    OnAction.isClicked
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Expanded(child: SizedBox()),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     globalListObject[placeholderTotal].onClicked =
-                      //         OnAction.isFalse;
-                      //     cropImage(globalListObject[placeholderTotal]);
-                      //   },
-                      //   child: const Stack(
-                      //     alignment: Alignment.center,
-                      //     children: [
-                      //       Icon(
-                      //         Icons.crop_rounded,
-                      //         color: Colors.blueAccent,
-                      //         size: 25,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                        child: GestureDetector(
-                          onHorizontalDragUpdate: (details) {
-                            globalListObject[placeholderTotal].rotateValue -=
-                                details.delta.dx;
-                            globalListObject[placeholderTotal].rotateValue %=
-                                360;
-                            setState(() {});
-                          },
-                          onVerticalDragUpdate: (details) {
-                            globalListObject[placeholderTotal].rotateValue -=
-                                details.delta.dy;
-                            globalListObject[placeholderTotal].rotateValue %=
-                                360;
-                            setState(() {});
-                          },
-                          child: const Icon(
-                            Icons.autorenew,
-                            color: Colors.blueAccent,
-                            size: 30,
-                          ),
-                        ),
-                      ),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     if (globalListObject[placeholderTotal].boxRound ==
-                      //         OnAction.isRounded) {
-                      //       globalListObject[placeholderTotal].boxRoundValue =
-                      //           15.0;
-                      //       globalListObject[placeholderTotal].boxRound =
-                      //           OnAction.isFalse;
-                      //     } else {
-                      //       globalListObject[placeholderTotal].boxRoundValue =
-                      //           15.0;
-                      //       globalListObject[placeholderTotal].boxRound =
-                      //           OnAction.isRounded;
-                      //     }
-                      //     setState(() {});
-                      //   },
-                      //   onHorizontalDragUpdate: (details) {
-                      //     globalListObject[placeholderTotal].boxRoundValue =
-                      //         max(
-                      //             10,
-                      //             globalListObject[placeholderTotal]
-                      //                     .boxRoundValue +
-                      //                 details.delta.dx);
-                      //     setState(() {});
-                      //   },
-                      //   child: const Icon(
-                      //     Icons.border_all_rounded,
-                      //     color: Colors.blueAccent,
-                      //     size: 25,
-                      //   ),
-                      // ),
-                      const Expanded(child: SizedBox()),
-                    ],
-                  )
-                : const SizedBox(),
-          ),
-        ]);
-      }
-
-      ///
-      /// image transparent
-      ///
-      if (globalListObject[i].image != null &&
-          globalListObject[i].transparent) {
-        var objectOnCurrentIndex = globalListObject[i];
-        data.addAll([
-          Positioned(
-            top: globalListObject[placeholderTotal].top,
-            left: globalListObject[placeholderTotal].left,
-            child: GestureDetector(
-              onPanUpdate: objectOnCurrentIndex.onClicked == OnAction.isFalse
-                  ? (details) {
-                      globalListObject[placeholderTotal].top =
-                          globalListObject[placeholderTotal].top +
-                              details.delta.dy;
-                      globalListObject[placeholderTotal].left =
-                          globalListObject[placeholderTotal].left +
-                              details.delta.dx;
-                      setState(() {});
-                    }
-                  : null,
-              child: Container(
-                key: GlobalObjectKey(i),
-                width: globalListObject[placeholderTotal].imageWidth,
-                height: globalListObject[placeholderTotal].imageHeight,
-                transformAlignment: Alignment.center,
-                transform: Matrix4.rotationZ(
-                    globalListObject[placeholderTotal].rotateValue / 180 * pi),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: 0,
-                      top: 0,
-                      child: Container(
-                        width:
-                            globalListObject[placeholderTotal].imageWidth - 20,
-                        height:
-                            globalListObject[placeholderTotal].imageHeight - 20,
-                        decoration: BoxDecoration(
-                          borderRadius: objectOnCurrentIndex.boxRound ==
-                                  OnAction.isRounded
-                              ? BorderRadius.circular(
-                                  objectOnCurrentIndex.boxRoundValue)
-                              : null,
-                          image: DecorationImage(
-                              image: objectOnCurrentIndex.croppedFile == null
-                                  ? FileImage(objectOnCurrentIndex.image!)
-                                  : FileImage(File(
-                                      objectOnCurrentIndex.croppedFile!.path)),
-                              fit: BoxFit.fill,
-                              opacity: 0),
                           border: objectOnCurrentIndex.onClicked ==
                                   OnAction.isClicked
                               ? Border.all(color: Colors.blueAccent, width: 2)
@@ -1100,11 +764,11 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                               objectOnCurrentIndex.onClicked = OnAction.isFalse;
                             }
                           },
-                          // onLongPress: () {
-                          //   moveImage(i).then((value) {
-                          //     setState(() {});
-                          //   });
-                          // },
+                          onLongPress: () {
+                            moveImage(i).then((value) {
+                              setState(() {});
+                            });
+                          },
                         ),
                       ),
                     ),
@@ -1116,10 +780,8 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                       top: 0,
                       left: 0,
                       child: SizedBox(
-                        width:
-                            globalListObject[placeholderTotal].imageWidth - 20,
-                        height:
-                            globalListObject[placeholderTotal].imageHeight - 20,
+                        width: objectOnCurrentIndex.imageWidth - 20,
+                        height: objectOnCurrentIndex.imageHeight - 20,
                         child: Column(
                           children: [
                             const Expanded(child: SizedBox()),
@@ -1133,22 +795,18 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                                         onPanUpdate: (details) {
                                           getSizeOfTheBox(i);
 
-                                          globalListObject[placeholderTotal]
-                                                  .imageHeight =
+                                          objectOnCurrentIndex.imageHeight =
                                               max(
                                                   70,
                                                   globalListObject[
                                                               placeholderTotal]
                                                           .imageHeight +
                                                       details.delta.dy);
-                                          globalListObject[placeholderTotal]
-                                                  .imageWidth =
-                                              max(
-                                                  90,
-                                                  globalListObject[
-                                                              placeholderTotal]
-                                                          .imageWidth +
-                                                      details.delta.dx);
+                                          objectOnCurrentIndex.imageWidth = max(
+                                              90,
+                                              globalListObject[placeholderTotal]
+                                                      .imageWidth +
+                                                  details.delta.dx);
                                           setState(() {});
                                         },
                                         child: const Stack(
@@ -1181,51 +839,43 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                     Positioned(
                       right: 0,
                       bottom: 0,
-                      child: objectOnCurrentIndex.onClicked ==
-                              OnAction.isClicked
-                          ? GestureDetector(
-                              onHorizontalDragUpdate: (details) {
-                                globalListObject[placeholderTotal].imageWidth =
-                                    max(
+                      child:
+                          objectOnCurrentIndex.onClicked == OnAction.isClicked
+                              ? GestureDetector(
+                                  onHorizontalDragUpdate: (details) {
+                                    objectOnCurrentIndex.imageWidth = max(
                                         90,
-                                        globalListObject[placeholderTotal]
-                                                .imageWidth +
+                                        objectOnCurrentIndex.imageWidth +
                                             details.delta.dx);
-                                globalListObject[placeholderTotal].imageHeight =
-                                    max(
+                                    objectOnCurrentIndex.imageHeight = max(
                                         70,
-                                        globalListObject[placeholderTotal]
-                                                .imageHeight +
+                                        objectOnCurrentIndex.imageHeight +
                                             details.delta.dx);
-                                getSizeOfTheBox(i);
-                                setState(() {});
-                              },
-                              onVerticalDragUpdate: (details) {
-                                globalListObject[placeholderTotal].imageWidth =
-                                    max(
+                                    getSizeOfTheBox(i);
+                                    setState(() {});
+                                  },
+                                  onVerticalDragUpdate: (details) {
+                                    objectOnCurrentIndex.imageWidth = max(
                                         90,
-                                        globalListObject[placeholderTotal]
-                                                .imageWidth +
+                                        objectOnCurrentIndex.imageWidth +
                                             details.delta.dy);
-                                globalListObject[placeholderTotal].imageHeight =
-                                    max(
+                                    objectOnCurrentIndex.imageHeight = max(
                                         70,
-                                        globalListObject[placeholderTotal]
-                                                .imageHeight +
+                                        objectOnCurrentIndex.imageHeight +
                                             details.delta.dy);
-                                getSizeOfTheBox(i);
-                                setState(() {});
-                              },
-                              child: Transform.rotate(
-                                angle: 45 / 180 * pi,
-                                child: const Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.blueAccent,
-                                  size: 30,
-                                ),
-                              ),
-                            )
-                          : const SizedBox(),
+                                    getSizeOfTheBox(i);
+                                    setState(() {});
+                                  },
+                                  child: Transform.rotate(
+                                    angle: 45 / 180 * pi,
+                                    child: const Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Colors.blueAccent,
+                                      size: 30,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox(),
                     ),
                   ],
                 ),
@@ -1237,8 +887,8 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
           /// tombol untuk crop, rotate, dan border image
           ///
           Positioned(
-            top: globalListObject[placeholderTotal].top,
-            left: globalListObject[placeholderTotal].left,
+            top: objectOnCurrentIndex.top,
+            left: objectOnCurrentIndex.left,
             width: widthContainerRender + 1,
             height: heightContainerRender * 235 / 100,
             child: objectOnCurrentIndex.onClicked == OnAction.isClicked
@@ -1248,9 +898,9 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                       const Expanded(child: SizedBox()),
                       // GestureDetector(
                       //   onTap: () {
-                      //     globalListObject[placeholderTotal].onClicked =
+                      //     objectOnCurrentIndex.onClicked =
                       //         OnAction.isFalse;
-                      //     cropImage(ob);
+                      //     cropImage(objectOnCurrentIndex);
                       //   },
                       //   child: const Stack(
                       //     alignment: Alignment.center,
@@ -1267,17 +917,15 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: GestureDetector(
                           onHorizontalDragUpdate: (details) {
-                            globalListObject[placeholderTotal].rotateValue -=
+                            objectOnCurrentIndex.rotateValue -=
                                 details.delta.dx;
-                            globalListObject[placeholderTotal].rotateValue %=
-                                360;
+                            objectOnCurrentIndex.rotateValue %= 360;
                             setState(() {});
                           },
                           onVerticalDragUpdate: (details) {
-                            globalListObject[placeholderTotal].rotateValue -=
+                            objectOnCurrentIndex.rotateValue -=
                                 details.delta.dy;
-                            globalListObject[placeholderTotal].rotateValue %=
-                                360;
+                            objectOnCurrentIndex.rotateValue %= 360;
                             setState(() {});
                           },
                           child: const Icon(
@@ -1289,25 +937,25 @@ abstract class TemplateBoardModel extends State<TemplateBoard> {
                       ),
                       // GestureDetector(
                       //   onTap: () {
-                      //     if (globalListObject[placeholderTotal].boxRound ==
+                      //     if (objectOnCurrentIndex.boxRound ==
                       //         OnAction.isRounded) {
-                      //       globalListObject[placeholderTotal].boxRoundValue =
+                      //       objectOnCurrentIndex.boxRoundValue =
                       //           15.0;
-                      //       globalListObject[placeholderTotal].boxRound =
+                      //       objectOnCurrentIndex.boxRound =
                       //           OnAction.isFalse;
                       //     } else {
-                      //       globalListObject[placeholderTotal].boxRoundValue =
+                      //       objectOnCurrentIndex.boxRoundValue =
                       //           15.0;
-                      //       globalListObject[placeholderTotal].boxRound =
+                      //       objectOnCurrentIndex.boxRound =
                       //           OnAction.isRounded;
                       //     }
                       //     setState(() {});
                       //   },
                       //   onHorizontalDragUpdate: (details) {
-                      //     globalListObject[placeholderTotal].boxRoundValue =
+                      //     objectOnCurrentIndex.boxRoundValue =
                       //         max(
                       //             10,
-                      //             globalListObject[placeholderTotal]
+                      //             objectOnCurrentIndex
                       //                     .boxRoundValue +
                       //                 details.delta.dx);
                       //     setState(() {});

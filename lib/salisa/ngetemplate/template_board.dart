@@ -9,12 +9,16 @@ import 'package:screenshot/screenshot.dart';
 
 class TemplateBoard extends StatefulWidget {
   // ambil data dengan widget.assetImage
-  final int id;
+  final double templateHeight;
+  final double templateWidth;
   final int placeholder;
+  final int id;
   final String assetImage;
   const TemplateBoard({
     Key? key,
     required this.id,
+    required this.templateHeight,
+    required this.templateWidth,
     required this.placeholder,
     required this.assetImage,
   }) : super(key: key);
@@ -41,9 +45,13 @@ class _TemplateBoardState extends TemplateBoardController {
           child: Stack(
             clipBehavior: Clip.none,
             children: [
-              Screenshot(
-                controller: screenshotController,
-                child: Center(
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 10 / 100,
+                  vertical: MediaQuery.of(context).size.width * 9 / 100,
+                ),
+                child: Screenshot(
+                  controller: screenshotController,
                   child: GestureDetector(
                     onTap: () {
                       for (var i = 0; i < globalListObject.length; i++) {
@@ -57,18 +65,25 @@ class _TemplateBoardState extends TemplateBoardController {
                     onPanStart: (details) => brushOnPanStart(details),
                     onPanUpdate: (details) => brushOnPanUpdate(details),
                     onPanEnd: (details) => brushOnPanEnd(details),
-                    child: Container(
-                      key: const GlobalObjectKey("utama"),
-                      color: Colors.white,
-                      height: MediaQuery.of(context).size.height * 57 / 100,
-                      width: MediaQuery.of(context).size.width * 90 / 100,
-                      margin: EdgeInsets.only(
-                          bottom:
-                              MediaQuery.of(context).size.height * 25 / 100),
-                      child: Stack(
-                        children: dataStack(),
-                      ),
-                    ),
+                    child: widget.id == 1
+                        ? Container(
+                            key: const GlobalObjectKey("utama"),
+                            color: canvasColor,
+                            height: widget.templateHeight / 4,
+                            width: widget.templateWidth / 4,
+                            child: Stack(
+                              children: dataStack(),
+                            ),
+                          )
+                        : Container(
+                            key: const GlobalObjectKey("utama"),
+                            color: canvasColor,
+                            height: widget.templateHeight / 3,
+                            width: widget.templateWidth / 3,
+                            child: Stack(
+                              children: dataStack(),
+                            ),
+                          ),
                   ),
                 ),
               ),

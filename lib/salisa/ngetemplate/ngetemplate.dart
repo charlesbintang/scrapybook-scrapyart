@@ -81,8 +81,10 @@ class NgeTemplateState extends State<NgeTemplate> {
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => TemplateBoard(
-                            assetImage: product.image,
                             id: product.id,
+                            assetImage: product.image,
+                            templateHeight: product.templateHeight,
+                            templateWidth: product.templateWidth,
                             placeholder: product.placeholder,
                           ),
                         ));
@@ -92,7 +94,7 @@ class NgeTemplateState extends State<NgeTemplate> {
                           borderRadius: BorderRadius.circular(20),
                           image: DecorationImage(
                               image: AssetImage(product.image),
-                              fit: BoxFit.cover),
+                              fit: BoxFit.fill),
                           border: Border.all(
                             color: Theme.of(context).primaryColor,
                             width: 5,
