@@ -16,7 +16,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-// rahmad7870
+/// rahmad170103 & rahmad7870
 class _MyHomePageState extends State<MyHomePage> {
   int _current = 0;
   final CarouselController _controller = CarouselController();
